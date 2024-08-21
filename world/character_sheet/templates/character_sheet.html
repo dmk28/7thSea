@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{ sheet.full_name }}'s Character Sheet</h1>
+
+<h2>Basic Information</h2>
+<p><strong>Gender:</strong> {{ sheet.gender }}</p>
+<p><strong>Nationality:</strong> {{ sheet.nationality }}</p>
+<p><strong>Hero Points:</strong> {{ sheet.hero_points }}</p>
+
+<h2>Traits</h2>
+<ul>
+    <li>Brawn: {{ sheet.brawn }}</li>
+    <li>Finesse: {{ sheet.finesse }}</li>
+    <li>Wits: {{ sheet.wits }}</li>
+    <li>Resolve: {{ sheet.resolve }}</li>
+    <li>Panache: {{ sheet.panache }}</li>
+</ul>
+
+<h2>Skills</h2>
+{% for category, category_skills in skills.items %}
+    <h3>{{ category }}</h3>
+    <ul>
+    {% for skill, knacks in category_skills.items %}
+        <li>{{ skill }}
+            <ul>
+            {% for knack, value in knacks.items %}
+                <li>{{ knack }}: {{ value }}</li>
+            {% endfor %}
+            </ul>
+        </li>
+    {% endfor %}
+    </ul>
+{% endfor %}
+
+<h2>Other Information</h2>
+<p><strong>Duelist Style:</strong> {{ sheet.duelist_style }}</p>
+<p><strong>Is Sorcerer:</strong> {{ sheet.is_sorcerer }}</p>
+<p><strong>Flesh Wounds:</strong> {{ sheet.flesh_wounds }}</p>
+<p><strong>Dramatic Wounds:</strong> {{ sheet.dramatic_wounds }}</p>
+<p><strong>XP:</strong> {{ sheet.xp }}</p>
+
+<h2>Perks</h2>
+<ul>
+{% for perk in sheet.perks %}
+    <li>{{ perk }}</li>
+{% endfor %}
+</ul>
+
+<h2>Sorcery Knacks</h2>
+{% if sheet.is_sorcerer %}
+    <ul>
+    {% for name, value in sheet.sorcery_knacks.items %}
+        <li>{{ name }}: {{ value }}</li>
+    {% empty %}
+        <li>No sorcery knacks</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>Not a sorcerer</p>
+{% endif %}
+
+<h2>Swordsman Knacks</h2>
+{% if sheet.swordsman_knacks.exists %}
+<ul>
+    {% for knack in sheet.swordsman_knacks.all %}
+    <li>{{ knack.name }}: {{ knack.value }}</li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No swordsman knacks</p>
+{% endif %}
+
+<h2>Sorte Magic Effects</h2>
+{% if sheet.is_sorcerer %}
+    <p>{{ sheet.get_sorte_magic_effects_display }}</p>
+{% else %}
+    <p>Not a sorcerer</p>
+{% endif %}
+
+{% if sheet.nationality == "Eisen" %}
+<h2>Dracheneisen Slots</h2>
+<ul>
+{% for slot, item in sheet.dracheneisen_slots.items %}
+    <li>{{ slot }}: {{ item }}</li>
+{% empty %}
+    <li>No Dracheneisen items</li>
+{% endfor %}
+</ul>
+{% endif %}
+
+{% endblock %}

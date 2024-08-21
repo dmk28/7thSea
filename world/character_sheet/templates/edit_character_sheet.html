@@ -1,0 +1,67 @@
+    {% extends "base.html" %}
+
+    {% block content %}
+    <h1>Edit {{ character.name }}'s Character Sheet</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.traits }}
+        {{ form.skills }}
+        {{ form.perks }}
+        
+        <h2>Basic Information</h2>
+        {{ form.full_name.label_tag }} {{ form.full_name }}
+        {{ form.gender.label_tag }} {{ form.gender }}
+        {{ form.nationality.label_tag }} {{ form.nationality }}
+        {{ form.hero_points.label_tag }} {{ form.hero_points }}
+
+        <h2>Traits</h2>
+        {% for field in form %}
+            {% if field.name|startswith:'trait_' %}
+                {{ field.label_tag }} {{ field }}
+            {% endif %}
+        {% endfor %}
+
+        <h2>Skills</h2>
+        {% for field in form %}
+            {% if field.name|startswith:'skill_' %}
+                {{ field.label_tag }} {{ field }}
+            {% endif %}
+        {% endfor %}
+
+        <h2>Sorcery Knacks</h2>
+    {% if sheet.is_sorcerer %}
+        <ul>
+        {% for knack in sheet.sorcery_knacks.all %}
+            <li>{{ knack.name }}: {{ knack.value }}</li>
+        {% empty %}
+            <li>No sorcery knacks</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>Not a sorcerer</p>
+    {% endif %}
+
+    <h2>Swordsman Knacks</h2>
+    {% if sheet.swordsman_knacks.exists %}
+    <ul>
+        {% for knack in sheet.swordsman_knacks.all %}
+        <li>{{ knack.name }}: {{ knack.value }}</li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>No swordsman knacks</p>
+    {% endif %}
+
+    {% if sheet.nationality == "Eisen" %}
+    <h2>Dracheneisen Slots</h2>
+    {{ form.dracheneisen_slots }}
+    {% endif %}
+
+
+
+        <input type="submit" value="Save Changes">
+    </form>
+
+    <a href="{% url 'character_sheet:character_sheet' object_id=character.id %}">Back to Character Sheet</a>
+    {% endblock %}

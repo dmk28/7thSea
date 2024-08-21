@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>{{ ship.name }}</h2>
+<p>Captain: {{ ship.captain.name if ship.captain else "None" }}</p>
+<p>Brawn: {{ ship.brawn }}</p>
+<p>Finesse: {{ ship.finesse }}</p>
+<p>Resolve: {{ ship.resolve }}</p>
+<p>Wits: {{ ship.wits }}</p>
+<p>Panache: {{ ship.panache }}</p>
+<p>Cargo: {{ ship.cargo }}</p>
+<p>Crew: {{ ship.evennia_object.crew }}</p>
+<p>Draft: {{ ship.draft }}</p>
+
+<h3>Modifications</h3>
+<ul>
+{% for mod in ship.modifications.all %}
+    <li>{{ mod.name }}</li>
+{% endfor %}
+</ul>
+
+<h3>Flaws</h3>
+<ul>
+{% for flaw in ship.flaws.all %}
+    <li>{{ flaw.name }}</li>
+{% endfor %}
+</ul>
+{% endblock %}

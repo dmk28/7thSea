@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Create a New Ship</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    
+    <h3>Modifications</h3>
+    {{ modification_formset.management_form }}
+    {% for form in modification_formset %}
+        {{ form.as_p }}
+    {% endfor %}
+    
+    <h3>Flaws</h3>
+    {{ flaw_formset.management_form }}
+    {% for form in flaw_formset %}
+        {{ form.as_p }}
+    {% endfor %}
+    
+    <button type="submit">Create Ship</button>
+</form>
+{% endblock %}
