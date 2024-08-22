@@ -162,8 +162,10 @@ class CharacterSheet(SharedMemoryModel):
     def heal_character(self, value, type):
         if type == "dramatic" and self.dramatic_wounds > 0:
             self.dramatic_wounds -= value
+            self.save(update_fields=["dramatic_wounds"])
         elif type == "flesh" and self.flesh_wounds > 0:
-            self.dramatic_wounds -= value
+            self.flesh_wounds -= value
+            self.save(update_fields=["flesh_wounds"])
         else:
             return 0
         

@@ -52,7 +52,7 @@ class CmdHeal(Command):
             if amount <= 0:
                 caller.msg("Amount to heal must be a positive number.")
                 return
-            elif amount > 5:
+            elif amount > 500:
                 caller.msg("Not allowed.")
                 return 
         except ValueError:
@@ -68,7 +68,7 @@ class CmdHeal(Command):
 
         # Perform the healing
         if wound_type == "flesh":
-            current_wounds = caller.character_sheet.flesh_wounds
+            current_wounds = target.character_sheet.flesh_wounds
             if current_wounds is None:
                 caller.msg(f"{target.name} has no Flesh Wounds attribute.")
                 return

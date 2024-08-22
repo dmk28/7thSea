@@ -35,7 +35,13 @@ class CombatScript(DefaultScript):
             self.ensure_combat_attributes(participant)
             participant.db.combat_id = self.id
             self.add_combat_cmdset(participant)
-            self.check_combat_advantages(participant)  
+            
+            # Double-check special_effects initialization
+            if not hasattr(participant.ndb, 'special_effects') or participant.ndb.special_effects is None:
+                participant.ndb.special_effects = []
+            
+            self.check_combat_advantages(participant)
+        
         self.roll_initiative()
         self.next_round()
 
@@ -58,18 +64,21 @@ class CombatScript(DefaultScript):
             character.db.special_effects = []
         if not hasattr(character.db, 'soak_keep'):
             character.db.soak_keep = 0
+        
+        # Ensure ndb.special_effects exists
         if not hasattr(character.ndb, 'special_effects'):
             character.ndb.special_effects = []
-        
-        # Add any other combat-related attributes here
+            
+            # Add any other combat-related attributes here
 
     def add_combat_cmdset(self, character):
         from commands.mycmdset import CombatCmdSet
         character.cmdset.add(CombatCmdSet(), persistent=False)
 
 
-    def check_combat_advantages(self, character): # BEG AI TO FIND OUT WHY THIS IS HAPPENING IT KEEPS THROWING AN ERROR HERE!!!
-        if not hasattr(character.ndb, 'special_effects'):
+    def check_combat_advantages(self, character):
+        # Ensure ndb.special_effects is always a list
+        if not hasattr(character.ndb, 'special_effects') or character.ndb.special_effects is None:
             character.ndb.special_effects = []
         
         # Get the character's advantages
@@ -77,7 +86,7 @@ class CombatScript(DefaultScript):
         for advantage in advantages:
             adv_name = advantage.get('name', '')
             adv_level = advantage.get('level', 1)
-            ring_me_true = True if advantage['name'] == 'Combat Reflexes' else False
+            
             if adv_name == 'Combat Reflexes' and "combat_reflexes" not in character.ndb.special_effects:
                 character.ndb.special_effects.append("combat_reflexes")
                 character.msg("Your Combat Reflexes advantage is active.")
@@ -85,8 +94,6 @@ class CombatScript(DefaultScript):
                 character.ndb.special_effects.append("toughness")
             elif adv_name == "Indomitable Will" and "indomitable_will" not in character.ndb.special_effects:
                 character.ndb.special_effects.append("indomitable_will")
-            # Note: Appearance and Inheritance don't typically have direct combat effects,
-            # but you might want to track them for roleplay purposes
 
         return character.ndb.special_effects
 
@@ -128,9 +135,9 @@ class CombatScript(DefaultScript):
                 char.character_sheet.save()
             
             # Clear temporary combat effects
-            
             char.ndb.flesh_wounds = 0
             char.ndb.special_effects = []
+            char.db.special_effects = []  # Clear persistent special effects too
             char.ndb.full_defense = False
             char.ndb.riposte = False
             char.ndb.held_action = False
@@ -206,46 +213,37 @@ class CombatScript(DefaultScript):
             panache = char.db.traits['panache']
             base_roll = randint(1, 10) + (panache * 3)
             
-            # Apply Combat Reflexes bonus if applicable
-            if "combat_reflexes" in char.db.special_effects:
+            if "combat_reflexes" in char.ndb.special_effects:
                 base_roll += 5
                 char.msg("Your Combat Reflexes give you a +5 bonus to initiative!")
 
-            roll = base_roll
-            initiative_rolls.append((char, roll, panache))
+            initiative_rolls.append((char, base_roll))
         
-        # Sort by initiative roll, then by panache if there's a tie
-        initiative_rolls.sort(key=lambda x: (x[1], x[2]), reverse=True)
+        initiative_rolls.sort(key=lambda x: x[1], reverse=True)
         
-        self.db.initiative_order = [(char, panache) for char, _, panache in initiative_rolls]
-        self.msg_all("Initiative has been rolled.")
-        for char, roll, _ in initiative_rolls:
+        self.db.initiative_order = [char for char, _ in initiative_rolls]
+        
+        for char, roll in initiative_rolls:
             char.msg(f"Your initiative roll: {roll}")
 
     def next_round(self):
-            self.db.round += 1
-            if self.db.round > 100:  # Arbitrary high number
-                self.msg_all("Combat has gone on for too many rounds. Ending combat.")
-                self.end_combat()
-                return
+        self.db.round += 1
+        if self.db.round > 100:  # Arbitrary high number
+            self.msg_all("Combat has gone on for too many rounds. Ending combat.")
+            self.end_combat()
+            return
 
-            self.msg_all(f"Round {self.db.round} begins.")
-            self.roll_initiative()
-            self.process_next_character()
+        self.msg_all(f"Round {self.db.round} begins.")
+        self.roll_initiative()
+        self.process_next_character()
 
     def process_next_character(self):
         if not self.db.initiative_order:
-            self.msg_all("New round")
             self.next_round()
             return
 
-        char, actions_left = self.db.initiative_order.pop(0)
-        if actions_left > 0:
-            self.db.current_actor = char
-            self.offer_action(char)
-            self.db.initiative_order.append((char, actions_left - 1))
-        else:
-            self.process_next_character()
+        self.db.current_actor = self.db.initiative_order.pop(0)
+        self.offer_action(self.db.current_actor)
 
     def finish_turn(self):
         current_actor = self.db.current_actor
@@ -255,6 +253,8 @@ class CombatScript(DefaultScript):
         self.db.current_actor = None
         self.process_next_character()
 
+    def all_characters_acted(self):
+     return len(self.db.initiative_order) == 0
 
     def reset_combat_states(self, character):
                 character.ndb.combat_state = None
@@ -276,12 +276,24 @@ class CombatScript(DefaultScript):
             action = parts[0].lower()
             target = parts[1] if len(parts) > 1 else None
 
-            action_successful = self.perform_special_move(character, action, target)
+            combat_ended = False
 
-            if action_successful:
-                self.finish_turn()
+            if action == "attack":
+                if not target:
+                    character.msg("You must specify a target for attack.")
+                    return
+                target_character = character.search(target)
+                if not target_character or target_character not in self.db.participants:
+                    character.msg(f"Invalid target: {target}")
+                    return
+                combat_ended = self.perform_attack(character, target_character, character.db.wielded_weapon)
             else:
-                self.offer_action(character)  # Allow the character to choose another action
+                self.perform_special_move(character, action, target)
+
+            if combat_ended:
+                self.end_combat()
+            else:
+                self.finish_turn()
 
         except Exception as e:
             self.msg_all(f"Error in combat: {str(e)}")
@@ -557,11 +569,13 @@ class CombatScript(DefaultScript):
     def resolve_wounds(self, character, damage):
         current_flesh_wounds = character.character_sheet.flesh_wounds
         character.character_sheet.flesh_wounds = current_flesh_wounds + damage
+        character.character_sheet.save(update_fields=['flesh_wounds'])
         resolve = character.db.traits.get('resolve', 1)
         
         if character.character_sheet.flesh_wounds >= resolve * 5:
             character.character_sheet.dramatic_wounds = character.character_sheet.dramatic_wounds + 1
             character.character_sheet.flesh_wounds -= resolve * 5
+            character.character_sheet.save(update_fields=['dramatic_wounds'])
             self.msg_all(f"{character.name} has received a Dramatic Wound!", exclude=None)
 
         if character.character_sheet.dramatic_wounds >= resolve * 2:
@@ -603,8 +617,8 @@ class CombatScript(DefaultScript):
         character.msg("|rYou have been killed!|n")
         self.msg_all(f"|500{character.name} has been killed!|n")
         self.remove_participant(character)
-        character.db.approved = False
-        character.character_sheet.update_from_typeclass()
+        character.character_sheet.approved = False
+        character.character_sheet.save(update_fields=['approved'])
 
     def attempt_regain_consciousness(self, character):
         if self.check_unconsciousness(character):
@@ -887,7 +901,7 @@ class CombatScript(DefaultScript):
     def resolve_successful_attack(self, attacker, target, weapon, attack_roll, defense_roll):
         try:
             raw_damage = self.calculate_damage(attacker, weapon)
-            is_critical = attack_roll > defense_roll + 15
+            is_critical = attack_roll > defense_roll + 25
 
             if is_critical:
                 raw_damage *= 2  # critical hit

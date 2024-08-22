@@ -34,7 +34,15 @@ class Holding(SharedMemoryModel):
             "base_income": 40,
             "upgrade_cost": 2000,
             "upgrade_multiplier": 2.0
-        }
+        },
+
+        "swordsman academy": {
+            "name": "Swordsman's Guild Academy",
+            "description": "A  swordsman's guild academy.",
+            "base_income": 15,
+            "upgrade_cost": 1500,
+            "upgrade_multiplier": 1.3,
+        },
     }
 
     HOLDING_TYPE_CHOICES = [(key, value['name']) for key, value in HOLDING_TYPES.items()]

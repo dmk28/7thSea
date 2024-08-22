@@ -323,3 +323,7 @@ LockHandler on rapier: access type 'edit' changed from 'edit:perm(Admin)' to 'ed
 24-08-21 04:26:07 [-] LockHandler on @tasks: access type 'cmd' changed from 'cmd:all()' to 'cmd:perm(Developer)'
 24-08-21 04:33:39 [-] LockHandler on @tasks: access type 'cmd' changed from 'cmd:all()' to 'cmd:perm(Developer)'
 24-08-21 04:36:20 [-] LockHandler on @tasks: access type 'cmd' changed from 'cmd:all()' to 'cmd:perm(Developer)'
+24-08-22 04:17:32 [-] LockHandler on @tasks: access type 'cmd' changed from 'cmd:all()' to 'cmd:perm(Developer)'
+24-08-22 04:18:47 [-] LockHandler on @tasks: access type 'cmd' changed from 'cmd:all()' to 'cmd:perm(Developer)'
+24-08-22 04:20:07 [-] LockHandler on @tasks: access type 'cmd' changed from 'cmd:all()' to 'cmd:perm(Developer)'
+24-08-22 04:50:36 [-] LockHandler on @tasks: access type 'cmd' changed from 'cmd:all()' to 'cmd:perm(Developer)'

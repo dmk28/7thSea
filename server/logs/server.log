@@ -466,3 +466,283 @@
 2024-08-21 04:38:03 [..] Server disconnected from the portal.
 2024-08-21 04:38:03 [..] Main loop terminated.
 2024-08-21 04:38:03 [..] Server Shut Down.
+2024-08-22 04:15:13 [..] Loaded.
+2024-08-22 04:15:12 [..] Loading /home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/server/server.py...
+2024-08-22 04:15:13 [..] Loaded.
+2024-08-22 04:15:13 [..] twistd 23.10.0 (/home/mage/Documents/7thsea_dev/env/bin/python3 3.12.4) starting up.
+2024-08-22 04:15:13 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2024-08-22 04:15:14 [..] Webserver starting on 4005
+2024-08-22 04:15:14 [..] Evennia Server successfully started.
+2024-08-22 04:15:16 [..] Logged in: Prophet(account 1) 127.0.0.1 (1 session(s) total)
+2024-08-22 04:15:27 [SS] Authentication Success: Jaime(account 2) (IP: 192.168.1.5).
+2024-08-22 04:15:27 [..] Logged in: Jaime(account 2) 192.168.1.5 (1 session(s) total)
+2024-08-22 04:15:30 [!!] Traceback (most recent call last):
+2024-08-22 04:15:30 [!!]   File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/commands/cmdhandler.py", line 629, in _run_command
+2024-08-22 04:15:30 [!!]     ret = cmd.func()
+2024-08-22 04:15:30 [!!]           ^^^^^^^^^^
+2024-08-22 04:15:30 [!!]   File "/home/mage/Documents/7thsea_dev/7thSea/7thSea/commands/cmdattack.py", line 129, in func
+2024-08-22 04:15:30 [!!]     combat.start_combat()
+2024-08-22 04:15:30 [!!]   File "/home/mage/Documents/7thsea_dev/7thSea/7thSea/world/combat_script/combat_system.py", line 38, in start_combat
+2024-08-22 04:15:30 [!!]     self.check_combat_advantages(participant)
+2024-08-22 04:15:30 [!!]   File "/home/mage/Documents/7thsea_dev/7thSea/7thSea/world/combat_script/combat_system.py", line 84, in check_combat_advantages
+2024-08-22 04:15:30 [!!]     if adv_name == 'Combat Reflexes' and "combat_reflexes" not in character.ndb.special_effects:
+2024-08-22 04:15:30 [!!]                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2024-08-22 04:15:30 [!!] TypeError: argument of type 'NoneType' is not iterable
+2024-08-22 04:15:30 [EE] User input was: 'startcombat dario'.
+2024-08-22 04:17:17 [..] Server disconnected from the portal.
+2024-08-22 04:17:17 [..] Main loop terminated.
+2024-08-22 04:17:17 [..] Server Shut Down.
+2024-08-22 04:17:18 [..] Loaded.
+2024-08-22 04:17:17 [..] Loading /home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/server/server.py...
+2024-08-22 04:17:18 [..] Loaded.
+2024-08-22 04:17:18 [..] twistd 23.10.0 (/home/mage/Documents/7thsea_dev/env/bin/python3 3.12.4) starting up.
+2024-08-22 04:17:18 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2024-08-22 04:17:18 [..] Webserver starting on 4005
+2024-08-22 04:17:18 [..] Server successfully reloaded.
+2024-08-22 04:18:38 [..] Server disconnected from the portal.
+2024-08-22 04:18:38 [..] Main loop terminated.
+2024-08-22 04:18:38 [..] Server Shut Down.
+2024-08-22 04:18:39 [..] Loaded.
+2024-08-22 04:18:38 [..] Loading /home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/server/server.py...
+2024-08-22 04:18:39 [..] Loaded.
+2024-08-22 04:18:39 [..] twistd 23.10.0 (/home/mage/Documents/7thsea_dev/env/bin/python3 3.12.4) starting up.
+2024-08-22 04:18:39 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2024-08-22 04:18:39 [..] Webserver starting on 4005
+2024-08-22 04:18:39 [..] Server successfully reloaded.
+2024-08-22 04:19:40 [..] Server disconnected from the portal.
+2024-08-22 04:19:40 [..] Main loop terminated.
+2024-08-22 04:19:40 [..] Server Shut Down.
+2024-08-22 04:19:42 [..] Loaded.
+2024-08-22 04:19:41 [..] Loading /home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/server/server.py...
+2024-08-22 04:19:42 [..] Loaded.
+2024-08-22 04:19:42 [..] twistd 23.10.0 (/home/mage/Documents/7thsea_dev/env/bin/python3 3.12.4) starting up.
+2024-08-22 04:19:42 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2024-08-22 04:19:42 [..] Webserver starting on 4005
+2024-08-22 04:19:42 [..] Server successfully reloaded.
+2024-08-22 04:23:38 [..] Server disconnected from the portal.
+2024-08-22 04:23:38 [..] Main loop terminated.
+2024-08-22 04:23:38 [..] Server Shut Down.
+2024-08-22 04:23:40 [..] Loaded.
+2024-08-22 04:23:38 [..] Loading /home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/server/server.py...
+2024-08-22 04:23:40 [..] Loaded.
+2024-08-22 04:23:40 [..] twistd 23.10.0 (/home/mage/Documents/7thsea_dev/env/bin/python3 3.12.4) starting up.
+2024-08-22 04:23:40 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2024-08-22 04:23:40 [..] Webserver starting on 4005
+2024-08-22 04:23:40 [..] Server successfully reloaded.
+2024-08-22 04:24:23 [..] Server disconnected from the portal.
+2024-08-22 04:24:23 [..] Main loop terminated.
+2024-08-22 04:24:23 [..] Server Shut Down.
+2024-08-22 04:24:24 [..] Loaded.
+2024-08-22 04:24:23 [..] Loading /home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/server/server.py...
+2024-08-22 04:24:24 [..] Loaded.
+2024-08-22 04:24:24 [..] twistd 23.10.0 (/home/mage/Documents/7thsea_dev/env/bin/python3 3.12.4) starting up.
+2024-08-22 04:24:24 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2024-08-22 04:24:24 [..] Webserver starting on 4005
+2024-08-22 04:24:24 [..] Server successfully reloaded.
+2024-08-22 04:24:55 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2024-08-22 04:25:08 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2024-08-22 04:25:08 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2024-08-22 04:25:08 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2024-08-22 04:33:24 [WW] Warning: Idmapper flush called more than once in 5.0 min interval. Check memory usage.
+2024-08-22 04:33:53 [..] Server disconnected from the portal.
+2024-08-22 04:33:53 [..] Main loop terminated.
+2024-08-22 04:33:53 [..] Server Shut Down.
+2024-08-22 04:33:54 [..] Loaded.
+2024-08-22 04:33:53 [..] Loading /home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/server/server.py...
+2024-08-22 04:33:54 [..] Loaded.
+2024-08-22 04:33:54 [..] twistd 23.10.0 (/home/mage/Documents/7thsea_dev/env/bin/python3 3.12.4) starting up.
+2024-08-22 04:33:54 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2024-08-22 04:33:54 [..] Webserver starting on 4005
+2024-08-22 04:33:54 [..] Server successfully reloaded.
+2024-08-22 04:38:42 [..] Server disconnected from the portal.
+2024-08-22 04:38:42 [..] Main loop terminated.
+2024-08-22 04:38:42 [..] Server Shut Down.
+2024-08-22 04:38:44 [..] Loaded.
+2024-08-22 04:38:42 [..] Loading /home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/server/server.py...
+2024-08-22 04:38:44 [..] Loaded.
+2024-08-22 04:38:44 [..] twistd 23.10.0 (/home/mage/Documents/7thsea_dev/env/bin/python3 3.12.4) starting up.
+2024-08-22 04:38:44 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2024-08-22 04:38:44 [..] Webserver starting on 4005
+2024-08-22 04:38:44 [..] Server successfully reloaded.
+2024-08-22 04:44:57 [..] Server disconnected from the portal.
+2024-08-22 04:44:57 [..] Main loop terminated.
+2024-08-22 04:44:57 [..] Server Shut Down.
+2024-08-22 04:44:59 [..] Loaded.
+2024-08-22 04:44:57 [..] Loading /home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/server/server.py...
+2024-08-22 04:44:59 [..] Loaded.
+2024-08-22 04:44:59 [..] twistd 23.10.0 (/home/mage/Documents/7thsea_dev/env/bin/python3 3.12.4) starting up.
+2024-08-22 04:44:59 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2024-08-22 04:44:59 [..] Webserver starting on 4005
+2024-08-22 04:44:59 [..] Server successfully reloaded.
+2024-08-22 04:46:04 [..] Server disconnected from the portal.
+2024-08-22 04:46:04 [..] Main loop terminated.
+2024-08-22 04:46:04 [..] Server Shut Down.
+2024-08-22 04:46:06 [..] Loaded.
+2024-08-22 04:46:05 [..] Loading /home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/server/server.py...
+2024-08-22 04:46:06 [..] Loaded.
+2024-08-22 04:46:06 [..] twistd 23.10.0 (/home/mage/Documents/7thsea_dev/env/bin/python3 3.12.4) starting up.
+2024-08-22 04:46:06 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2024-08-22 04:46:06 [..] Webserver starting on 4005
+2024-08-22 04:46:06 [..] Server successfully reloaded.
+2024-08-22 04:46:17 [..] Server disconnected from the portal.
+2024-08-22 04:46:17 [..] Main loop terminated.
+2024-08-22 04:46:17 [..] Server Shut Down.
+2024-08-22 04:46:18 [..] Loaded.
+2024-08-22 04:46:17 [..] Loading /home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/server/server.py...
+2024-08-22 04:46:18 [..] Loaded.
+2024-08-22 04:46:18 [..] twistd 23.10.0 (/home/mage/Documents/7thsea_dev/env/bin/python3 3.12.4) starting up.
+2024-08-22 04:46:18 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2024-08-22 04:46:18 [..] Webserver starting on 4005
+2024-08-22 04:46:18 [..] Server successfully reloaded.
+2024-08-22 04:46:56 [..] Server disconnected from the portal.
+2024-08-22 04:46:56 [..] Main loop terminated.
+2024-08-22 04:46:56 [..] Server Shut Down.
+2024-08-22 04:46:58 [..] Loaded.
+2024-08-22 04:46:56 [..] Loading /home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/server/server.py...
+2024-08-22 04:46:58 [..] Loaded.
+2024-08-22 04:46:58 [..] twistd 23.10.0 (/home/mage/Documents/7thsea_dev/env/bin/python3 3.12.4) starting up.
+2024-08-22 04:46:58 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2024-08-22 04:46:58 [..] Webserver starting on 4005
+2024-08-22 04:46:58 [..] Server successfully reloaded.
+2024-08-22 04:47:36 [..] Server disconnected from the portal.
+2024-08-22 04:47:36 [..] Main loop terminated.
+2024-08-22 04:47:36 [..] Server Shut Down.
+2024-08-22 04:47:38 [..] Loaded.
+2024-08-22 04:47:36 [..] Loading /home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/server/server.py...
+2024-08-22 04:47:38 [..] Loaded.
+2024-08-22 04:47:38 [..] twistd 23.10.0 (/home/mage/Documents/7thsea_dev/env/bin/python3 3.12.4) starting up.
+2024-08-22 04:47:38 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2024-08-22 04:47:38 [..] Webserver starting on 4005
+2024-08-22 04:47:38 [..] Server successfully reloaded.
+2024-08-22 04:47:52 [..] Server disconnected from the portal.
+2024-08-22 04:47:52 [..] Main loop terminated.
+2024-08-22 04:47:52 [..] Server Shut Down.
+2024-08-22 04:47:53 [..] Loaded.
+2024-08-22 04:47:52 [..] Loading /home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/server/server.py...
+2024-08-22 04:47:53 [..] Loaded.
+2024-08-22 04:47:53 [..] twistd 23.10.0 (/home/mage/Documents/7thsea_dev/env/bin/python3 3.12.4) starting up.
+2024-08-22 04:47:53 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2024-08-22 04:47:53 [..] Webserver starting on 4005
+2024-08-22 04:47:53 [..] Server successfully reloaded.
+2024-08-22 04:48:53 [..] Server disconnected from the portal.
+2024-08-22 04:48:53 [..] Main loop terminated.
+2024-08-22 04:48:53 [..] Server Shut Down.
+2024-08-22 04:48:55 [..] Loaded.
+2024-08-22 04:48:54 [..] Loading /home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/server/server.py...
+2024-08-22 04:48:55 [..] Loaded.
+2024-08-22 04:48:55 [..] twistd 23.10.0 (/home/mage/Documents/7thsea_dev/env/bin/python3 3.12.4) starting up.
+2024-08-22 04:48:55 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2024-08-22 04:48:55 [..] Webserver starting on 4005
+2024-08-22 04:48:55 [..] Server successfully reloaded.
+2024-08-22 04:48:57 [!!] Traceback (most recent call last):
+2024-08-22 04:48:57 [!!]   File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/commands/cmdhandler.py", line 629, in _run_command
+2024-08-22 04:48:57 [!!]     ret = cmd.func()
+2024-08-22 04:48:57 [!!]           ^^^^^^^^^^
+2024-08-22 04:48:57 [!!]   File "/home/mage/Documents/7thsea_dev/7thSea/7thSea/commands/admin/adminheal.py", line 81, in func
+2024-08-22 04:48:57 [!!]     caller.character_sheet.save(update_fields='flesh_wounds')
+2024-08-22 04:48:57 [!!]   File "/home/mage/Documents/7thsea_dev/7thSea/7thSea/world/character_sheet/models.py", line 408, in save
+2024-08-22 04:48:57 [!!]     super().save(*args, **kwargs)
+2024-08-22 04:48:57 [!!]   File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/utils/idmapper/models.py", line 452, in save
+2024-08-22 04:48:57 [!!]     super().save(*args, **kwargs)
+2024-08-22 04:48:57 [!!]   File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/django/db/models/base.py", line 797, in save
+2024-08-22 04:48:57 [!!]     raise ValueError(
+2024-08-22 04:48:57 [!!] ValueError: The following fields do not exist in this model, are m2m fields, or are non-concrete fields: f, w, u, l, _, n, o, d, h, e, s
+2024-08-22 04:48:57 [EE] User input was: 'heal dario flesh=230'.
+2024-08-22 04:49:18 [..] Server disconnected from the portal.
+2024-08-22 04:49:18 [..] Main loop terminated.
+2024-08-22 04:49:18 [..] Server Shut Down.
+2024-08-22 04:49:20 [..] Loaded.
+2024-08-22 04:49:19 [..] Loading /home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/server/server.py...
+2024-08-22 04:49:20 [..] Loaded.
+2024-08-22 04:49:20 [..] twistd 23.10.0 (/home/mage/Documents/7thsea_dev/env/bin/python3 3.12.4) starting up.
+2024-08-22 04:49:20 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2024-08-22 04:49:20 [..] Webserver starting on 4005
+2024-08-22 04:49:20 [..] Server successfully reloaded.
+2024-08-22 04:49:20 [!!] Traceback (most recent call last):
+2024-08-22 04:49:20 [!!]   File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/commands/cmdhandler.py", line 629, in _run_command
+2024-08-22 04:49:20 [!!]     ret = cmd.func()
+2024-08-22 04:49:20 [!!]           ^^^^^^^^^^
+2024-08-22 04:49:20 [!!]   File "/home/mage/Documents/7thsea_dev/7thSea/7thSea/commands/admin/adminheal.py", line 81, in func
+2024-08-22 04:49:20 [!!]     caller.character_sheet.save(update_fields="flesh_wounds")
+2024-08-22 04:49:20 [!!]   File "/home/mage/Documents/7thsea_dev/7thSea/7thSea/world/character_sheet/models.py", line 408, in save
+2024-08-22 04:49:20 [!!]     super().save(*args, **kwargs)
+2024-08-22 04:49:20 [!!]   File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/utils/idmapper/models.py", line 452, in save
+2024-08-22 04:49:20 [!!]     super().save(*args, **kwargs)
+2024-08-22 04:49:20 [!!]   File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/django/db/models/base.py", line 797, in save
+2024-08-22 04:49:20 [!!]     raise ValueError(
+2024-08-22 04:49:20 [!!] ValueError: The following fields do not exist in this model, are m2m fields, or are non-concrete fields: l, d, n, w, s, f, o, h, _, e, u
+2024-08-22 04:49:20 [EE] User input was: 'heal dario flesh=230'.
+2024-08-22 04:50:29 [..] Server disconnected from the portal.
+2024-08-22 04:50:29 [..] Main loop terminated.
+2024-08-22 04:50:29 [..] Server Shut Down.
+2024-08-22 04:50:30 [..] Loaded.
+2024-08-22 04:50:29 [..] Loading /home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/server/server.py...
+2024-08-22 04:50:30 [..] Loaded.
+2024-08-22 04:50:30 [..] twistd 23.10.0 (/home/mage/Documents/7thsea_dev/env/bin/python3 3.12.4) starting up.
+2024-08-22 04:50:30 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2024-08-22 04:50:30 [..] Webserver starting on 4005
+2024-08-22 04:50:30 [..] Server successfully reloaded.
+2024-08-22 04:50:39 [!!] Traceback (most recent call last):
+2024-08-22 04:50:39 [!!]   File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/commands/cmdhandler.py", line 629, in _run_command
+2024-08-22 04:50:39 [!!]     ret = cmd.func()
+2024-08-22 04:50:39 [!!]           ^^^^^^^^^^
+2024-08-22 04:50:39 [!!]   File "/home/mage/Documents/7thsea_dev/7thSea/7thSea/commands/admin/adminheal.py", line 80, in func
+2024-08-22 04:50:39 [!!]     caller.character_sheet.heal_character(healed, "flesh")
+2024-08-22 04:50:39 [!!]   File "/home/mage/Documents/7thsea_dev/7thSea/7thSea/world/character_sheet/models.py", line 168, in heal_character
+2024-08-22 04:50:39 [!!]     caller.character_sheet.save(update_fields=["flesh_wounds"])
+2024-08-22 04:50:39 [!!]     ^^^^^^
+2024-08-22 04:50:39 [!!] NameError: name 'caller' is not defined
+2024-08-22 04:50:39 [EE] User input was: 'heal dario flesh=230'.
+2024-08-22 04:51:00 [..] Server disconnected from the portal.
+2024-08-22 04:51:00 [..] Main loop terminated.
+2024-08-22 04:51:00 [..] Server Shut Down.
+2024-08-22 04:51:01 [..] Loaded.
+2024-08-22 04:51:00 [..] Loading /home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/server/server.py...
+2024-08-22 04:51:01 [..] Loaded.
+2024-08-22 04:51:01 [..] twistd 23.10.0 (/home/mage/Documents/7thsea_dev/env/bin/python3 3.12.4) starting up.
+2024-08-22 04:51:01 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2024-08-22 04:51:01 [..] Webserver starting on 4005
+2024-08-22 04:51:01 [..] Server successfully reloaded.
+2024-08-22 04:51:02 [!!] Traceback (most recent call last):
+2024-08-22 04:51:02 [!!]   File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/commands/cmdhandler.py", line 629, in _run_command
+2024-08-22 04:51:02 [!!]     ret = cmd.func()
+2024-08-22 04:51:02 [!!]           ^^^^^^^^^^
+2024-08-22 04:51:02 [!!]   File "/home/mage/Documents/7thsea_dev/7thSea/7thSea/commands/admin/adminheal.py", line 80, in func
+2024-08-22 04:51:02 [!!]     caller.character_sheet.heal_character(healed, "flesh")
+2024-08-22 04:51:02 [!!]   File "/home/mage/Documents/7thsea_dev/7thSea/7thSea/world/character_sheet/models.py", line 168, in heal_character
+2024-08-22 04:51:02 [!!]     self.character_sheet.save(update_fields=["flesh_wounds"])
+2024-08-22 04:51:02 [!!]     ^^^^^^^^^^^^^^^^^^^^
+2024-08-22 04:51:02 [!!] AttributeError: 'CharacterSheet' object has no attribute 'character_sheet'
+2024-08-22 04:51:02 [EE] User input was: 'heal dario flesh=230'.
+2024-08-22 04:51:22 [..] Server disconnected from the portal.
+2024-08-22 04:51:22 [..] Main loop terminated.
+2024-08-22 04:51:22 [..] Server Shut Down.
+2024-08-22 04:51:23 [..] Loaded.
+2024-08-22 04:51:22 [..] Loading /home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/server/server.py...
+2024-08-22 04:51:23 [..] Loaded.
+2024-08-22 04:51:23 [..] twistd 23.10.0 (/home/mage/Documents/7thsea_dev/env/bin/python3 3.12.4) starting up.
+2024-08-22 04:51:23 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2024-08-22 04:51:23 [..] Webserver starting on 4005
+2024-08-22 04:51:23 [..] Server successfully reloaded.
+2024-08-22 04:51:43 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2024-08-22 04:51:46 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2024-08-22 04:51:48 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2024-08-22 04:51:51 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2024-08-22 04:51:51 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2024-08-22 04:51:57 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2024-08-22 04:51:59 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2024-08-22 04:52:01 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2024-08-22 04:52:04 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2024-08-22 04:52:11 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2024-08-22 04:53:56 [..] Server disconnected from the portal.
+2024-08-22 04:53:56 [..] Main loop terminated.
+2024-08-22 04:53:56 [..] Server Shut Down.
+2024-08-22 04:53:57 [..] Loaded.
+2024-08-22 04:53:56 [..] Loading /home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/server/server.py...
+2024-08-22 04:53:57 [..] Loaded.
+2024-08-22 04:53:57 [..] twistd 23.10.0 (/home/mage/Documents/7thsea_dev/env/bin/python3 3.12.4) starting up.
+2024-08-22 04:53:57 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2024-08-22 04:53:57 [..] Webserver starting on 4005
+2024-08-22 04:53:57 [..] Server successfully reloaded.
+2024-08-22 04:54:14 [..] Logged out: Prophet(account 1) 127.0.0.1 (0 sessions(s) remaining) (quit)
+2024-08-22 04:54:17 [..] Logged out: Jaime(account 2) 192.168.1.5 (0 sessions(s) remaining) (quit)
