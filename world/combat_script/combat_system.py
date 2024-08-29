@@ -1127,11 +1127,11 @@ class CombatScript(DefaultScript):
         if feint_roll > defense_roll:
             feint_margin = feint_roll - defense_roll
             if feint_margin >= 15:
-                attacker.ndb.special_effects.add('feinted_critical')
+                attacker.ndb.special_effects += ['feinted_critical']
                 self.msg_all(f"{attacker.name}'s Feint is brilliantly successful against {target.name}!")
                 self.msg_all(f"{attacker.name} gains a significant advantage on their next attack.")
             else:
-                attacker.ndb.special_effects.add('feinted')
+                attacker.ndb.special_effects += ['feinted']
                 self.msg_all(f"{attacker.name}'s Feint succeeds against {target.name}!")
                 self.msg_all(f"{attacker.name} gains an advantage on their next attack.")
             return True  # Feint was successful

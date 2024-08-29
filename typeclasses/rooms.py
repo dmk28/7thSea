@@ -13,6 +13,7 @@ import logging
 from commands.crafting.crafting_cmdset import CraftingCmdSet, ShipBuildCmdset
 from world.banking.rooms import BankRoom
 from evennia.utils.utils import inherits_from
+from world.combat_script.repartee_cmdset import ReparteeCmdSet
 
 logger = logging.getLogger("evennia")
 
@@ -157,7 +158,10 @@ class ChargenRoom(Room):
 # class UsedBankRoom(BankRoom):
 
 #     pass
-
+class SalonRoom(Room):
+    def at_object_creation(self):
+        super().at_object_creation()
+        self.cmdset.add(ReparteeCmdSet, persistent=True)
                 
 class ShipyardRoom(Room):
     def at_object_creation(self):

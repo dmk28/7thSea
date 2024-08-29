@@ -411,6 +411,11 @@ class Character(ObjectParent, DefaultCharacter):
         self.db.total_armor = max(0, int(value))  # Ensure it's a non-negative integer
         self.update_model()
 
+    def is_approved(self):
+        """Check if the character is approved."""
+        return self.db.approved
+
+
     def get_armor(self):
         """Get the character's armor value."""
         return getattr(self.db, 'armor', 0)  # Default to 0 if not set
