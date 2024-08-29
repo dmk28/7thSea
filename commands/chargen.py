@@ -41,11 +41,11 @@ def ensure_chargen_data(caller):
     return sheet
 
 def start_chargen(caller):
-    sheet = ensure_chargen_data(caller)
-    
+    sheet, created = CharacterSheet.objects.get_or_create(db_object=caller)
+
     if not sheet.approved:
-        # Reset the character sheet
-        sheet.hero_points = 80
+        if created or sheet.hero_points is None:
+            sheet.hero_points = 80
         sheet.brawn = sheet.finesse = sheet.wits = sheet.resolve = sheet.panache = 1
         sheet.nationality = ""
         sheet.is_sorcerer = False
