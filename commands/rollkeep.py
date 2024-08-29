@@ -54,8 +54,8 @@ class CmdRollKeep(Command):
             total = sum(kept_rolls)
 
             self.broadcast(f"{caller.name} rolls {trait.capitalize()} only: {num_dice}k{num_keep}")
-            caller.msg(f"Rolls: {rolls}")
-            caller.msg(f"Kept Rolls: {kept_rolls}")
+            caller.msg(f"{caller.name} rolls {trait.capitalize()} only: {num_dice}k{num_keep}")
+            caller.msg(f"Total: {total}")
             self.broadcast(f"Total: {total}")
 
             # Check for raises
@@ -101,8 +101,10 @@ class CmdRollKeep(Command):
             total = sum(kept_rolls)
 
             self.broadcast(f"{caller.name} rolls {trait.capitalize()} + {knack_input}: {num_dice}k{num_keep}")
+            caller.msg(f"{caller.name} rolls {trait.capitalize()} + {knack_input}: {num_dice}k{num_keep}")
             caller.msg(f"Rolls: {rolls}")
             caller.msg(f"Kept Rolls: {kept_rolls}")
+            caller.msg(f"Total: {total}")
             self.broadcast(f"Total: {total}")
 
             # Check for raises
@@ -115,6 +117,7 @@ class CmdRollKeep(Command):
                 success = total >= target_number
                 great_success = total >= (target_number + 10)
                 result = "|gGreat Success!|n" if great_success else "|GSuccess!|n" if success else "|rFailure|n"
+                caller.msg(f"Result: {result}")
                 self.broadcast(f"Result: {result}")
                 caller.msg(f"Target Number was: |w{target_number}|n")
 
