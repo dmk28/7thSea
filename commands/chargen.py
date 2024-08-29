@@ -37,7 +37,7 @@ def ensure_chargen_data(caller):
     sheet, _ = CharacterSheet.objects.get_or_create(db_object=caller)
     if not sheet.hero_points:
         sheet.hero_points = 80
-        sheet.save()
+        sheet.save(update_fields=["hero_points"])
     return sheet
 
 def start_chargen(caller):
@@ -494,8 +494,8 @@ def select_skills(caller):
 def set_skill_package(caller, raw_string):
     if raw_string.lower().strip() == 'done':
         return buy_additional_knacks(caller)
-
-    parts = raw_string.strip().split(sep=" ",maxsplit=1)
+# further retouches
+    parts = raw_string.strip().split(sep=" ", maxsplit=1)
     if len(parts) != 2:
         caller.msg("Invalid input. Please enter the category and package name (e.g., 'Martial Fencing') or 'done' to finish.")
         return select_skills(caller)
@@ -503,21 +503,29 @@ def set_skill_package(caller, raw_string):
     category, package = parts[0].capitalize(), parts[1].strip().capitalize()
 
     if category in PACKAGES and package in PACKAGES[category]:
-        process_skill_package(caller, package, category)
-        return select_skills(caller)
+        if process_skill_package(caller, package, category):
+            return select_skills(caller)
+        else:
+            # If process_skill_package returns False, we stay on the same menu
+            return select_skills(caller)
     else:
         caller.msg("Invalid package. Please enter a valid category and package name or 'done' to finish selecting packages.")
-        caller.msg(f"Debug: {parts}")
         return select_skills(caller)
 
 def process_skill_package(caller, package, category, free=False):
     sheet = ensure_chargen_data(caller)
     if category in PACKAGES and package in PACKAGES[category]:
         details = PACKAGES[category][package]
+        
+        # Check if the skill already exists for this character
+        if sheet.skills.filter(name=package, category=category).exists():
+            caller.msg(f"You have already purchased the {package} package.")
+            return False
+
         if free or sheet.hero_points >= details["cost"]:
             if not free:
                 sheet.hero_points -= details["cost"]
-            
+
             skill, _ = Skill.objects.get_or_create(name=package, category=category)
             sheet.skills.add(skill)
 
@@ -537,16 +545,19 @@ def process_skill_package(caller, package, category, free=False):
                         knack=knack,
                         defaults={'value': adv_value}
                     )
-            
+
             sheet.save()
             if not free:
                 caller.msg(f"You have chosen the {package} package. You have {sheet.hero_points} hero points remaining.")
             else:
                 caller.msg(f"You have received the {package} package for free as part of your duelist school curriculum.")
+            return True
         else:
             caller.msg("You don't have enough hero points for this package.")
+            return False
     else:
         caller.msg(f"Error: Package {package} not found in category {category}.")
+        return False
 
 
 def process_knack(knack):
