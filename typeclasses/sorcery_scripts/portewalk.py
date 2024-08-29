@@ -5,7 +5,7 @@ class PorteWalkEffect(Script):
     def at_script_creation(self):
         self.key = "porte_walk_effect"
         self.desc = "Increases passive defense using Porte Walk"
-        self.interval = 3600 # 5 minutes, adjust as needed
+        self.interval = 300  # 5 minutes, adjust as needed
         self.persistent = False
 
     def at_start(self):
@@ -14,17 +14,14 @@ class PorteWalkEffect(Script):
         if not character:
             self.stop()
             return
-        
+
         walk_rank = self.attributes.get('walk_rank', 0)
         defense_increase = 5 * walk_rank
-        
-        # Store the original passive defense
-        character.db.total_armor = defense_increase
 
         # Increase the passive defense
-        character.db.special_effects += ['portewalk']
+        character.db.total_armor += defense_increase
+        character.db.special_effects.append('portewalk')
         character.db.porte_walk_active = True
-
         character.msg(f"Your passive defense has been increased by {defense_increase}.")
 
     def at_repeat(self):
@@ -37,6 +34,9 @@ class PorteWalkEffect(Script):
         """Remove the Porte Walk effect."""
         character = self.obj
         if character and character.db.porte_walk_active:
+            walk_rank = self.attributes.get('walk_rank', 0)
+            defense_increase = 5 * walk_rank
+            
             # Restore the original passive defense
             character.db.special_effects.remove('portewalk')
             character.db.total_armor -= defense_increase
