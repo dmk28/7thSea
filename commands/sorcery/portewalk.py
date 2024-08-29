@@ -1,6 +1,5 @@
 from evennia import Command
 from evennia import create_script
-
 class CmdPorteWalk(Command):
     """
     Activate the Porte Walk sorcery effect to increase your passive defense.
@@ -16,12 +15,12 @@ class CmdPorteWalk(Command):
 
     def func(self):
         caller = self.caller
-
+        character_sheet = caller.character_sheet
         if not caller.db.is_sorcerer or "Porte" not in caller.db.sorcery.get('name', ''):
             caller.msg("You don't know how to use Porte sorcery.")
             return
 
-        walk_rank = caller.db.sorcery_knacks.get('Walk', 0)
+        walk_rank = character_sheet.get_knack_value('Walk')
 
         if walk_rank == 0:
             caller.msg("You haven't learned the Walk knack yet.")
