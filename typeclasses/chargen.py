@@ -52,6 +52,8 @@ PACKAGES = {
                 "Diplomacy": 0,
                 "Leadership": 0,
                 "Logistics": 0,
+                "Incitation": 0,
+                "Gunnery": 0,
             }
         },
         "Knife": {
@@ -1020,7 +1022,24 @@ SWORDSMAN_SCHOOLS = {
                 }
                 
             }
-        }
+        },
+
+        "Bernoulli": {
+            "country": "Vodacce",
+            "requirements": {
+                "Fencing",
+                "Pugilism",
+            },
+            "knacks": {
+                "Bernoulli": {
+                    "Beat (Fencing)": 1,
+                    "Corps-a-Corps": 1,
+                    "Lunge (Fencing)": 1,
+                    "Exploit Weakness (Bernoulli)": 1,
+                }
+             
+            }
+        },
         
         }
     
@@ -1131,7 +1150,7 @@ ADVANTAGES = {
 
         "Legendary Trait": {
             "cost": 3,
-            "descriptioon": "One of your traits can go up to 6."
+            "description": "One of your traits can go up to 6."
         },
 
         "Linguist": {

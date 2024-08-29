@@ -1,33 +1,28 @@
 from evennia import Command
 from evennia.utils.search import object_search
 from world.character_sheet.models import CharacterSheet
+
 class CmdHeal(Command):
     """
     Heal a character's wounds.
-
     Usage:
       heal <character> [flesh|dramatic]=<amount>
-
     Examples:
       heal Bob flesh=5
       heal Jane dramatic=1
-      heal John=10  (heals 10 flesh wounds by default)
-
+      heal John=10 (heals 10 flesh wounds by default)
     This command allows staff to heal a character's Flesh Wounds or Dramatic Wounds.
     If no wound type is specified, it defaults to healing Flesh Wounds.
     """
-
     key = "heal"
     locks = "cmd:perm(Wizards)"
     help_category = "Admin"
 
     def func(self):
         caller = self.caller
-
         if not self.args:
             caller.msg("Usage: heal <character> [flesh|dramatic]=<amount>")
             return
-
         if "=" not in self.args:
             caller.msg("You must specify an amount to heal.")
             return
@@ -53,8 +48,8 @@ class CmdHeal(Command):
                 caller.msg("Amount to heal must be a positive number.")
                 return
             elif amount > 500:
-                caller.msg("Not allowed.")
-                return 
+                caller.msg("Not allowed to heal more than 500 wounds at once.")
+                return
         except ValueError:
             caller.msg("Amount to heal must be a number.")
             return
@@ -66,36 +61,36 @@ class CmdHeal(Command):
             return
         target = target[0]
 
+        # Get the character sheet
+        try:
+            sheet = target.character_sheet
+        except AttributeError:
+            caller.msg(f"{target.name} doesn't have a character sheet.")
+            return
+
         # Perform the healing
         if wound_type == "flesh":
-            current_wounds = target.character_sheet.flesh_wounds
-            if current_wounds is None:
-                caller.msg(f"{target.name} has no Flesh Wounds attribute.")
+            current_wounds = sheet.flesh_wounds
+            if current_wounds == 0:
+                caller.msg(f"{target.name} doesn't have any Flesh Wounds to heal.")
                 return
-            elif current_wounds == 0:
-                caller.msg(f"{target.name} can't be healed for Flesh Wounds")
-                return
-            else:
-                healed = min(amount, current_wounds)
-                caller.character_sheet.heal_character(healed, "flesh")
-                caller.msg(f"Healed {healed} Flesh Wounds for {target.name}.")
-                target.msg(f"You have been healed for {healed} Flesh Wounds.")
+            healed = min(amount, current_wounds)
+            sheet.heal_character(healed, "flesh")
+            caller.msg(f"Healed {healed} Flesh Wounds for {target.name}.")
+            target.msg(f"You have been healed for {healed} Flesh Wounds.")
         else:  # dramatic wounds
-            current_wounds = target.character_sheet.dramatic_wounds
-            if current_wounds is None:
-                caller.msg(f"{target.name} has no Dramatic Wounds attribute.")
+            current_wounds = sheet.dramatic_wounds
+            if current_wounds == 0:
+                caller.msg(f"{target.name} doesn't have any Dramatic Wounds to heal.")
                 return
-            elif current_wounds == 0:
-                caller.msg(f"{target.name} cannot be healed, he has no Dramatic Wounds.")
-                return
-            else:
-                healed = min(amount, current_wounds)
-                caller.character_sheet.heal_character(healed, "dramatic")
-                if target.db.unconscious:
-                    target.db.unconscious = False
-                    target.msg(f"|gYou snap out of unconsciousness.|n")
-                caller.msg(f"Healed {healed} Dramatic Wounds for {target.name}.")
-                target.msg(f"You have been healed for {healed} Dramatic Wounds.")
+            healed = min(amount, current_wounds)
+            sheet.heal_character(healed, "dramatic")
+            caller.msg(f"Healed {healed} Dramatic Wounds for {target.name}.")
+            target.msg(f"You have been healed for {healed} Dramatic Wounds.")
+            if target.db.unconscious:
+                target.db.unconscious = False
+                target.msg("|gYou snap out of unconsciousness.|n")
+                caller.msg(f"{target.name} has regained consciousness.")
 
         # Inform the room
-       # target.location.msg_contents(f"{target.name} has been healed.", exclude=[caller, target])
+        target.location.msg_contents(f"{target.name} has been healed.", exclude=[caller, target])

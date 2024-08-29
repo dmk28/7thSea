@@ -110,7 +110,7 @@ class CharacterSheet(SharedMemoryModel):
     flesh_wounds = models.PositiveIntegerField(default=0)
     dramatic_wounds = models.PositiveIntegerField(default=0)
     special_effects = models.JSONField(default=list, blank=True)
-    
+    reputation = models.IntegerField(default=5)
     nationality = models.CharField(max_length=100, blank=True)
     is_sorcerer = models.BooleanField(default=False)
     duelist_style = models.CharField(max_length=100, blank=True)
@@ -168,7 +168,46 @@ class CharacterSheet(SharedMemoryModel):
             self.save(update_fields=["flesh_wounds"])
         else:
             return 0
+
+    def hurt_character(self, value, type):
+        if type == "dramatic":
+            self.dramatic_wounds += value
+            self.save(update_fields=["dramatic_wounds"])
+        elif type == "flesh":
+            self.flesh_wounds += value
+            self.save(update_fields=["flesh_wounds"])
         
+    def get_sorcery_knack_value(self, knack_name):
+        for sorcery in self.sorceries.all():
+            knack = sorcery.knacks.filter(name=knack_name).first()
+            if knack:
+                knack_value = KnackValue.objects.filter(
+                    character_sheet=self,
+                    knack=knack
+                ).first()
+                if knack_value:
+                    return knack_value.value
+        return 0
+
+    def hurt_reputation(self, value, type):
+        if type == "scandalous" and self.reputation > 0:
+            self.reputation -= value
+            self.save(update_fields=["reputation"])
+        elif type == "embarrassment" and self.reputation > 0:
+            self.reputation -= round(value // 2)
+            self.save(update_fields=["reputation"])
+        else:
+            return 0
+
+    def gain_reputation(self, value, type):
+        if type == "commendation":
+            self.reputation += value * 2
+            self.save(update_fields=["reputation"])
+        elif type == "praise":
+            self.reputation += value
+            self.save(update_fields=["reputation"])
+        else:
+            return 0
 
     def update_swordsman_knacks(self, swordsman_knacks_data):
         # Clear existing swordsman schools
@@ -282,7 +321,6 @@ class CharacterSheet(SharedMemoryModel):
         char.db.eye_color = self.eye_color
         char.db.hair_color = self.hair_color
         char.db.skin_hue = self.skin_hue
-        
         # Update other fields
         char.db.is_sorcerer = self.is_sorcerer
         char.db.duelist_style = self.duelist_style
@@ -291,6 +329,9 @@ class CharacterSheet(SharedMemoryModel):
         # Update skills
         char.db.skills = self.get_skills_by_category()
         
+        #update money
+        char.db.money = {"guilders": self.money_guilders, "doubloons": self.money_doubloons}
+
         # Update advantages
         char.db.advantages = [
             {
@@ -337,6 +378,8 @@ class CharacterSheet(SharedMemoryModel):
             return knack_value.value
         except KnackValue.DoesNotExist:
             return 0
+
+            
     def set_knack_value(self, knack_name, value):
         knack, _ = Knack.objects.get_or_create(name=knack_name)
         knack_value, _ = KnackValue.objects.get_or_create(character_sheet=self, knack=knack)

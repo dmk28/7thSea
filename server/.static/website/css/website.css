@@ -3,7 +3,7 @@
 
 /* Old site styles, left in just in case.
    Shouldn't break anything! */
-@media (max-width: 570px) {
+   @media (max-width: 570px) {
     .oneThird {
         width: 100%;
         border-left: none;
@@ -49,27 +49,31 @@ html {
 body {
   /* Margin bottom by footer height plus padding against main content*/
   margin-bottom: 92px;
-  background-color: #eee;
+  background-color: #e8dcb8 !important;
 }
 
 .navbar-brand-logo {
-    height: 64px;
-    width: 64px;
+    height: 50px;
+    width: 50px;
 }
+
 
 /* Default Colors */
 
 .navbar {
   background-color: #3d5c7a;
+  background:linear-gradient(to bottom, #28104E 5%, #6237A0 100%);
 }
 
 .footer {
+  display:none;
+  background:linear-gradient(to bottom, #28104E 5%, #6237A0 100%);
   position: absolute;
   bottom: 0;
   width: 100%;
   /* Set the fixed height of the footer here */
   height: 60px;
-  line-height: 60px; /* Vertically center the text there */
+  line-height: 20px; /* Vertically center the text there */
   background-color: #3d5c7a;
 }
 
@@ -77,25 +81,27 @@ body {
 /* Fancy play - button */
 
 a.playbutton {
-	box-shadow: 0px 1px 10px 5px #9fb4f2;
-	background:linear-gradient(to bottom, #7892c2 5%, #476e9e 100%);
-	background-color:#7892c2;
-	border-radius:12px;
-	border:1px solid #4e6096;
-	display:inline-block;
-	cursor:pointer;
-	color:#ffffff;
-	font-family:Arial;
-	font-size:19px;
-	padding:14px 37px;
-	text-decoration:none;
-	text-shadow:0px 1px 0px #283966;
+box-shadow: 0px 1px 10px 5px #9fb4f2;
+background:linear-gradient(to bottom, #ff0038 5%, #660000
+ 100%);
+background-color:#ff0038;
+border-radius:12px;
+border:1px solid #4e6096;
+display:inline-block;
+cursor:pointer;
+color:#ffffff;
+font-family:Roboto;
+font-size:19px;
+padding:14px 37px;
+text-decoration:none;
+text-shadow:0px 1px 0px #283966;
 }
 a.playbutton:hover {
-	background:linear-gradient(to bottom, #476e9e 5%, #7892c2 100%);
-	background-color:#476e9e;
+background:linear-gradient(to bottom, #476e9e 5%, #7892c2 100%);
+background-color:#ff0038;
 }
 a.playbutton:active {
-	position:relative;
-	top:1px;
+position:relative;
+top:1px;
 }
+

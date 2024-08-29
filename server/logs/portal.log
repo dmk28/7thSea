@@ -3776,3 +3776,2227 @@
 |Portal| 2024-08-22 04:53:56 [..] Portal starting server ... 
 |Portal| 2024-08-22 04:55:30 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=56620)
 |Portal| 2024-08-22 04:58:30 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=37000)
+|Portal| 2024-08-22 05:01:30 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=40258)
+|Portal| 2024-08-22 05:02:39 [..] Received SIGTERM, shutting down.
+|Portal| 2024-08-22 05:02:39 [..] (TCP Port 4001 Closed)
+|Portal| 2024-08-22 05:02:39 [..] (TCP Port 4002 Closed)
+|Portal| 2024-08-22 05:02:39 [..] (TCP Port 4000 Closed)
+|Portal| 2024-08-22 05:02:39 [..] (TCP Port 4006 Closed)
+|Portal| 2024-08-22 05:02:39 [..] Main loop terminated.
+|Portal| 2024-08-22 05:02:39 [..] Server Shut Down.
+|Portal| 2024-08-23 01:15:15 [..] Loaded.
+|Portal| 2024-08-23 01:15:13 [..] Loading /home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/server/portal/portal.py...
+|Portal| 2024-08-23 01:15:15 [..] Loaded.
+|Portal| 2024-08-23 01:15:15 [..] twistd 23.10.0 (/home/mage/Documents/7thsea_dev/env/bin/python3 3.12.4) starting up.
+|Portal| 2024-08-23 01:15:15 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+|Portal| 2024-08-23 01:15:15 [..] AMP starting on 4006
+|Portal| 2024-08-23 01:15:15 [..] Telnet starting on 4000
+|Portal| 2024-08-23 01:15:15 [..] Websocket starting on 4002
+|Portal| 2024-08-23 01:15:15 [..] Webserver-proxy starting on 4001
+|Portal| 2024-08-23 01:15:15 [..] Portal starting server ... 
+|Portal| 2024-08-23 01:16:24 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=40232)
+|Portal| 2024-08-23 01:16:24 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=40240)
+|Portal| 2024-08-23 01:16:24 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=35504)
+|Portal| 2024-08-23 01:16:24 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=35494)
+|Portal| 2024-08-23 01:16:24 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=40218)
+|Portal| 2024-08-23 01:16:25 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=40220)
+|Portal| 2024-08-23 01:24:36 [..] Portal starting server ... 
+|Portal| 2024-08-23 01:24:54 [!!] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	--- <exception caught here> ---
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 482, in _doReadOrWrite
+	    why = selectable.doRead()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 248, in doRead
+	    return self._dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 253, in _dataReceived
+	    rval = self.protocol.dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/protocols/basic.py", line 555, in dataReceived
+	    why = self.rawDataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 735, in rawDataReceived
+	    self.handleResponseEnd()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/proxy.py", line 82, in handleResponseEnd
+	    self.father.finish()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/server.py", line 277, in finish
+	    return http.Request.finish(self)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 1149, in finish
+	    raise RuntimeError(
+	builtins.RuntimeError: Request.finish called on a request after its connection was lost; use Request.notifyFinish to keep track of this.
+	
+|Portal| 2024-08-23 01:24:56 [!!] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	--- <exception caught here> ---
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 482, in _doReadOrWrite
+	    why = selectable.doRead()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 248, in doRead
+	    return self._dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 253, in _dataReceived
+	    rval = self.protocol.dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/protocols/basic.py", line 555, in dataReceived
+	    why = self.rawDataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 735, in rawDataReceived
+	    self.handleResponseEnd()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/proxy.py", line 82, in handleResponseEnd
+	    self.father.finish()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/server.py", line 277, in finish
+	    return http.Request.finish(self)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 1149, in finish
+	    raise RuntimeError(
+	builtins.RuntimeError: Request.finish called on a request after its connection was lost; use Request.notifyFinish to keep track of this.
+	
+|Portal| 2024-08-23 01:25:58 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=53072)
+|Portal| 2024-08-23 01:25:58 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=53038)
+|Portal| 2024-08-23 01:25:58 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=53078)
+|Portal| 2024-08-23 01:26:08 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=53054)
+|Portal| 2024-08-23 01:27:29 [..] Portal starting server ... 
+|Portal| 2024-08-23 01:28:10 [..] Portal starting server ... 
+|Portal| 2024-08-23 01:31:09 [..] Portal starting server ... 
+|Portal| 2024-08-23 01:38:00 [..] Portal starting server ... 
+|Portal| 2024-08-23 01:39:36 [..] Portal starting server ... 
+|Portal| 2024-08-23 01:41:57 [..] Portal starting server ... 
+|Portal| 2024-08-23 01:57:14 [!!] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	--- <exception caught here> ---
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 482, in _doReadOrWrite
+	    why = selectable.doRead()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 248, in doRead
+	    return self._dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 253, in _dataReceived
+	    rval = self.protocol.dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/protocols/basic.py", line 555, in dataReceived
+	    why = self.rawDataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 735, in rawDataReceived
+	    self.handleResponseEnd()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/proxy.py", line 82, in handleResponseEnd
+	    self.father.finish()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/server.py", line 277, in finish
+	    return http.Request.finish(self)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 1149, in finish
+	    raise RuntimeError(
+	builtins.RuntimeError: Request.finish called on a request after its connection was lost; use Request.notifyFinish to keep track of this.
+	
+|Portal| 2024-08-23 01:58:14 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=59132)
+|Portal| 2024-08-23 01:58:14 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=59144)
+|Portal| 2024-08-23 02:05:59 [!!] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	--- <exception caught here> ---
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 482, in _doReadOrWrite
+	    why = selectable.doRead()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 248, in doRead
+	    return self._dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 253, in _dataReceived
+	    rval = self.protocol.dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/protocols/basic.py", line 555, in dataReceived
+	    why = self.rawDataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 735, in rawDataReceived
+	    self.handleResponseEnd()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/proxy.py", line 82, in handleResponseEnd
+	    self.father.finish()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/server.py", line 277, in finish
+	    return http.Request.finish(self)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 1149, in finish
+	    raise RuntimeError(
+	builtins.RuntimeError: Request.finish called on a request after its connection was lost; use Request.notifyFinish to keep track of this.
+	
+|Portal| 2024-08-23 02:07:00 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=59862)
+|Portal| 2024-08-23 02:07:01 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=59870)
+|Portal| 2024-08-23 02:19:16 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=46812)
+|Portal| 2024-08-23 02:49:39 [..] Portal starting server ... 
+|Portal| 2024-08-23 02:50:45 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=50016)
+|Portal| 2024-08-23 02:51:29 [..] Portal starting server ... 
+|Portal| 2024-08-23 02:52:32 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=49292)
+|Portal| 2024-08-23 02:53:33 [..] (TCP Port 4001 Closed)
+|Portal| 2024-08-23 02:53:33 [..] (TCP Port 4002 Closed)
+|Portal| 2024-08-23 02:53:33 [..] (TCP Port 4000 Closed)
+|Portal| 2024-08-23 02:53:33 [..] (TCP Port 4006 Closed)
+|Portal| 2024-08-23 02:53:33 [..] Main loop terminated.
+|Portal| 2024-08-23 02:53:33 [..] Server Shut Down.
+|Portal| 2024-08-23 02:53:38 [..] Loaded.
+|Portal| 2024-08-23 02:53:37 [..] Loading /home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/server/portal/portal.py...
+|Portal| 2024-08-23 02:53:38 [..] Loaded.
+|Portal| 2024-08-23 02:53:38 [..] twistd 23.10.0 (/home/mage/Documents/7thsea_dev/env/bin/python3 3.12.4) starting up.
+|Portal| 2024-08-23 02:53:38 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+|Portal| 2024-08-23 02:53:38 [..] AMP starting on 4006
+|Portal| 2024-08-23 02:53:38 [..] Telnet starting on 4000
+|Portal| 2024-08-23 02:53:38 [..] Websocket starting on 4002
+|Portal| 2024-08-23 02:53:38 [..] Webserver-proxy starting on 4001
+|Portal| 2024-08-23 02:53:38 [..] Portal starting server ... 
+|Portal| 2024-08-23 02:54:45 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=51276)
+|Portal| 2024-08-23 03:03:37 [..] Portal starting server ... 
+|Portal| 2024-08-23 03:04:53 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=55476)
+|Portal| 2024-08-23 03:12:02 [..] Portal starting server ... 
+|Portal| 2024-08-23 03:13:08 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=47622)
+|Portal| 2024-08-23 03:13:43 [..] Portal starting server ... 
+|Portal| 2024-08-23 03:14:24 [..] Portal starting server ... 
+|Portal| 2024-08-23 03:14:58 [..] Portal starting server ... 
+|Portal| 2024-08-23 03:15:27 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=55938)
+|Portal| 2024-08-23 03:17:10 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=33808)
+|Portal| 2024-08-23 03:17:27 [..] Portal starting server ... 
+|Portal| 2024-08-23 03:18:34 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=54200)
+|Portal| 2024-08-23 03:25:04 [..] Portal starting server ... 
+|Portal| 2024-08-23 03:26:21 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=52564)
+|Portal| 2024-08-23 03:26:21 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=52566)
+|Portal| 2024-08-23 03:26:43 [..] Portal starting server ... 
+|Portal| 2024-08-23 03:27:46 [..] Portal starting server ... 
+|Portal| 2024-08-23 03:28:22 [..] Portal starting server ... 
+|Portal| 2024-08-23 03:28:30 [..] Portal starting server ... 
+|Portal| 2024-08-23 03:28:39 [..] Portal starting server ... 
+|Portal| 2024-08-23 03:29:17 [..] Portal starting server ... 
+|Portal| 2024-08-23 03:29:44 [..] Portal starting server ... 
+|Portal| 2024-08-23 03:30:01 [..] Portal starting server ... 
+|Portal| 2024-08-23 03:30:17 [!!] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	--- <exception caught here> ---
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 482, in _doReadOrWrite
+	    why = selectable.doRead()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 248, in doRead
+	    return self._dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 253, in _dataReceived
+	    rval = self.protocol.dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/protocols/basic.py", line 555, in dataReceived
+	    why = self.rawDataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 735, in rawDataReceived
+	    self.handleResponseEnd()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/proxy.py", line 82, in handleResponseEnd
+	    self.father.finish()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/server.py", line 277, in finish
+	    return http.Request.finish(self)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 1149, in finish
+	    raise RuntimeError(
+	builtins.RuntimeError: Request.finish called on a request after its connection was lost; use Request.notifyFinish to keep track of this.
+	
+|Portal| 2024-08-23 03:30:47 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=33588)
+|Portal| 2024-08-23 03:31:01 [..] Portal starting server ... 
+|Portal| 2024-08-23 03:32:04 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=57472)
+|Portal| 2024-08-23 03:32:04 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=57484)
+|Portal| 2024-08-23 03:33:41 [..] Portal starting server ... 
+|Portal| 2024-08-23 03:33:55 [..] Portal starting server ... 
+|Portal| 2024-08-23 03:34:10 [..] Portal starting server ... 
+|Portal| 2024-08-23 03:35:21 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=58290)
+|Portal| 2024-08-23 03:35:22 [..] Portal starting server ... 
+|Portal| 2024-08-23 03:35:28 [..] Portal starting server ... 
+|Portal| 2024-08-23 03:36:07 [..] Portal starting server ... 
+|Portal| 2024-08-23 03:36:26 [..] Portal starting server ... 
+|Portal| 2024-08-23 03:37:12 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=41140)
+|Portal| 2024-08-23 03:38:26 [..] Portal starting server ... 
+|Portal| 2024-08-23 03:40:01 [..] Portal starting server ... 
+|Portal| 2024-08-23 03:41:09 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=53408)
+|Portal| 2024-08-23 03:42:43 [..] Portal starting server ... 
+|Portal| 2024-08-23 03:46:11 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=35928)
+|Portal| 2024-08-23 03:47:10 [..] Portal starting server ... 
+|Portal| 2024-08-23 03:47:34 [..] Portal starting server ... 
+|Portal| 2024-08-23 03:48:09 [..] (TCP Port 4001 Closed)
+|Portal| 2024-08-23 03:48:09 [..] (TCP Port 4002 Closed)
+|Portal| 2024-08-23 03:48:09 [..] (TCP Port 4000 Closed)
+|Portal| 2024-08-23 03:48:09 [..] (TCP Port 4006 Closed)
+|Portal| 2024-08-23 03:48:09 [..] Main loop terminated.
+|Portal| 2024-08-23 03:48:09 [..] Server Shut Down.
+|Portal| 2024-08-23 03:48:14 [..] Loaded.
+|Portal| 2024-08-23 03:48:13 [..] Loading /home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/server/portal/portal.py...
+|Portal| 2024-08-23 03:48:14 [..] Loaded.
+|Portal| 2024-08-23 03:48:14 [..] twistd 23.10.0 (/home/mage/Documents/7thsea_dev/env/bin/python3 3.12.4) starting up.
+|Portal| 2024-08-23 03:48:14 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+|Portal| 2024-08-23 03:48:15 [..] AMP starting on 4006
+|Portal| 2024-08-23 03:48:15 [..] Telnet starting on 4000
+|Portal| 2024-08-23 03:48:15 [..] Websocket starting on 4002
+|Portal| 2024-08-23 03:48:15 [..] Webserver-proxy starting on 4001
+|Portal| 2024-08-23 03:48:15 [..] Portal starting server ... 
+|Portal| 2024-08-23 03:49:37 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=39030)
+|Portal| 2024-08-23 03:50:40 [..] Portal starting server ... 
+|Portal| 2024-08-23 03:50:43 [!!] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/application/app.py", line 304, in runReactorWithLogging
+	    reactor.run()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/base.py", line 695, in run
+	    self.mainLoop()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/base.py", line 708, in mainLoop
+	    self.doIteration(t)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/epollreactor.py", line 244, in doPoll
+	    log.callWithLogger(selectable, _drdw, selectable, fd, event)
+	--- <exception caught here> ---
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 495, in _doReadOrWrite
+	    self._disconnectSelectable(selectable, why, inRead)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 107, in _disconnectSelectable
+	    selectable.readConnectionLost(f)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 309, in readConnectionLost
+	    self.connectionLost(reason)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 508, in connectionLost
+	    self._commonConnection.connectionLost(self, reason)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 326, in connectionLost
+	    protocol.connectionLost(reason)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 688, in connectionLost
+	    self.handleResponseEnd()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/proxy.py", line 82, in handleResponseEnd
+	    self.father.finish()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/server.py", line 277, in finish
+	    return http.Request.finish(self)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 1149, in finish
+	    raise RuntimeError(
+	builtins.RuntimeError: Request.finish called on a request after its connection was lost; use Request.notifyFinish to keep track of this.
+	
+|Portal| 2024-08-23 03:50:54 [..] Portal starting server ... 
+|Portal| 2024-08-23 03:51:22 [..] Portal starting server ... 
+|Portal| 2024-08-23 03:52:25 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=55626)
+|Portal| 2024-08-23 03:52:25 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=55632)
+|Portal| 2024-08-23 04:02:17 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=47590)
+|Portal| 2024-08-23 04:06:45 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=58856)
+|Portal| 2024-08-23 04:06:45 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=35298)
+|Portal| 2024-08-23 04:30:29 [..] Portal starting server ... 
+|Portal| 2024-08-23 04:31:43 [..] Portal starting server ... 
+|Portal| 2024-08-23 04:32:45 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=46732)
+|Portal| 2024-08-23 04:33:25 [..] Portal starting server ... 
+|Portal| 2024-08-23 04:33:57 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=53484)
+|Portal| 2024-08-23 05:13:01 [..] Received SIGTERM, shutting down.
+|Portal| 2024-08-23 05:13:01 [..] (TCP Port 4001 Closed)
+|Portal| 2024-08-23 05:13:01 [..] (TCP Port 4002 Closed)
+|Portal| 2024-08-23 05:13:01 [..] (TCP Port 4000 Closed)
+|Portal| 2024-08-23 05:13:01 [..] (TCP Port 4006 Closed)
+|Portal| 2024-08-23 05:13:01 [..] Main loop terminated.
+|Portal| 2024-08-23 05:13:01 [..] Server Shut Down.
+|Portal| 2024-08-23 16:26:12 [..] Loaded.
+|Portal| 2024-08-23 16:26:11 [..] Loading /home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/server/portal/portal.py...
+|Portal| 2024-08-23 16:26:12 [..] Loaded.
+|Portal| 2024-08-23 16:26:12 [..] twistd 23.10.0 (/home/mage/Documents/7thsea_dev/env/bin/python3 3.12.4) starting up.
+|Portal| 2024-08-23 16:26:12 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+|Portal| 2024-08-23 16:26:12 [..] AMP starting on 4006
+|Portal| 2024-08-23 16:26:12 [..] Telnet starting on 4000
+|Portal| 2024-08-23 16:26:12 [..] Websocket starting on 4002
+|Portal| 2024-08-23 16:26:12 [..] Webserver-proxy starting on 4001
+|Portal| 2024-08-23 16:26:12 [..] Portal starting server ... 
+|Portal| 2024-08-23 16:27:16 [..] Portal starting server ... 
+|Portal| 2024-08-23 16:55:31 [..] Portal starting server ... 
+|Portal| 2024-08-23 16:55:39 [!!] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	--- <exception caught here> ---
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 482, in _doReadOrWrite
+	    why = selectable.doRead()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 248, in doRead
+	    return self._dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 253, in _dataReceived
+	    rval = self.protocol.dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/protocols/basic.py", line 555, in dataReceived
+	    why = self.rawDataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 735, in rawDataReceived
+	    self.handleResponseEnd()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/proxy.py", line 82, in handleResponseEnd
+	    self.father.finish()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/server.py", line 277, in finish
+	    return http.Request.finish(self)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 1149, in finish
+	    raise RuntimeError(
+	builtins.RuntimeError: Request.finish called on a request after its connection was lost; use Request.notifyFinish to keep track of this.
+	
+|Portal| 2024-08-23 16:56:07 [..] Portal starting server ... 
+|Portal| 2024-08-23 16:56:39 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=47802)
+|Portal| 2024-08-23 16:56:40 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=47798)
+|Portal| 2024-08-23 18:59:32 [..] Portal starting server ... 
+|Portal| 2024-08-23 18:59:43 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=48262)
+|Portal| 2024-08-23 19:00:23 [..] Portal starting server ... 
+|Portal| 2024-08-23 19:00:31 [..] Portal starting server ... 
+|Portal| 2024-08-23 19:00:53 [..] Portal starting server ... 
+|Portal| 2024-08-23 19:01:05 [..] Portal starting server ... 
+|Portal| 2024-08-23 19:01:17 [..] (TCP Port 4001 Closed)
+|Portal| 2024-08-23 19:01:17 [..] (TCP Port 4002 Closed)
+|Portal| 2024-08-23 19:01:17 [..] (TCP Port 4000 Closed)
+|Portal| 2024-08-23 19:01:17 [..] (TCP Port 4006 Closed)
+|Portal| 2024-08-23 19:01:17 [..] Main loop terminated.
+|Portal| 2024-08-23 19:01:17 [..] Server Shut Down.
+|Portal| 2024-08-23 19:01:22 [..] Loaded.
+|Portal| 2024-08-23 19:01:20 [..] Loading /home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/server/portal/portal.py...
+|Portal| 2024-08-23 19:01:22 [..] Loaded.
+|Portal| 2024-08-23 19:01:22 [..] twistd 23.10.0 (/home/mage/Documents/7thsea_dev/env/bin/python3 3.12.4) starting up.
+|Portal| 2024-08-23 19:01:22 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+|Portal| 2024-08-23 19:01:22 [..] AMP starting on 4006
+|Portal| 2024-08-23 19:01:22 [..] Telnet starting on 4000
+|Portal| 2024-08-23 19:01:22 [..] Websocket starting on 4002
+|Portal| 2024-08-23 19:01:22 [..] Webserver-proxy starting on 4001
+|Portal| 2024-08-23 19:01:22 [..] Portal starting server ... 
+|Portal| 2024-08-23 19:02:04 [..] Portal starting server ... 
+|Portal| 2024-08-23 19:03:15 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=50138)
+|Portal| 2024-08-23 19:03:15 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=54174)
+|Portal| 2024-08-23 19:03:20 [..] Portal starting server ... 
+|Portal| 2024-08-23 19:03:34 [..] Portal starting server ... 
+|Portal| 2024-08-23 19:04:36 [..] Portal starting server ... 
+|Portal| 2024-08-23 19:05:17 [..] Portal starting server ... 
+|Portal| 2024-08-23 19:05:40 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=58440)
+|Portal| 2024-08-23 19:08:56 [..] Portal starting server ... 
+|Portal| 2024-08-23 19:10:07 [..] Portal starting server ... 
+|Portal| 2024-08-23 19:10:21 [..] Portal starting server ... 
+|Portal| 2024-08-23 19:11:40 [..] Portal starting server ... 
+|Portal| 2024-08-23 19:12:14 [..] Portal starting server ... 
+|Portal| 2024-08-23 19:12:44 [..] Portal starting server ... 
+|Portal| 2024-08-23 19:13:28 [..] Portal starting server ... 
+|Portal| 2024-08-23 19:13:46 [..] Portal starting server ... 
+|Portal| 2024-08-23 19:14:48 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=47080)
+|Portal| 2024-08-23 19:59:45 [!!] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	--- <exception caught here> ---
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 482, in _doReadOrWrite
+	    why = selectable.doRead()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 248, in doRead
+	    return self._dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 253, in _dataReceived
+	    rval = self.protocol.dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/protocols/basic.py", line 555, in dataReceived
+	    why = self.rawDataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 735, in rawDataReceived
+	    self.handleResponseEnd()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/proxy.py", line 82, in handleResponseEnd
+	    self.father.finish()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/server.py", line 277, in finish
+	    return http.Request.finish(self)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 1149, in finish
+	    raise RuntimeError(
+	builtins.RuntimeError: Request.finish called on a request after its connection was lost; use Request.notifyFinish to keep track of this.
+	
+|Portal| 2024-08-23 19:59:45 [!!] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	--- <exception caught here> ---
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 482, in _doReadOrWrite
+	    why = selectable.doRead()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 248, in doRead
+	    return self._dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 253, in _dataReceived
+	    rval = self.protocol.dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/protocols/basic.py", line 555, in dataReceived
+	    why = self.rawDataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 735, in rawDataReceived
+	    self.handleResponseEnd()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/proxy.py", line 82, in handleResponseEnd
+	    self.father.finish()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/server.py", line 277, in finish
+	    return http.Request.finish(self)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 1149, in finish
+	    raise RuntimeError(
+	builtins.RuntimeError: Request.finish called on a request after its connection was lost; use Request.notifyFinish to keep track of this.
+	
+|Portal| 2024-08-23 20:00:38 [..] Portal starting server ... 
+|Portal| 2024-08-23 20:01:43 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=55766)
+|Portal| 2024-08-23 20:01:43 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=55790)
+|Portal| 2024-08-23 20:01:46 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=55746)
+|Portal| 2024-08-23 20:01:57 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=55774)
+|Portal| 2024-08-23 20:02:05 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=55758)
+|Portal| 2024-08-23 20:02:28 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=55734)
+|Portal| 2024-08-23 20:04:30 [..] Portal starting server ... 
+|Portal| 2024-08-23 20:05:22 [..] Portal starting server ... 
+|Portal| 2024-08-23 20:06:05 [..] Portal starting server ... 
+|Portal| 2024-08-23 20:06:20 [..] Portal starting server ... 
+|Portal| 2024-08-23 20:07:34 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=49952)
+|Portal| 2024-08-23 20:07:34 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=52486)
+|Portal| 2024-08-23 20:16:09 [..] Portal starting server ... 
+|Portal| 2024-08-23 20:16:51 [..] Portal starting server ... 
+|Portal| 2024-08-23 20:17:30 [..] Portal starting server ... 
+|Portal| 2024-08-23 20:22:04 [..] (TCP Port 4001 Closed)
+|Portal| 2024-08-23 20:22:04 [..] (TCP Port 4002 Closed)
+|Portal| 2024-08-23 20:22:04 [..] (TCP Port 4000 Closed)
+|Portal| 2024-08-23 20:22:04 [..] (TCP Port 4006 Closed)
+|Portal| 2024-08-23 20:22:04 [..] Main loop terminated.
+|Portal| 2024-08-23 20:22:04 [..] Server Shut Down.
+|Portal| 2024-08-23 20:22:09 [..] Loaded.
+|Portal| 2024-08-23 20:22:09 [!!]     from world.combat_script.combat_system import get_combat
+|Portal| 2024-08-23 20:22:09 [!!]   File "/home/mage/Documents/7thsea_dev/7thSea/7thSea/world/combat_script/combat_system.py", line 8, in <module>
+|Portal| 2024-08-23 20:22:09 [!!]     class CombatScript(DefaultScript):
+|Portal| 2024-08-23 20:22:09 [!!] TypeError: NoneType takes no arguments
+|Portal| 2024-08-23 20:22:09 [!!] Traceback (most recent call last):
+|Portal| 2024-08-23 20:22:09 [!!]   File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/typeclasses/models.py", line 287, in set_class_from_typeclass
+|Portal| 2024-08-23 20:22:09 [!!]     self.__class__ = class_from_module(self.db_typeclass_path)
+|Portal| 2024-08-23 20:22:09 [!!]                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+|Portal| 2024-08-23 20:22:09 [!!]   File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/utils/utils.py", line 1641, in class_from_module
+|Portal| 2024-08-23 20:22:09 [!!]     mod = importlib.import_module(testpath, package="evennia")
+|Portal| 2024-08-23 20:22:09 [!!]           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+|Portal| 2024-08-23 20:22:09 [!!]   File "/usr/lib64/python3.12/importlib/__init__.py", line 90, in import_module
+|Portal| 2024-08-23 20:22:09 [!!]     return _bootstrap._gcd_import(name[level:], package, level)
+|Portal| 2024-08-23 20:22:09 [!!]            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+|Portal| 2024-08-23 20:22:09 [!!]   File "/home/mage/Documents/7thsea_dev/7thSea/7thSea/typeclasses/characters.py", line 4, in <module>
+|Portal| 2024-08-23 20:22:09 [!!]     from world.combat_script.combat_system import get_combat
+|Portal| 2024-08-23 20:22:09 [!!]   File "/home/mage/Documents/7thsea_dev/7thSea/7thSea/world/combat_script/combat_system.py", line 8, in <module>
+|Portal| 2024-08-23 20:22:09 [!!]     class CombatScript(DefaultScript):
+|Portal| 2024-08-23 20:22:09 [!!] TypeError: NoneType takes no arguments
+|Portal| 2024-08-23 20:22:09 [!!] Traceback (most recent call last):
+|Portal| 2024-08-23 20:22:09 [!!]   File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/typeclasses/models.py", line 287, in set_class_from_typeclass
+|Portal| 2024-08-23 20:22:09 [!!]     self.__class__ = class_from_module(self.db_typeclass_path)
+|Portal| 2024-08-23 20:22:09 [!!]                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+|Portal| 2024-08-23 20:22:09 [!!]   File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/utils/utils.py", line 1641, in class_from_module
+|Portal| 2024-08-23 20:22:09 [!!]     mod = importlib.import_module(testpath, package="evennia")
+|Portal| 2024-08-23 20:22:09 [!!]           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+|Portal| 2024-08-23 20:22:09 [!!]   File "/usr/lib64/python3.12/importlib/__init__.py", line 90, in import_module
+|Portal| 2024-08-23 20:22:09 [!!]     return _bootstrap._gcd_import(name[level:], package, level)
+|Portal| 2024-08-23 20:22:09 [!!]            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+|Portal| 2024-08-23 20:22:09 [!!]   File "/home/mage/Documents/7thsea_dev/7thSea/7thSea/typeclasses/rooms.py", line 13, in <module>
+|Portal| 2024-08-23 20:22:09 [!!]     from commands.mycmdset import CharacterGenCmdSet
+|Portal| 2024-08-23 20:22:09 [!!]   File "/home/mage/Documents/7thsea_dev/7thSea/7thSea/commands/mycmdset.py", line 4, in <module>
+|Portal| 2024-08-23 20:22:09 [!!]     from commands.rollkeep import CmdRollKeep, CmdRollNumberKeep
+|Portal| 2024-08-23 20:22:09 [!!]   File "/home/mage/Documents/7thsea_dev/7thSea/7thSea/commands/rollkeep.py", line 8, in <module>
+|Portal| 2024-08-23 20:22:09 [!!]     class CmdRollKeep(Command):
+|Portal| 2024-08-23 20:22:09 [!!] TypeError: NoneType takes no arguments
+|Portal| 2024-08-23 20:22:09 [!!] Traceback (most recent call last):
+|Portal| 2024-08-23 20:22:09 [!!]   File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/typeclasses/models.py", line 287, in set_class_from_typeclass
+|Portal| 2024-08-23 20:22:09 [!!]     self.__class__ = class_from_module(self.db_typeclass_path)
+|Portal| 2024-08-23 20:22:09 [!!]                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+|Portal| 2024-08-23 20:22:09 [!!]   File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/utils/utils.py", line 1641, in class_from_module
+|Portal| 2024-08-23 20:22:09 [!!]     mod = importlib.import_module(testpath, package="evennia")
+|Portal| 2024-08-23 20:22:09 [!!]           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+|Portal| 2024-08-23 20:22:09 [!!]   File "/usr/lib64/python3.12/importlib/__init__.py", line 90, in import_module
+|Portal| 2024-08-23 20:22:09 [!!]     return _bootstrap._gcd_import(name[level:], package, level)
+|Portal| 2024-08-23 20:22:09 [!!]            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+|Portal| 2024-08-23 20:22:09 [!!]   File "/home/mage/Documents/7thsea_dev/7thSea/7thSea/typeclasses/rooms.py", line 13, in <module>
+|Portal| 2024-08-23 20:22:09 [!!]     from commands.mycmdset import CharacterGenCmdSet
+|Portal| 2024-08-23 20:22:09 [!!]   File "/home/mage/Documents/7thsea_dev/7thSea/7thSea/commands/mycmdset.py", line 4, in <module>
+|Portal| 2024-08-23 20:22:09 [!!]     from commands.rollkeep import CmdRollKeep, CmdRollNumberKeep
+|Portal| 2024-08-23 20:22:09 [!!]   File "/home/mage/Documents/7thsea_dev/7thSea/7thSea/commands/rollkeep.py", line 8, in <module>
+|Portal| 2024-08-23 20:22:09 [!!]     class CmdRollKeep(Command):
+|Portal| 2024-08-23 20:22:09 [!!] TypeError: NoneType takes no arguments
+|Portal| 2024-08-23 20:22:09 [!!] Traceback (most recent call last):
+|Portal| 2024-08-23 20:22:09 [!!]   File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/typeclasses/models.py", line 287, in set_class_from_typeclass
+|Portal| 2024-08-23 20:22:09 [!!]     self.__class__ = class_from_module(self.db_typeclass_path)
+|Portal| 2024-08-23 20:22:09 [!!]                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+|Portal| 2024-08-23 20:22:09 [!!]   File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/utils/utils.py", line 1641, in class_from_module
+|Portal| 2024-08-23 20:22:09 [!!]     mod = importlib.import_module(testpath, package="evennia")
+|Portal| 2024-08-23 20:22:09 [!!]           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+|Portal| 2024-08-23 20:22:09 [!!]   File "/usr/lib64/python3.12/importlib/__init__.py", line 90, in import_module
+|Portal| 2024-08-23 20:22:09 [!!]     return _bootstrap._gcd_import(name[level:], package, level)
+|Portal| 2024-08-23 20:22:09 [!!]            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+|Portal| 2024-08-23 20:22:09 [!!]   File "/home/mage/Documents/7thsea_dev/7thSea/7thSea/typeclasses/rooms.py", line 13, in <module>
+|Portal| 2024-08-23 20:22:09 [!!]     from commands.mycmdset import CharacterGenCmdSet
+|Portal| 2024-08-23 20:22:09 [!!]   File "/home/mage/Documents/7thsea_dev/7thSea/7thSea/commands/mycmdset.py", line 4, in <module>
+|Portal| 2024-08-23 20:22:09 [!!]     from commands.rollkeep import CmdRollKeep, CmdRollNumberKeep
+|Portal| 2024-08-23 20:22:09 [!!]   File "/home/mage/Documents/7thsea_dev/7thSea/7thSea/commands/rollkeep.py", line 8, in <module>
+|Portal| 2024-08-23 20:22:09 [!!]     class CmdRollKeep(Command):
+|Portal| 2024-08-23 20:22:09 [!!] TypeError: NoneType takes no arguments
+|Portal| 2024-08-23 20:22:09 [!!] Traceback (most recent call last):
+|Portal| 2024-08-23 20:22:09 [!!]   File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/typeclasses/models.py", line 287, in set_class_from_typeclass
+|Portal| 2024-08-23 20:22:09 [!!]     self.__class__ = class_from_module(self.db_typeclass_path)
+|Portal| 2024-08-23 20:22:09 [!!]                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+|Portal| 2024-08-23 20:22:09 [!!]   File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/utils/utils.py", line 1641, in class_from_module
+|Portal| 2024-08-23 20:22:09 [!!]     mod = importlib.import_module(testpath, package="evennia")
+|Portal| 2024-08-23 20:22:09 [!!]           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+|Portal| 2024-08-23 20:22:09 [!!]   File "/usr/lib64/python3.12/importlib/__init__.py", line 90, in import_module
+|Portal| 2024-08-23 20:22:09 [!!]     return _bootstrap._gcd_import(name[level:], package, level)
+|Portal| 2024-08-23 20:22:09 [!!]            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+|Portal| 2024-08-23 20:22:09 [!!]   File "/home/mage/Documents/7thsea_dev/7thSea/7thSea/typeclasses/characters.py", line 4, in <module>
+|Portal| 2024-08-23 20:22:09 [!!]     from world.combat_script.combat_system import get_combat
+|Portal| 2024-08-23 20:22:09 [!!]   File "/home/mage/Documents/7thsea_dev/7thSea/7thSea/world/combat_script/combat_system.py", line 8, in <module>
+|Portal| 2024-08-23 20:22:09 [!!]     class CombatScript(DefaultScript):
+|Portal| 2024-08-23 20:22:09 [!!] TypeError: NoneType takes no arguments
+|Portal| 2024-08-23 20:22:09 [!!] Traceback (most recent call last):
+|Portal| 2024-08-23 20:22:09 [!!]   File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/typeclasses/models.py", line 287, in set_class_from_typeclass
+|Portal| 2024-08-23 20:22:09 [!!]     self.__class__ = class_from_module(self.db_typeclass_path)
+|Portal| 2024-08-23 20:22:09 [!!]                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+|Portal| 2024-08-23 20:22:09 [!!]   File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/utils/utils.py", line 1641, in class_from_module
+|Portal| 2024-08-23 20:22:09 [!!]     mod = importlib.import_module(testpath, package="evennia")
+|Portal| 2024-08-23 20:22:09 [!!]           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+|Portal| 2024-08-23 20:22:09 [!!]   File "/usr/lib64/python3.12/importlib/__init__.py", line 90, in import_module
+|Portal| 2024-08-23 20:22:09 [!!]     return _bootstrap._gcd_import(name[level:], package, level)
+|Portal| 2024-08-23 20:22:09 [!!]            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+|Portal| 2024-08-23 20:22:09 [!!]   File "/home/mage/Documents/7thsea_dev/7thSea/7thSea/typeclasses/characters.py", line 4, in <module>
+|Portal| 2024-08-23 20:22:09 [!!]     from world.combat_script.combat_system import get_combat
+|Portal| 2024-08-23 20:22:09 [!!]   File "/home/mage/Documents/7thsea_dev/7thSea/7thSea/world/combat_script/combat_system.py", line 8, in <module>
+|Portal| 2024-08-23 20:22:09 [!!]     class CombatScript(DefaultScript):
+|Portal| 2024-08-23 20:22:09 [!!] TypeError: NoneType takes no arguments
+|Portal| 2024-08-23 20:22:09 [!!] Traceback (most recent call last):
+|Portal| 2024-08-23 20:22:09 [!!]   File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/typeclasses/models.py", line 287, in set_class_from_typeclass
+|Portal| 2024-08-23 20:22:09 [!!]     self.__class__ = class_from_module(self.db_typeclass_path)
+|Portal| 2024-08-23 20:22:09 [!!]                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+|Portal| 2024-08-23 20:22:09 [!!]   File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/utils/utils.py", line 1641, in class_from_module
+|Portal| 2024-08-23 20:22:09 [!!]     mod = importlib.import_module(testpath, package="evennia")
+|Portal| 2024-08-23 20:22:09 [!!]           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+|Portal| 2024-08-23 20:22:09 [!!]   File "/usr/lib64/python3.12/importlib/__init__.py", line 90, in import_module
+|Portal| 2024-08-23 20:22:09 [!!]     return _bootstrap._gcd_import(name[level:], package, level)
+|Portal| 2024-08-23 20:22:09 [!!]            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+|Portal| 2024-08-23 20:22:09 [!!]   File "/home/mage/Documents/7thsea_dev/7thSea/7thSea/typeclasses/characters.py", line 4, in <module>
+|Portal| 2024-08-23 20:22:09 [!!]     from world.combat_script.combat_system import get_combat
+|Portal| 2024-08-23 20:22:09 [!!]   File "/home/mage/Documents/7thsea_dev/7thSea/7thSea/world/combat_script/combat_system.py", line 8, in <module>
+|Portal| 2024-08-23 20:22:09 [!!]     class CombatScript(DefaultScript):
+|Portal| 2024-08-23 20:22:09 [!!] TypeError: NoneType takes no arguments
+|Portal| 2024-08-23 20:22:09 [!!] Traceback (most recent call last):
+|Portal| 2024-08-23 20:22:09 [!!]   File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/typeclasses/models.py", line 287, in set_class_from_typeclass
+|Portal| 2024-08-23 20:22:09 [!!]     self.__class__ = class_from_module(self.db_typeclass_path)
+|Portal| 2024-08-23 20:22:09 [!!]                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+|Portal| 2024-08-23 20:22:09 [!!]   File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/utils/utils.py", line 1641, in class_from_module
+|Portal| 2024-08-23 20:22:09 [!!]     mod = importlib.import_module(testpath, package="evennia")
+|Portal| 2024-08-23 20:22:09 [!!]           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+|Portal| 2024-08-23 20:22:09 [!!]   File "/usr/lib64/python3.12/importlib/__init__.py", line 90, in import_module
+|Portal| 2024-08-23 20:22:09 [!!]     return _bootstrap._gcd_import(name[level:], package, level)
+|Portal| 2024-08-23 20:22:09 [!!]            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+|Portal| 2024-08-23 20:22:09 [!!]   File "/home/mage/Documents/7thsea_dev/7thSea/7thSea/typeclasses/characters.py", line 4, in <module>
+|Portal| 2024-08-23 20:22:09 [!!]     from world.combat_script.combat_system import get_combat
+|Portal| 2024-08-23 20:22:09 [!!]   File "/home/mage/Documents/7thsea_dev/7thSea/7thSea/world/combat_script/combat_system.py", line 8, in <module>
+|Portal| 2024-08-23 20:22:09 [!!]     class CombatScript(DefaultScript):
+|Portal| 2024-08-23 20:22:09 [!!] TypeError: NoneType takes no arguments
+|Portal| 2024-08-23 20:22:09 [!!] Traceback (most recent call last):
+|Portal| 2024-08-23 20:22:09 [!!]   File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/typeclasses/models.py", line 287, in set_class_from_typeclass
+|Portal| 2024-08-23 20:22:09 [!!]     self.__class__ = class_from_module(self.db_typeclass_path)
+|Portal| 2024-08-23 20:22:09 [!!]                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+|Portal| 2024-08-23 20:22:09 [!!]   File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/utils/utils.py", line 1641, in class_from_module
+|Portal| 2024-08-23 20:22:09 [!!]     mod = importlib.import_module(testpath, package="evennia")
+|Portal| 2024-08-23 20:22:09 [!!]           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+|Portal| 2024-08-23 20:22:09 [!!]   File "/usr/lib64/python3.12/importlib/__init__.py", line 90, in import_module
+|Portal| 2024-08-23 20:22:09 [!!]     return _bootstrap._gcd_import(name[level:], package, level)
+|Portal| 2024-08-23 20:22:09 [!!]            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+|Portal| 2024-08-23 20:22:09 [!!]   File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+|Portal| 2024-08-23 20:22:09 [!!]   File "/home/mage/Documents/7thsea_dev/7thSea/7thSea/typeclasses/characters.py", line 4, in <module>
+|Portal| 2024-08-23 20:22:09 [!!]     from world.combat_script.combat_system import get_combat
+|Portal| 2024-08-23 20:22:09 [!!]   File "/home/mage/Documents/7thsea_dev/7thSea/7thSea/world/combat_script/combat_system.py", line 8, in <module>
+|Portal| 2024-08-23 20:22:09 [!!]     class CombatScript(DefaultScript):
+|Portal| 2024-08-23 20:22:09 [!!] TypeError: NoneType takes no arguments
+|Portal| 2024-08-23 20:22:09 [..] Loaded.
+|Portal| 2024-08-23 20:22:09 [..] twistd 23.10.0 (/home/mage/Documents/7thsea_dev/env/bin/python3 3.12.4) starting up.
+|Portal| 2024-08-23 20:22:09 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+|Portal| 2024-08-23 20:22:09 [..] AMP starting on 4006
+|Portal| 2024-08-23 20:22:09 [..] Telnet starting on 4000
+|Portal| 2024-08-23 20:22:09 [..] Websocket starting on 4002
+|Portal| 2024-08-23 20:22:09 [..] Webserver-proxy starting on 4001
+|Portal| 2024-08-23 20:22:09 [..] Portal starting server ... 
+|Portal| 2024-08-23 20:25:16 [..] (TCP Port 4001 Closed)
+|Portal| 2024-08-23 20:25:16 [..] (TCP Port 4002 Closed)
+|Portal| 2024-08-23 20:25:16 [..] (TCP Port 4000 Closed)
+|Portal| 2024-08-23 20:25:16 [..] (TCP Port 4006 Closed)
+|Portal| 2024-08-23 20:25:16 [..] Main loop terminated.
+|Portal| 2024-08-23 20:25:16 [..] Server Shut Down.
+|Portal| 2024-08-23 20:25:21 [..] Loaded.
+|Portal| 2024-08-23 20:25:20 [..] Loading /home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/server/portal/portal.py...
+|Portal| 2024-08-23 20:25:21 [..] Loaded.
+|Portal| 2024-08-23 20:25:21 [..] twistd 23.10.0 (/home/mage/Documents/7thsea_dev/env/bin/python3 3.12.4) starting up.
+|Portal| 2024-08-23 20:25:21 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+|Portal| 2024-08-23 20:25:21 [..] AMP starting on 4006
+|Portal| 2024-08-23 20:25:21 [..] Telnet starting on 4000
+|Portal| 2024-08-23 20:25:21 [..] Websocket starting on 4002
+|Portal| 2024-08-23 20:25:21 [..] Webserver-proxy starting on 4001
+|Portal| 2024-08-23 20:25:22 [..] Portal starting server ... 
+|Portal| 2024-08-23 20:50:36 [..] Portal starting server ... 
+|Portal| 2024-08-23 20:51:40 [..] Portal starting server ... 
+|Portal| 2024-08-23 20:52:52 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=53654)
+|Portal| 2024-08-23 20:52:52 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=53662)
+|Portal| 2024-08-23 20:52:52 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=53624)
+|Portal| 2024-08-23 20:52:53 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=53636)
+|Portal| 2024-08-23 20:53:18 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=53644)
+|Portal| 2024-08-23 20:53:27 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=53612)
+|Portal| 2024-08-23 20:56:02 [..] Portal starting server ... 
+|Portal| 2024-08-23 20:56:25 [..] (TCP Port 4001 Closed)
+|Portal| 2024-08-23 20:56:25 [..] (TCP Port 4002 Closed)
+|Portal| 2024-08-23 20:56:25 [..] (TCP Port 4000 Closed)
+|Portal| 2024-08-23 20:56:25 [..] (TCP Port 4006 Closed)
+|Portal| 2024-08-23 20:56:25 [..] Main loop terminated.
+|Portal| 2024-08-23 20:56:25 [..] Server Shut Down.
+|Portal| 2024-08-23 20:56:32 [..] Loaded.
+|Portal| 2024-08-23 20:56:30 [..] Loading /home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/server/portal/portal.py...
+|Portal| 2024-08-23 20:56:32 [..] Loaded.
+|Portal| 2024-08-23 20:56:32 [..] twistd 23.10.0 (/home/mage/Documents/7thsea_dev/env/bin/python3 3.12.4) starting up.
+|Portal| 2024-08-23 20:56:32 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+|Portal| 2024-08-23 20:56:32 [..] AMP starting on 4006
+|Portal| 2024-08-23 20:56:32 [..] Telnet starting on 4000
+|Portal| 2024-08-23 20:56:32 [..] Websocket starting on 4002
+|Portal| 2024-08-23 20:56:32 [..] Webserver-proxy starting on 4001
+|Portal| 2024-08-23 20:56:32 [..] Portal starting server ... 
+|Portal| 2024-08-23 20:58:25 [!!] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	--- <exception caught here> ---
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 482, in _doReadOrWrite
+	    why = selectable.doRead()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 248, in doRead
+	    return self._dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 253, in _dataReceived
+	    rval = self.protocol.dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/protocols/basic.py", line 555, in dataReceived
+	    why = self.rawDataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 735, in rawDataReceived
+	    self.handleResponseEnd()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/proxy.py", line 82, in handleResponseEnd
+	    self.father.finish()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/server.py", line 277, in finish
+	    return http.Request.finish(self)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 1149, in finish
+	    raise RuntimeError(
+	builtins.RuntimeError: Request.finish called on a request after its connection was lost; use Request.notifyFinish to keep track of this.
+	
+|Portal| 2024-08-23 20:59:52 [..] Portal starting server ... 
+|Portal| 2024-08-23 21:00:18 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=33070)
+|Portal| 2024-08-23 21:00:18 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=36164)
+|Portal| 2024-08-23 21:00:21 [..] Portal starting server ... 
+|Portal| 2024-08-23 21:01:29 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=42132)
+|Portal| 2024-08-23 21:04:45 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=40548)
+|Portal| 2024-08-23 21:05:36 [..] Portal starting server ... 
+|Portal| 2024-08-23 21:34:22 [..] Portal starting server ... 
+|Portal| 2024-08-23 21:35:03 [..] Portal starting server ... 
+|Portal| 2024-08-23 21:35:42 [..] Portal starting server ... 
+|Portal| 2024-08-23 21:36:54 [..] Portal starting server ... 
+|Portal| 2024-08-23 21:37:10 [..] Portal starting server ... 
+|Portal| 2024-08-23 21:37:54 [..] Portal starting server ... 
+|Portal| 2024-08-23 21:38:10 [..] Portal starting server ... 
+|Portal| 2024-08-23 21:39:31 [..] Portal starting server ... 
+|Portal| 2024-08-23 21:41:37 [..] Portal starting server ... 
+|Portal| 2024-08-23 21:41:47 [..] Portal starting server ... 
+|Portal| 2024-08-23 21:42:01 [..] Portal starting server ... 
+|Portal| 2024-08-23 21:42:29 [..] Portal starting server ... 
+|Portal| 2024-08-23 21:42:40 [..] Portal starting server ... 
+|Portal| 2024-08-23 21:42:51 [..] Portal starting server ... 
+|Portal| 2024-08-23 21:43:04 [..] Portal starting server ... 
+|Portal| 2024-08-23 21:44:01 [..] Portal starting server ... 
+|Portal| 2024-08-23 21:44:22 [..] Portal starting server ... 
+|Portal| 2024-08-23 21:45:05 [..] Portal starting server ... 
+|Portal| 2024-08-23 21:45:17 [..] Portal starting server ... 
+|Portal| 2024-08-23 22:19:11 [!!] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	--- <exception caught here> ---
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 482, in _doReadOrWrite
+	    why = selectable.doRead()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 248, in doRead
+	    return self._dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 253, in _dataReceived
+	    rval = self.protocol.dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/protocols/basic.py", line 555, in dataReceived
+	    why = self.rawDataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 735, in rawDataReceived
+	    self.handleResponseEnd()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/proxy.py", line 82, in handleResponseEnd
+	    self.father.finish()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/server.py", line 277, in finish
+	    return http.Request.finish(self)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 1149, in finish
+	    raise RuntimeError(
+	builtins.RuntimeError: Request.finish called on a request after its connection was lost; use Request.notifyFinish to keep track of this.
+	
+|Portal| 2024-08-23 22:20:19 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=35852)
+|Portal| 2024-08-23 22:20:19 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=54624)
+|Portal| 2024-08-23 22:20:39 [..] Portal starting server ... 
+|Portal| 2024-08-23 22:21:03 [..] Portal starting server ... 
+|Portal| 2024-08-23 22:21:05 [!!] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/application/app.py", line 304, in runReactorWithLogging
+	    reactor.run()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/base.py", line 695, in run
+	    self.mainLoop()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/base.py", line 708, in mainLoop
+	    self.doIteration(t)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/epollreactor.py", line 244, in doPoll
+	    log.callWithLogger(selectable, _drdw, selectable, fd, event)
+	--- <exception caught here> ---
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 495, in _doReadOrWrite
+	    self._disconnectSelectable(selectable, why, inRead)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 107, in _disconnectSelectable
+	    selectable.readConnectionLost(f)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 309, in readConnectionLost
+	    self.connectionLost(reason)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 508, in connectionLost
+	    self._commonConnection.connectionLost(self, reason)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 326, in connectionLost
+	    protocol.connectionLost(reason)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 688, in connectionLost
+	    self.handleResponseEnd()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/proxy.py", line 82, in handleResponseEnd
+	    self.father.finish()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/server.py", line 277, in finish
+	    return http.Request.finish(self)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 1149, in finish
+	    raise RuntimeError(
+	builtins.RuntimeError: Request.finish called on a request after its connection was lost; use Request.notifyFinish to keep track of this.
+	
+|Portal| 2024-08-23 22:21:43 [..] Portal starting server ... 
+|Portal| 2024-08-23 22:21:57 [..] Portal starting server ... 
+|Portal| 2024-08-23 22:23:07 [..] Portal starting server ... 
+|Portal| 2024-08-23 22:23:26 [..] (TCP Port 4001 Closed)
+|Portal| 2024-08-23 22:23:26 [..] (TCP Port 4002 Closed)
+|Portal| 2024-08-23 22:23:26 [..] (TCP Port 4000 Closed)
+|Portal| 2024-08-23 22:23:26 [..] (TCP Port 4006 Closed)
+|Portal| 2024-08-23 22:23:26 [..] Main loop terminated.
+|Portal| 2024-08-23 22:23:26 [..] Server Shut Down.
+|Portal| 2024-08-23 22:23:31 [..] Loaded.
+|Portal| 2024-08-23 22:23:30 [..] Loading /home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/server/portal/portal.py...
+|Portal| 2024-08-23 22:23:31 [..] Loaded.
+|Portal| 2024-08-23 22:23:31 [..] twistd 23.10.0 (/home/mage/Documents/7thsea_dev/env/bin/python3 3.12.4) starting up.
+|Portal| 2024-08-23 22:23:31 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+|Portal| 2024-08-23 22:23:31 [..] AMP starting on 4006
+|Portal| 2024-08-23 22:23:31 [..] Telnet starting on 4000
+|Portal| 2024-08-23 22:23:31 [..] Websocket starting on 4002
+|Portal| 2024-08-23 22:23:31 [..] Webserver-proxy starting on 4001
+|Portal| 2024-08-23 22:23:31 [..] Portal starting server ... 
+|Portal| 2024-08-23 22:24:21 [..] Portal starting server ... 
+|Portal| 2024-08-23 22:24:35 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=53714)
+|Portal| 2024-08-23 22:25:24 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=38740)
+|Portal| 2024-08-23 22:25:24 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=38738)
+|Portal| 2024-08-23 22:37:10 [..] Portal starting server ... 
+|Portal| 2024-08-23 22:38:12 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=60372)
+|Portal| 2024-08-23 22:38:17 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=60388)
+|Portal| 2024-08-23 22:38:19 [..] Portal starting server ... 
+|Portal| 2024-08-23 22:39:24 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=42844)
+|Portal| 2024-08-23 22:39:29 [..] (TCP Port 4001 Closed)
+|Portal| 2024-08-23 22:39:29 [..] (TCP Port 4002 Closed)
+|Portal| 2024-08-23 22:39:29 [..] (TCP Port 4000 Closed)
+|Portal| 2024-08-23 22:39:29 [..] (TCP Port 4006 Closed)
+|Portal| 2024-08-23 22:39:29 [..] Main loop terminated.
+|Portal| 2024-08-23 22:39:29 [..] Server Shut Down.
+|Portal| 2024-08-23 22:39:34 [..] Loaded.
+|Portal| 2024-08-23 22:39:33 [..] Loading /home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/server/portal/portal.py...
+|Portal| 2024-08-23 22:39:34 [..] Loaded.
+|Portal| 2024-08-23 22:39:34 [..] twistd 23.10.0 (/home/mage/Documents/7thsea_dev/env/bin/python3 3.12.4) starting up.
+|Portal| 2024-08-23 22:39:34 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+|Portal| 2024-08-23 22:39:34 [..] AMP starting on 4006
+|Portal| 2024-08-23 22:39:34 [..] Telnet starting on 4000
+|Portal| 2024-08-23 22:39:34 [..] Websocket starting on 4002
+|Portal| 2024-08-23 22:39:34 [..] Webserver-proxy starting on 4001
+|Portal| 2024-08-23 22:39:34 [..] Portal starting server ... 
+|Portal| 2024-08-23 22:40:19 [!!] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	--- <exception caught here> ---
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 482, in _doReadOrWrite
+	    why = selectable.doRead()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 248, in doRead
+	    return self._dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 253, in _dataReceived
+	    rval = self.protocol.dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/protocols/basic.py", line 555, in dataReceived
+	    why = self.rawDataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 735, in rawDataReceived
+	    self.handleResponseEnd()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/proxy.py", line 82, in handleResponseEnd
+	    self.father.finish()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/server.py", line 277, in finish
+	    return http.Request.finish(self)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 1149, in finish
+	    raise RuntimeError(
+	builtins.RuntimeError: Request.finish called on a request after its connection was lost; use Request.notifyFinish to keep track of this.
+	
+|Portal| 2024-08-23 22:40:19 [!!] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	--- <exception caught here> ---
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 482, in _doReadOrWrite
+	    why = selectable.doRead()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 248, in doRead
+	    return self._dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 253, in _dataReceived
+	    rval = self.protocol.dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/protocols/basic.py", line 555, in dataReceived
+	    why = self.rawDataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 735, in rawDataReceived
+	    self.handleResponseEnd()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/proxy.py", line 82, in handleResponseEnd
+	    self.father.finish()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/server.py", line 277, in finish
+	    return http.Request.finish(self)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 1149, in finish
+	    raise RuntimeError(
+	builtins.RuntimeError: Request.finish called on a request after its connection was lost; use Request.notifyFinish to keep track of this.
+	
+|Portal| 2024-08-23 22:41:20 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=43790)
+|Portal| 2024-08-23 22:41:23 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=43798)
+|Portal| 2024-08-23 22:41:43 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=43814)
+|Portal| 2024-08-23 22:42:15 [..] Portal starting server ... 
+|Portal| 2024-08-23 22:43:51 [..] Portal starting server ... 
+|Portal| 2024-08-23 22:44:56 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=40734)
+|Portal| 2024-08-23 22:44:58 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=40742)
+|Portal| 2024-08-23 22:47:29 [..] Portal starting server ... 
+|Portal| 2024-08-23 22:48:09 [..] Portal starting server ... 
+|Portal| 2024-08-23 22:49:12 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=58114)
+|Portal| 2024-08-23 22:49:14 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=45026)
+|Portal| 2024-08-23 22:50:08 [..] Portal starting server ... 
+|Portal| 2024-08-23 22:50:18 [!!] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/application/app.py", line 304, in runReactorWithLogging
+	    reactor.run()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/base.py", line 695, in run
+	    self.mainLoop()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/base.py", line 708, in mainLoop
+	    self.doIteration(t)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/epollreactor.py", line 244, in doPoll
+	    log.callWithLogger(selectable, _drdw, selectable, fd, event)
+	--- <exception caught here> ---
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 495, in _doReadOrWrite
+	    self._disconnectSelectable(selectable, why, inRead)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 107, in _disconnectSelectable
+	    selectable.readConnectionLost(f)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 309, in readConnectionLost
+	    self.connectionLost(reason)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 508, in connectionLost
+	    self._commonConnection.connectionLost(self, reason)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 326, in connectionLost
+	    protocol.connectionLost(reason)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 688, in connectionLost
+	    self.handleResponseEnd()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/proxy.py", line 82, in handleResponseEnd
+	    self.father.finish()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/server.py", line 277, in finish
+	    return http.Request.finish(self)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 1149, in finish
+	    raise RuntimeError(
+	builtins.RuntimeError: Request.finish called on a request after its connection was lost; use Request.notifyFinish to keep track of this.
+	
+|Portal| 2024-08-23 22:51:22 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=33106)
+|Portal| 2024-08-23 22:51:39 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=52408)
+|Portal| 2024-08-23 22:51:40 [..] Portal starting server ... 
+|Portal| 2024-08-23 22:51:49 [!!] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/application/app.py", line 304, in runReactorWithLogging
+	    reactor.run()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/base.py", line 695, in run
+	    self.mainLoop()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/base.py", line 708, in mainLoop
+	    self.doIteration(t)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/epollreactor.py", line 244, in doPoll
+	    log.callWithLogger(selectable, _drdw, selectable, fd, event)
+	--- <exception caught here> ---
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 495, in _doReadOrWrite
+	    self._disconnectSelectable(selectable, why, inRead)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 107, in _disconnectSelectable
+	    selectable.readConnectionLost(f)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 309, in readConnectionLost
+	    self.connectionLost(reason)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 508, in connectionLost
+	    self._commonConnection.connectionLost(self, reason)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 326, in connectionLost
+	    protocol.connectionLost(reason)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 688, in connectionLost
+	    self.handleResponseEnd()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/proxy.py", line 82, in handleResponseEnd
+	    self.father.finish()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/server.py", line 277, in finish
+	    return http.Request.finish(self)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 1149, in finish
+	    raise RuntimeError(
+	builtins.RuntimeError: Request.finish called on a request after its connection was lost; use Request.notifyFinish to keep track of this.
+	
+|Portal| 2024-08-23 22:52:44 [..] Portal starting server ... 
+|Portal| 2024-08-23 22:52:50 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=44002)
+|Portal| 2024-08-23 22:53:12 [..] Portal starting server ... 
+|Portal| 2024-08-23 22:54:17 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=47704)
+|Portal| 2024-08-23 22:54:17 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=47706)
+|Portal| 2024-08-23 22:55:08 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=44004)
+|Portal| 2024-08-23 22:56:11 [..] Portal starting server ... 
+|Portal| 2024-08-23 22:57:22 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=51710)
+|Portal| 2024-08-23 22:58:16 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=57702)
+|Portal| 2024-08-23 22:58:16 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=57688)
+|Portal| 2024-08-23 22:58:21 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=57676)
+|Portal| 2024-08-23 22:58:58 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=39072)
+|Portal| 2024-08-24 03:16:09 [!!] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	--- <exception caught here> ---
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 482, in _doReadOrWrite
+	    why = selectable.doRead()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 248, in doRead
+	    return self._dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 253, in _dataReceived
+	    rval = self.protocol.dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/protocols/basic.py", line 555, in dataReceived
+	    why = self.rawDataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 735, in rawDataReceived
+	    self.handleResponseEnd()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/proxy.py", line 82, in handleResponseEnd
+	    self.father.finish()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/server.py", line 277, in finish
+	    return http.Request.finish(self)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 1149, in finish
+	    raise RuntimeError(
+	builtins.RuntimeError: Request.finish called on a request after its connection was lost; use Request.notifyFinish to keep track of this.
+	
+|Portal| 2024-08-24 03:17:25 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=33594)
+|Portal| 2024-08-24 03:17:32 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=33586)
+|Portal| 2024-08-24 03:17:55 [..] Portal starting server ... 
+|Portal| 2024-08-24 03:19:05 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=42710)
+|Portal| 2024-08-24 03:19:10 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=42702)
+|Portal| 2024-08-24 03:19:27 [..] Portal starting server ... 
+|Portal| 2024-08-24 03:20:32 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=44358)
+|Portal| 2024-08-24 03:20:32 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=44362)
+|Portal| 2024-08-24 03:23:41 [..] Portal starting server ... 
+|Portal| 2024-08-24 03:24:54 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=47974)
+|Portal| 2024-08-24 03:24:56 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=47966)
+|Portal| 2024-08-24 03:25:33 [..] Portal starting server ... 
+|Portal| 2024-08-24 03:25:38 [!!] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/application/app.py", line 304, in runReactorWithLogging
+	    reactor.run()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/base.py", line 695, in run
+	    self.mainLoop()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/base.py", line 708, in mainLoop
+	    self.doIteration(t)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/epollreactor.py", line 244, in doPoll
+	    log.callWithLogger(selectable, _drdw, selectable, fd, event)
+	--- <exception caught here> ---
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 495, in _doReadOrWrite
+	    self._disconnectSelectable(selectable, why, inRead)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 107, in _disconnectSelectable
+	    selectable.readConnectionLost(f)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 309, in readConnectionLost
+	    self.connectionLost(reason)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 508, in connectionLost
+	    self._commonConnection.connectionLost(self, reason)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 326, in connectionLost
+	    protocol.connectionLost(reason)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 688, in connectionLost
+	    self.handleResponseEnd()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/proxy.py", line 82, in handleResponseEnd
+	    self.father.finish()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/server.py", line 277, in finish
+	    return http.Request.finish(self)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 1149, in finish
+	    raise RuntimeError(
+	builtins.RuntimeError: Request.finish called on a request after its connection was lost; use Request.notifyFinish to keep track of this.
+	
+|Portal| 2024-08-24 03:26:39 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=42570)
+|Portal| 2024-08-24 03:28:23 [..] Portal starting server ... 
+|Portal| 2024-08-24 03:28:53 [..] Portal starting server ... 
+|Portal| 2024-08-24 03:29:55 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=47156)
+|Portal| 2024-08-24 03:30:24 [..] Portal starting server ... 
+|Portal| 2024-08-24 03:31:37 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=58988)
+|Portal| 2024-08-24 03:31:37 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=59000)
+|Portal| 2024-08-24 03:32:13 [..] Portal starting server ... 
+|Portal| 2024-08-24 03:33:16 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=48404)
+|Portal| 2024-08-24 03:33:42 [..] Portal starting server ... 
+|Portal| 2024-08-24 03:36:15 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=35312)
+|Portal| 2024-08-24 03:36:15 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=41384)
+|Portal| 2024-08-24 03:37:27 [..] Portal starting server ... 
+|Portal| 2024-08-24 03:41:01 [..] Portal starting server ... 
+|Portal| 2024-08-24 03:45:12 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=49838)
+|Portal| 2024-08-24 03:51:02 [..] Portal starting server ... 
+|Portal| 2024-08-24 03:52:57 [..] Portal starting server ... 
+|Portal| 2024-08-24 03:54:25 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=34992)
+|Portal| 2024-08-24 03:54:25 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=35000)
+|Portal| 2024-08-24 03:56:33 [..] Portal starting server ... 
+|Portal| 2024-08-24 03:59:19 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=60256)
+|Portal| 2024-08-24 03:59:19 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=60272)
+|Portal| 2024-08-24 04:16:46 [!!] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	--- <exception caught here> ---
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 482, in _doReadOrWrite
+	    why = selectable.doRead()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 248, in doRead
+	    return self._dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 253, in _dataReceived
+	    rval = self.protocol.dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/protocols/basic.py", line 555, in dataReceived
+	    why = self.rawDataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 735, in rawDataReceived
+	    self.handleResponseEnd()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/proxy.py", line 82, in handleResponseEnd
+	    self.father.finish()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/server.py", line 277, in finish
+	    return http.Request.finish(self)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 1149, in finish
+	    raise RuntimeError(
+	builtins.RuntimeError: Request.finish called on a request after its connection was lost; use Request.notifyFinish to keep track of this.
+	
+|Portal| 2024-08-24 04:17:10 [!!] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	--- <exception caught here> ---
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 482, in _doReadOrWrite
+	    why = selectable.doRead()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 248, in doRead
+	    return self._dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 253, in _dataReceived
+	    rval = self.protocol.dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/protocols/basic.py", line 555, in dataReceived
+	    why = self.rawDataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 735, in rawDataReceived
+	    self.handleResponseEnd()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/proxy.py", line 82, in handleResponseEnd
+	    self.father.finish()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/server.py", line 277, in finish
+	    return http.Request.finish(self)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 1149, in finish
+	    raise RuntimeError(
+	builtins.RuntimeError: Request.finish called on a request after its connection was lost; use Request.notifyFinish to keep track of this.
+	
+|Portal| 2024-08-24 04:17:59 [!!] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	--- <exception caught here> ---
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 482, in _doReadOrWrite
+	    why = selectable.doRead()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 248, in doRead
+	    return self._dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 253, in _dataReceived
+	    rval = self.protocol.dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/protocols/basic.py", line 555, in dataReceived
+	    why = self.rawDataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 735, in rawDataReceived
+	    self.handleResponseEnd()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/proxy.py", line 82, in handleResponseEnd
+	    self.father.finish()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/server.py", line 277, in finish
+	    return http.Request.finish(self)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 1149, in finish
+	    raise RuntimeError(
+	builtins.RuntimeError: Request.finish called on a request after its connection was lost; use Request.notifyFinish to keep track of this.
+	
+|Portal| 2024-08-24 04:18:59 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=41474)
+|Portal| 2024-08-24 04:25:26 [..] Portal starting server ... 
+|Portal| 2024-08-24 04:25:37 [!!] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	--- <exception caught here> ---
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 482, in _doReadOrWrite
+	    why = selectable.doRead()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 248, in doRead
+	    return self._dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 253, in _dataReceived
+	    rval = self.protocol.dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/protocols/basic.py", line 555, in dataReceived
+	    why = self.rawDataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 735, in rawDataReceived
+	    self.handleResponseEnd()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/proxy.py", line 82, in handleResponseEnd
+	    self.father.finish()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/server.py", line 277, in finish
+	    return http.Request.finish(self)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 1149, in finish
+	    raise RuntimeError(
+	builtins.RuntimeError: Request.finish called on a request after its connection was lost; use Request.notifyFinish to keep track of this.
+	
+|Portal| 2024-08-24 04:27:14 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=43062)
+|Portal| 2024-08-24 04:30:02 [..] Portal starting server ... 
+|Portal| 2024-08-24 04:30:21 [..] Portal starting server ... 
+|Portal| 2024-08-24 04:31:19 [!!] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	--- <exception caught here> ---
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 482, in _doReadOrWrite
+	    why = selectable.doRead()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 248, in doRead
+	    return self._dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 253, in _dataReceived
+	    rval = self.protocol.dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/protocols/basic.py", line 555, in dataReceived
+	    why = self.rawDataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 735, in rawDataReceived
+	    self.handleResponseEnd()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/proxy.py", line 82, in handleResponseEnd
+	    self.father.finish()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/server.py", line 277, in finish
+	    return http.Request.finish(self)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 1149, in finish
+	    raise RuntimeError(
+	builtins.RuntimeError: Request.finish called on a request after its connection was lost; use Request.notifyFinish to keep track of this.
+	
+|Portal| 2024-08-24 04:32:19 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=38396)
+|Portal| 2024-08-24 04:33:06 [!!] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	--- <exception caught here> ---
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 482, in _doReadOrWrite
+	    why = selectable.doRead()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 248, in doRead
+	    return self._dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 253, in _dataReceived
+	    rval = self.protocol.dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/protocols/basic.py", line 555, in dataReceived
+	    why = self.rawDataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 735, in rawDataReceived
+	    self.handleResponseEnd()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/proxy.py", line 82, in handleResponseEnd
+	    self.father.finish()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/server.py", line 277, in finish
+	    return http.Request.finish(self)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 1149, in finish
+	    raise RuntimeError(
+	builtins.RuntimeError: Request.finish called on a request after its connection was lost; use Request.notifyFinish to keep track of this.
+	
+|Portal| 2024-08-24 04:34:27 [..] Portal starting server ... 
+|Portal| 2024-08-24 04:35:45 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=37056)
+|Portal| 2024-08-24 04:35:45 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=41810)
+|Portal| 2024-08-24 04:42:22 [..] Portal starting server ... 
+|Portal| 2024-08-24 04:45:14 [..] Portal starting server ... 
+|Portal| 2024-08-24 04:49:00 [..] Portal starting server ... 
+|Portal| 2024-08-24 04:52:08 [..] Portal starting server ... 
+|Portal| 2024-08-24 04:56:51 [..] Portal starting server ... 
+|Portal| 2024-08-24 04:59:33 [..] Portal starting server ... 
+|Portal| 2024-08-24 05:00:28 [!!] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	--- <exception caught here> ---
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 482, in _doReadOrWrite
+	    why = selectable.doRead()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 248, in doRead
+	    return self._dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 253, in _dataReceived
+	    rval = self.protocol.dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/protocols/basic.py", line 555, in dataReceived
+	    why = self.rawDataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 735, in rawDataReceived
+	    self.handleResponseEnd()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/proxy.py", line 82, in handleResponseEnd
+	    self.father.finish()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/server.py", line 277, in finish
+	    return http.Request.finish(self)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 1149, in finish
+	    raise RuntimeError(
+	builtins.RuntimeError: Request.finish called on a request after its connection was lost; use Request.notifyFinish to keep track of this.
+	
+|Portal| 2024-08-24 05:00:30 [!!] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	--- <exception caught here> ---
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 482, in _doReadOrWrite
+	    why = selectable.doRead()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 248, in doRead
+	    return self._dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 253, in _dataReceived
+	    rval = self.protocol.dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/protocols/basic.py", line 555, in dataReceived
+	    why = self.rawDataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 735, in rawDataReceived
+	    self.handleResponseEnd()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/proxy.py", line 82, in handleResponseEnd
+	    self.father.finish()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/server.py", line 277, in finish
+	    return http.Request.finish(self)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 1149, in finish
+	    raise RuntimeError(
+	builtins.RuntimeError: Request.finish called on a request after its connection was lost; use Request.notifyFinish to keep track of this.
+	
+|Portal| 2024-08-24 05:00:31 [!!] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	--- <exception caught here> ---
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 482, in _doReadOrWrite
+	    why = selectable.doRead()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 248, in doRead
+	    return self._dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 253, in _dataReceived
+	    rval = self.protocol.dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/protocols/basic.py", line 555, in dataReceived
+	    why = self.rawDataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 735, in rawDataReceived
+	    self.handleResponseEnd()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/proxy.py", line 82, in handleResponseEnd
+	    self.father.finish()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/server.py", line 277, in finish
+	    return http.Request.finish(self)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 1149, in finish
+	    raise RuntimeError(
+	builtins.RuntimeError: Request.finish called on a request after its connection was lost; use Request.notifyFinish to keep track of this.
+	
+|Portal| 2024-08-24 05:01:42 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=43066)
+|Portal| 2024-08-24 05:07:11 [..] Portal starting server ... 
+|Portal| 2024-08-24 05:08:48 [..] Portal starting server ... 
+|Portal| 2024-08-24 05:09:58 [..] Portal starting server ... 
+|Portal| 2024-08-24 05:11:16 [..] Portal starting server ... 
+|Portal| 2024-08-24 05:14:48 [..] Portal starting server ... 
+|Portal| 2024-08-24 05:17:15 [..] Received SIGTERM, shutting down.
+|Portal| 2024-08-24 05:17:15 [..] (TCP Port 4001 Closed)
+|Portal| 2024-08-24 05:17:15 [..] (TCP Port 4002 Closed)
+|Portal| 2024-08-24 05:17:15 [..] (TCP Port 4000 Closed)
+|Portal| 2024-08-24 05:17:15 [..] (TCP Port 4006 Closed)
+|Portal| 2024-08-24 05:17:15 [..] Main loop terminated.
+|Portal| 2024-08-24 05:17:15 [..] Server Shut Down.
+|Portal| 2024-08-24 21:17:27 [..] Loaded.
+|Portal| 2024-08-24 21:17:25 [..] Loading /home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/server/portal/portal.py...
+|Portal| 2024-08-24 21:17:27 [..] Loaded.
+|Portal| 2024-08-24 21:17:27 [..] twistd 23.10.0 (/home/mage/Documents/7thsea_dev/env/bin/python3 3.12.4) starting up.
+|Portal| 2024-08-24 21:17:27 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+|Portal| 2024-08-24 21:17:27 [..] AMP starting on 4006
+|Portal| 2024-08-24 21:17:27 [..] Telnet starting on 4000
+|Portal| 2024-08-24 21:17:27 [..] Websocket starting on 4002
+|Portal| 2024-08-24 21:17:27 [..] Webserver-proxy starting on 4001
+|Portal| 2024-08-24 21:17:27 [..] Portal starting server ... 
+|Portal| 2024-08-24 21:17:59 [!!] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/application/app.py", line 304, in runReactorWithLogging
+	    reactor.run()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/base.py", line 695, in run
+	    self.mainLoop()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/base.py", line 708, in mainLoop
+	    self.doIteration(t)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/epollreactor.py", line 244, in doPoll
+	    log.callWithLogger(selectable, _drdw, selectable, fd, event)
+	--- <exception caught here> ---
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 495, in _doReadOrWrite
+	    self._disconnectSelectable(selectable, why, inRead)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 107, in _disconnectSelectable
+	    selectable.readConnectionLost(f)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 309, in readConnectionLost
+	    self.connectionLost(reason)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 508, in connectionLost
+	    self._commonConnection.connectionLost(self, reason)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 326, in connectionLost
+	    protocol.connectionLost(reason)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 688, in connectionLost
+	    self.handleResponseEnd()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/proxy.py", line 82, in handleResponseEnd
+	    self.father.finish()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/server.py", line 277, in finish
+	    return http.Request.finish(self)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 1149, in finish
+	    raise RuntimeError(
+	builtins.RuntimeError: Request.finish called on a request after its connection was lost; use Request.notifyFinish to keep track of this.
+	
+|Portal| 2024-08-24 21:18:30 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=57304)
+|Portal| 2024-08-24 21:18:30 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=57310)
+|Portal| 2024-08-24 21:18:30 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=57312)
+|Portal| 2024-08-24 21:18:59 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=57290)
+|Portal| 2024-08-24 21:18:59 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=57336)
+|Portal| 2024-08-24 21:34:16 [..] Portal starting server ... 
+|Portal| 2024-08-24 21:35:58 [..] Portal starting server ... 
+|Portal| 2024-08-24 21:37:57 [..] Portal starting server ... 
+|Portal| 2024-08-24 21:41:31 [..] Portal starting server ... 
+|Portal| 2024-08-24 21:44:25 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=54116)
+|Portal| 2024-08-24 21:44:25 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=54096)
+|Portal| 2024-08-24 21:44:25 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=54082)
+|Portal| 2024-08-24 21:44:25 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=54100)
+|Portal| 2024-08-24 21:44:51 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=54070)
+|Portal| 2024-08-24 21:44:51 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=54102)
+|Portal| 2024-08-24 21:45:39 [..] Portal starting server ... 
+|Portal| 2024-08-24 21:46:52 [..] Portal starting server ... 
+|Portal| 2024-08-24 22:00:28 [..] Portal starting server ... 
+|Portal| 2024-08-24 22:01:46 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=52710)
+|Portal| 2024-08-24 22:01:54 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=52694)
+|Portal| 2024-08-24 22:20:38 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=42624)
+|Portal| 2024-08-24 22:20:46 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=39318)
+|Portal| 2024-08-24 22:26:08 [..] Portal starting server ... 
+|Portal| 2024-08-24 22:34:13 [..] Portal starting server ... 
+|Portal| 2024-08-24 22:35:19 [..] Portal starting server ... 
+|Portal| 2024-08-24 22:37:01 [..] Portal starting server ... 
+|Portal| 2024-08-24 22:38:47 [..] Portal starting server ... 
+|Portal| 2024-08-24 22:39:31 [..] Portal starting server ... 
+|Portal| 2024-08-24 22:49:13 [..] Portal starting server ... 
+|Portal| 2024-08-24 23:11:01 [..] Portal starting server ... 
+|Portal| 2024-08-24 23:12:03 [..] Portal starting server ... 
+|Portal| 2024-08-24 23:12:50 [..] Portal starting server ... 
+|Portal| 2024-08-24 23:15:40 [..] Portal starting server ... 
+|Portal| 2024-08-24 23:22:40 [..] Portal starting server ... 
+|Portal| 2024-08-24 23:23:25 [..] Portal starting server ... 
+|Portal| 2024-08-24 23:28:05 [..] Portal starting server ... 
+|Portal| 2024-08-24 23:31:52 [..] Portal starting server ... 
+|Portal| 2024-08-24 23:36:02 [..] Portal starting server ... 
+|Portal| 2024-08-25 02:30:51 [..] Portal starting server ... 
+|Portal| 2024-08-25 02:30:54 [!!] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	--- <exception caught here> ---
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 482, in _doReadOrWrite
+	    why = selectable.doRead()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 248, in doRead
+	    return self._dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 253, in _dataReceived
+	    rval = self.protocol.dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/protocols/basic.py", line 555, in dataReceived
+	    why = self.rawDataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 735, in rawDataReceived
+	    self.handleResponseEnd()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/proxy.py", line 82, in handleResponseEnd
+	    self.father.finish()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/server.py", line 277, in finish
+	    return http.Request.finish(self)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 1149, in finish
+	    raise RuntimeError(
+	builtins.RuntimeError: Request.finish called on a request after its connection was lost; use Request.notifyFinish to keep track of this.
+	
+|Portal| 2024-08-25 02:31:44 [..] Portal starting server ... 
+|Portal| 2024-08-25 02:34:16 [!!] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	--- <exception caught here> ---
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 482, in _doReadOrWrite
+	    why = selectable.doRead()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 248, in doRead
+	    return self._dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 253, in _dataReceived
+	    rval = self.protocol.dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/protocols/basic.py", line 555, in dataReceived
+	    why = self.rawDataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 735, in rawDataReceived
+	    self.handleResponseEnd()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/proxy.py", line 82, in handleResponseEnd
+	    self.father.finish()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/server.py", line 277, in finish
+	    return http.Request.finish(self)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 1149, in finish
+	    raise RuntimeError(
+	builtins.RuntimeError: Request.finish called on a request after its connection was lost; use Request.notifyFinish to keep track of this.
+	
+|Portal| 2024-08-25 02:34:16 [!!] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	--- <exception caught here> ---
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 482, in _doReadOrWrite
+	    why = selectable.doRead()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 248, in doRead
+	    return self._dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 253, in _dataReceived
+	    rval = self.protocol.dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/protocols/basic.py", line 555, in dataReceived
+	    why = self.rawDataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 735, in rawDataReceived
+	    self.handleResponseEnd()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/proxy.py", line 82, in handleResponseEnd
+	    self.father.finish()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/server.py", line 277, in finish
+	    return http.Request.finish(self)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 1149, in finish
+	    raise RuntimeError(
+	builtins.RuntimeError: Request.finish called on a request after its connection was lost; use Request.notifyFinish to keep track of this.
+	
+|Portal| 2024-08-25 02:35:33 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=56784)
+|Portal| 2024-08-25 02:35:33 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=56796)
+|Portal| 2024-08-25 02:35:33 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=56798)
+|Portal| 2024-08-25 02:35:33 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=56782)
+|Portal| 2024-08-25 02:35:33 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=56756)
+|Portal| 2024-08-25 02:35:34 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=56770)
+|Portal| 2024-08-25 02:45:06 [..] Portal starting server ... 
+|Portal| 2024-08-25 02:48:53 [..] Portal starting server ... 
+|Portal| 2024-08-25 02:51:11 [..] Portal starting server ... 
+|Portal| 2024-08-25 03:03:33 [..] Portal starting server ... 
+|Portal| 2024-08-25 03:07:37 [..] Portal starting server ... 
+|Portal| 2024-08-25 03:09:13 [..] Portal starting server ... 
+|Portal| 2024-08-25 03:12:37 [..] Portal starting server ... 
+|Portal| 2024-08-25 03:14:34 [..] Portal starting server ... 
+|Portal| 2024-08-25 03:19:32 [..] Portal starting server ... 
+|Portal| 2024-08-25 03:21:08 [..] Portal starting server ... 
+|Portal| 2024-08-25 03:25:05 [..] Portal starting server ... 
+|Portal| 2024-08-25 03:26:45 [..] Portal starting server ... 
+|Portal| 2024-08-25 04:36:27 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=35392)
+|Portal| 2024-08-25 04:36:27 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=35404)
+|Portal| 2024-08-25 05:01:40 [!!] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/application/app.py", line 304, in runReactorWithLogging
+	    reactor.run()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/base.py", line 695, in run
+	    self.mainLoop()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/base.py", line 708, in mainLoop
+	    self.doIteration(t)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/epollreactor.py", line 244, in doPoll
+	    log.callWithLogger(selectable, _drdw, selectable, fd, event)
+	--- <exception caught here> ---
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 495, in _doReadOrWrite
+	    self._disconnectSelectable(selectable, why, inRead)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 107, in _disconnectSelectable
+	    selectable.readConnectionLost(f)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 309, in readConnectionLost
+	    self.connectionLost(reason)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 508, in connectionLost
+	    self._commonConnection.connectionLost(self, reason)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 326, in connectionLost
+	    protocol.connectionLost(reason)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 688, in connectionLost
+	    self.handleResponseEnd()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/proxy.py", line 82, in handleResponseEnd
+	    self.father.finish()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/server.py", line 277, in finish
+	    return http.Request.finish(self)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 1149, in finish
+	    raise RuntimeError(
+	builtins.RuntimeError: Request.finish called on a request after its connection was lost; use Request.notifyFinish to keep track of this.
+	
+|Portal| 2024-08-25 05:02:40 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=37036)
+|Portal| 2024-08-25 05:17:02 [..] Portal starting server ... 
+|Portal| 2024-08-25 05:18:25 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=46618)
+|Portal| 2024-08-25 05:18:36 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=35336)
+|Portal| 2024-08-25 05:21:05 [..] Portal starting server ... 
+|Portal| 2024-08-25 05:31:40 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=40512)
+|Portal| 2024-08-25 05:35:13 [..] Portal starting server ... 
+|Portal| 2024-08-25 05:36:29 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=47880)
+|Portal| 2024-08-25 05:39:50 [..] Portal starting server ... 
+|Portal| 2024-08-25 05:41:17 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=59718)
+|Portal| 2024-08-25 05:41:28 [..] Portal starting server ... 
+|Portal| 2024-08-25 05:43:06 [..] Portal starting server ... 
+|Portal| 2024-08-25 05:43:33 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=59164)
+|Portal| 2024-08-25 05:43:34 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=33974)
+|Portal| 2024-08-25 05:43:58 [..] Portal starting server ... 
+|Portal| 2024-08-25 05:45:12 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=60316)
+|Portal| 2024-08-25 05:45:39 [..] Portal starting server ... 
+|Portal| 2024-08-25 05:45:51 [!!] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	--- <exception caught here> ---
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 482, in _doReadOrWrite
+	    why = selectable.doRead()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 248, in doRead
+	    return self._dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 253, in _dataReceived
+	    rval = self.protocol.dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/protocols/basic.py", line 555, in dataReceived
+	    why = self.rawDataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 735, in rawDataReceived
+	    self.handleResponseEnd()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/proxy.py", line 82, in handleResponseEnd
+	    self.father.finish()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/server.py", line 277, in finish
+	    return http.Request.finish(self)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 1149, in finish
+	    raise RuntimeError(
+	builtins.RuntimeError: Request.finish called on a request after its connection was lost; use Request.notifyFinish to keep track of this.
+	
+|Portal| 2024-08-25 05:47:01 [..] Portal starting server ... 
+|Portal| 2024-08-25 05:47:02 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=52346)
+|Portal| 2024-08-25 05:47:25 [..] Portal starting server ... 
+|Portal| 2024-08-25 05:48:21 [..] Portal starting server ... 
+|Portal| 2024-08-25 05:49:24 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=34616)
+|Portal| 2024-08-25 05:49:24 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=34964)
+|Portal| 2024-08-25 06:01:42 [..] Received SIGTERM, shutting down.
+|Portal| 2024-08-25 06:01:42 [..] (TCP Port 4001 Closed)
+|Portal| 2024-08-25 06:01:42 [..] (TCP Port 4002 Closed)
+|Portal| 2024-08-25 06:01:42 [..] (TCP Port 4000 Closed)
+|Portal| 2024-08-25 06:01:42 [..] (TCP Port 4006 Closed)
+|Portal| 2024-08-25 06:01:42 [..] Main loop terminated.
+|Portal| 2024-08-25 06:01:42 [..] Server Shut Down.
+|Portal| 2024-08-26 01:20:04 [..] Loaded.
+|Portal| 2024-08-26 01:20:03 [..] Loading /home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/server/portal/portal.py...
+|Portal| 2024-08-26 01:20:04 [..] Loaded.
+|Portal| 2024-08-26 01:20:04 [..] twistd 23.10.0 (/home/mage/Documents/7thsea_dev/env/bin/python3 3.12.4) starting up.
+|Portal| 2024-08-26 01:20:04 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+|Portal| 2024-08-26 01:20:04 [..] AMP starting on 4006
+|Portal| 2024-08-26 01:20:04 [..] Telnet starting on 4000
+|Portal| 2024-08-26 01:20:04 [..] Websocket starting on 4002
+|Portal| 2024-08-26 01:20:04 [..] Webserver-proxy starting on 4001
+|Portal| 2024-08-26 01:20:05 [!!] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	--- <exception caught here> ---
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 482, in _doReadOrWrite
+	    why = selectable.doRead()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 577, in doConnect
+	    self.failIfNotConnected(error.getConnectError((err, strerror(err))))
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 485, in failIfNotConnected
+	    self.connector.connectionFailed(failure.Failure(err))
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/base.py", line 1297, in connectionFailed
+	    self.factory.clientConnectionFailed(self, reason)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/proxy.py", line 115, in clientConnectionFailed
+	    self.father.finish()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/server.py", line 277, in finish
+	    return http.Request.finish(self)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 1149, in finish
+	    raise RuntimeError(
+	builtins.RuntimeError: Request.finish called on a request after its connection was lost; use Request.notifyFinish to keep track of this.
+	
+|Portal| 2024-08-26 01:20:05 [!!] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/application/app.py", line 304, in runReactorWithLogging
+	    reactor.run()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/base.py", line 695, in run
+	    self.mainLoop()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/base.py", line 708, in mainLoop
+	    self.doIteration(t)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/epollreactor.py", line 244, in doPoll
+	    log.callWithLogger(selectable, _drdw, selectable, fd, event)
+	--- <exception caught here> ---
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 495, in _doReadOrWrite
+	    self._disconnectSelectable(selectable, why, inRead)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 113, in _disconnectSelectable
+	    selectable.connectionLost(failure.Failure(why))
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 506, in connectionLost
+	    self.failIfNotConnected(error.ConnectError(string=reason))
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 485, in failIfNotConnected
+	    self.connector.connectionFailed(failure.Failure(err))
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/base.py", line 1297, in connectionFailed
+	    self.factory.clientConnectionFailed(self, reason)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/proxy.py", line 115, in clientConnectionFailed
+	    self.father.finish()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/server.py", line 277, in finish
+	    return http.Request.finish(self)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 1149, in finish
+	    raise RuntimeError(
+	builtins.RuntimeError: Request.finish called on a request after its connection was lost; use Request.notifyFinish to keep track of this.
+	
+|Portal| 2024-08-26 01:20:05 [..] Portal starting server ... 
+|Portal| 2024-08-26 01:21:14 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=53168)
+|Portal| 2024-08-26 01:21:14 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=53202)
+|Portal| 2024-08-26 01:21:14 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=53206)
+|Portal| 2024-08-26 01:21:16 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=53196)
+|Portal| 2024-08-26 01:21:16 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=53188)
+|Portal| 2024-08-26 01:21:40 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=53176)
+|Portal| 2024-08-26 01:23:19 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=42676)
+|Portal| 2024-08-26 01:24:44 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=41906)
+|Portal| 2024-08-26 01:24:44 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=41912)
+|Portal| 2024-08-26 01:27:22 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=36352)
+|Portal| 2024-08-26 01:27:22 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=36364)
+|Portal| 2024-08-26 01:27:22 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=44808)
+|Portal| 2024-08-26 01:27:22 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=36344)
+|Portal| 2024-08-26 01:27:23 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=44812)
+|Portal| 2024-08-26 01:27:23 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=36350)
+|Portal| 2024-08-26 01:27:25 [..] Portal starting server ... 
+|Portal| 2024-08-26 01:31:27 [..] Portal starting server ... 
+|Portal| 2024-08-26 01:33:52 [..] Portal starting server ... 
+|Portal| 2024-08-26 01:36:11 [..] Portal starting server ... 
+|Portal| 2024-08-26 01:36:23 [!!] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	--- <exception caught here> ---
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 482, in _doReadOrWrite
+	    why = selectable.doRead()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 248, in doRead
+	    return self._dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 253, in _dataReceived
+	    rval = self.protocol.dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/protocols/basic.py", line 555, in dataReceived
+	    why = self.rawDataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 735, in rawDataReceived
+	    self.handleResponseEnd()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/proxy.py", line 82, in handleResponseEnd
+	    self.father.finish()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/server.py", line 277, in finish
+	    return http.Request.finish(self)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 1149, in finish
+	    raise RuntimeError(
+	builtins.RuntimeError: Request.finish called on a request after its connection was lost; use Request.notifyFinish to keep track of this.
+	
+|Portal| 2024-08-26 01:38:13 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=60922)
+|Portal| 2024-08-26 01:50:15 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=36578)
+|Portal| 2024-08-26 01:50:15 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=36582)
+|Portal| 2024-08-26 01:53:09 [..] Portal starting server ... 
+|Portal| 2024-08-26 01:53:47 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=42640)
+|Portal| 2024-08-26 01:55:53 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=49372)
+|Portal| 2024-08-26 01:55:53 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=41364)
+|Portal| 2024-08-26 02:09:22 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=54184)
+|Portal| 2024-08-26 02:09:22 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=54200)
+|Portal| 2024-08-26 02:09:22 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=54174)
+|Portal| 2024-08-26 02:09:31 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=49312)
+|Portal| 2024-08-26 04:28:28 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=60486)
+|Portal| 2024-08-26 04:35:55 [..] Received SIGTERM, shutting down.
+|Portal| 2024-08-26 04:35:55 [..] (TCP Port 4001 Closed)
+|Portal| 2024-08-26 04:35:55 [..] (TCP Port 4002 Closed)
+|Portal| 2024-08-26 04:35:55 [..] (TCP Port 4000 Closed)
+|Portal| 2024-08-26 04:35:55 [..] (TCP Port 4006 Closed)
+|Portal| 2024-08-26 04:35:55 [..] Main loop terminated.
+|Portal| 2024-08-26 04:35:55 [..] Server Shut Down.
+|Portal| 2024-08-26 22:07:39 [..] Loaded.
+|Portal| 2024-08-26 22:07:37 [..] Loading /home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/server/portal/portal.py...
+|Portal| 2024-08-26 22:07:39 [..] Loaded.
+|Portal| 2024-08-26 22:07:39 [..] twistd 23.10.0 (/home/mage/Documents/7thsea_dev/env/bin/python3 3.12.4) starting up.
+|Portal| 2024-08-26 22:07:39 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+|Portal| 2024-08-26 22:07:39 [..] AMP starting on 4006
+|Portal| 2024-08-26 22:07:39 [..] Telnet starting on 4000
+|Portal| 2024-08-26 22:07:39 [..] Websocket starting on 4002
+|Portal| 2024-08-26 22:07:39 [..] Webserver-proxy starting on 4001
+|Portal| 2024-08-26 22:07:39 [..] Portal starting server ... 
+|Portal| 2024-08-26 22:07:51 [!!] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	--- <exception caught here> ---
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 482, in _doReadOrWrite
+	    why = selectable.doRead()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 248, in doRead
+	    return self._dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 253, in _dataReceived
+	    rval = self.protocol.dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/protocols/basic.py", line 555, in dataReceived
+	    why = self.rawDataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 735, in rawDataReceived
+	    self.handleResponseEnd()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/proxy.py", line 82, in handleResponseEnd
+	    self.father.finish()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/server.py", line 277, in finish
+	    return http.Request.finish(self)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 1149, in finish
+	    raise RuntimeError(
+	builtins.RuntimeError: Request.finish called on a request after its connection was lost; use Request.notifyFinish to keep track of this.
+	
+|Portal| 2024-08-26 22:08:51 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=45040)
+|Portal| 2024-08-26 22:08:51 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=45074)
+|Portal| 2024-08-26 22:08:51 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=45082)
+|Portal| 2024-08-26 22:08:51 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=45086)
+|Portal| 2024-08-26 22:08:51 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=45078)
+|Portal| 2024-08-26 22:08:51 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=45044)
+|Portal| 2024-08-26 22:09:26 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=58336)
+|Portal| 2024-08-26 22:09:26 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=45058)
+|Portal| 2024-08-26 23:58:53 [!!] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	--- <exception caught here> ---
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 482, in _doReadOrWrite
+	    why = selectable.doRead()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 248, in doRead
+	    return self._dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 253, in _dataReceived
+	    rval = self.protocol.dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/protocols/basic.py", line 555, in dataReceived
+	    why = self.rawDataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 735, in rawDataReceived
+	    self.handleResponseEnd()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/proxy.py", line 82, in handleResponseEnd
+	    self.father.finish()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/server.py", line 277, in finish
+	    return http.Request.finish(self)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 1149, in finish
+	    raise RuntimeError(
+	builtins.RuntimeError: Request.finish called on a request after its connection was lost; use Request.notifyFinish to keep track of this.
+	
+|Portal| 2024-08-26 23:58:53 [!!] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	--- <exception caught here> ---
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 482, in _doReadOrWrite
+	    why = selectable.doRead()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 248, in doRead
+	    return self._dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 253, in _dataReceived
+	    rval = self.protocol.dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/protocols/basic.py", line 555, in dataReceived
+	    why = self.rawDataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 735, in rawDataReceived
+	    self.handleResponseEnd()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/proxy.py", line 82, in handleResponseEnd
+	    self.father.finish()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/server.py", line 277, in finish
+	    return http.Request.finish(self)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 1149, in finish
+	    raise RuntimeError(
+	builtins.RuntimeError: Request.finish called on a request after its connection was lost; use Request.notifyFinish to keep track of this.
+	
+|Portal| 2024-08-27 00:00:22 [..] Portal starting server ... 
+|Portal| 2024-08-27 00:02:51 [..] Portal starting server ... 
+|Portal| 2024-08-27 00:08:24 [..] Portal starting server ... 
+|Portal| 2024-08-27 00:11:45 [..] Portal starting server ... 
+|Portal| 2024-08-27 00:15:57 [..] Portal starting server ... 
+|Portal| 2024-08-27 00:18:53 [..] Portal starting server ... 
+|Portal| 2024-08-27 00:20:28 [..] Portal starting server ... 
+|Portal| 2024-08-27 00:22:05 [..] Portal starting server ... 
+|Portal| 2024-08-27 00:26:55 [..] Portal starting server ... 
+|Portal| 2024-08-27 00:36:29 [..] Portal starting server ... 
+|Portal| 2024-08-27 00:36:37 [..] Portal starting server ... 
+|Portal| 2024-08-27 00:37:25 [..] Portal starting server ... 
+|Portal| 2024-08-27 00:38:18 [..] Portal starting server ... 
+|Portal| 2024-08-27 00:40:07 [!!] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	--- <exception caught here> ---
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 482, in _doReadOrWrite
+	    why = selectable.doRead()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 248, in doRead
+	    return self._dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 253, in _dataReceived
+	    rval = self.protocol.dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/protocols/basic.py", line 555, in dataReceived
+	    why = self.rawDataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 735, in rawDataReceived
+	    self.handleResponseEnd()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/proxy.py", line 82, in handleResponseEnd
+	    self.father.finish()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/server.py", line 277, in finish
+	    return http.Request.finish(self)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 1149, in finish
+	    raise RuntimeError(
+	builtins.RuntimeError: Request.finish called on a request after its connection was lost; use Request.notifyFinish to keep track of this.
+	
+|Portal| 2024-08-27 00:41:07 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=34816)
+|Portal| 2024-08-27 00:41:07 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=34830)
+|Portal| 2024-08-27 00:42:23 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=34802)
+|Portal| 2024-08-27 00:43:01 [..] Portal starting server ... 
+|Portal| 2024-08-27 00:44:20 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=34680)
+|Portal| 2024-08-27 00:45:46 [..] Portal starting server ... 
+|Portal| 2024-08-27 00:46:10 [..] Portal starting server ... 
+|Portal| 2024-08-27 00:46:20 [!!] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	--- <exception caught here> ---
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 482, in _doReadOrWrite
+	    why = selectable.doRead()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 248, in doRead
+	    return self._dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 253, in _dataReceived
+	    rval = self.protocol.dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/protocols/basic.py", line 555, in dataReceived
+	    why = self.rawDataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 735, in rawDataReceived
+	    self.handleResponseEnd()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/proxy.py", line 82, in handleResponseEnd
+	    self.father.finish()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/server.py", line 277, in finish
+	    return http.Request.finish(self)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 1149, in finish
+	    raise RuntimeError(
+	builtins.RuntimeError: Request.finish called on a request after its connection was lost; use Request.notifyFinish to keep track of this.
+	
+|Portal| 2024-08-27 00:47:21 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=55348)
+|Portal| 2024-08-27 00:47:21 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=55352)
+|Portal| 2024-08-27 00:49:23 [..] Portal starting server ... 
+|Portal| 2024-08-27 00:52:05 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=51202)
+|Portal| 2024-08-27 00:52:05 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=51206)
+|Portal| 2024-08-27 01:03:03 [..] Portal starting server ... 
+|Portal| 2024-08-27 01:03:09 [!!] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	--- <exception caught here> ---
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 482, in _doReadOrWrite
+	    why = selectable.doRead()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 248, in doRead
+	    return self._dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 253, in _dataReceived
+	    rval = self.protocol.dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/protocols/basic.py", line 555, in dataReceived
+	    why = self.rawDataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 735, in rawDataReceived
+	    self.handleResponseEnd()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/proxy.py", line 82, in handleResponseEnd
+	    self.father.finish()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/server.py", line 277, in finish
+	    return http.Request.finish(self)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 1149, in finish
+	    raise RuntimeError(
+	builtins.RuntimeError: Request.finish called on a request after its connection was lost; use Request.notifyFinish to keep track of this.
+	
+|Portal| 2024-08-27 01:04:47 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=51264)
+|Portal| 2024-08-27 01:06:20 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=58226)
+|Portal| 2024-08-27 01:06:30 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=33330)
+|Portal| 2024-08-27 01:07:14 [..] Portal starting server ... 
+|Portal| 2024-08-27 01:07:54 [!!] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	--- <exception caught here> ---
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 482, in _doReadOrWrite
+	    why = selectable.doRead()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 248, in doRead
+	    return self._dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 253, in _dataReceived
+	    rval = self.protocol.dataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/protocols/basic.py", line 555, in dataReceived
+	    why = self.rawDataReceived(data)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 735, in rawDataReceived
+	    self.handleResponseEnd()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/proxy.py", line 82, in handleResponseEnd
+	    self.father.finish()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/server.py", line 277, in finish
+	    return http.Request.finish(self)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 1149, in finish
+	    raise RuntimeError(
+	builtins.RuntimeError: Request.finish called on a request after its connection was lost; use Request.notifyFinish to keep track of this.
+	
+|Portal| 2024-08-27 01:09:37 [..] Portal starting server ... 
+|Portal| 2024-08-27 01:10:46 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=48192)
+|Portal| 2024-08-27 01:10:46 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=34094)
+|Portal| 2024-08-27 01:21:05 [..] Portal starting server ... 
+|Portal| 2024-08-27 01:21:47 [..] Portal starting server ... 
+|Portal| 2024-08-27 01:22:06 [..] Portal starting server ... 
+|Portal| 2024-08-27 01:22:38 [..] Portal starting server ... 
+|Portal| 2024-08-27 01:25:53 [..] Portal starting server ... 
+|Portal| 2024-08-27 01:27:51 [..] Portal starting server ... 
+|Portal| 2024-08-27 01:28:26 [..] Portal starting server ... 
+|Portal| 2024-08-27 01:30:22 [..] Portal starting server ... 
+|Portal| 2024-08-27 01:30:59 [..] Portal starting server ... 
+|Portal| 2024-08-27 01:32:51 [..] Portal starting server ... 
+|Portal| 2024-08-27 01:35:30 [..] Portal starting server ... 
+|Portal| 2024-08-27 01:49:20 [!!] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/application/app.py", line 304, in runReactorWithLogging
+	    reactor.run()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/base.py", line 695, in run
+	    self.mainLoop()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/base.py", line 708, in mainLoop
+	    self.doIteration(t)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/epollreactor.py", line 244, in doPoll
+	    log.callWithLogger(selectable, _drdw, selectable, fd, event)
+	--- <exception caught here> ---
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 495, in _doReadOrWrite
+	    self._disconnectSelectable(selectable, why, inRead)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/posixbase.py", line 107, in _disconnectSelectable
+	    selectable.readConnectionLost(f)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 309, in readConnectionLost
+	    self.connectionLost(reason)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 508, in connectionLost
+	    self._commonConnection.connectionLost(self, reason)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/internet/tcp.py", line 326, in connectionLost
+	    protocol.connectionLost(reason)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 688, in connectionLost
+	    self.handleResponseEnd()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/proxy.py", line 82, in handleResponseEnd
+	    self.father.finish()
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/server.py", line 277, in finish
+	    return http.Request.finish(self)
+	  File "/home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/twisted/web/http.py", line 1149, in finish
+	    raise RuntimeError(
+	builtins.RuntimeError: Request.finish called on a request after its connection was lost; use Request.notifyFinish to keep track of this.
+	
+|Portal| 2024-08-27 01:50:38 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=41170)
+|Portal| 2024-08-27 03:39:11 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=36836)
+|Portal| 2024-08-27 03:39:18 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=36838)
+|Portal| 2024-08-27 03:39:18 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=36866)
+|Portal| 2024-08-27 03:39:18 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=36854)
+|Portal| 2024-08-27 03:40:19 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=36824)
+|Portal| 2024-08-27 03:40:19 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=36880)
+|Portal| 2024-08-27 04:11:45 [..] Received SIGTERM, shutting down.
+|Portal| 2024-08-27 04:11:45 [..] (TCP Port 4001 Closed)
+|Portal| 2024-08-27 04:11:45 [..] (TCP Port 4002 Closed)
+|Portal| 2024-08-27 04:11:45 [..] (TCP Port 4000 Closed)
+|Portal| 2024-08-27 04:11:45 [..] (TCP Port 4006 Closed)
+|Portal| 2024-08-27 04:11:45 [..] Main loop terminated.
+|Portal| 2024-08-27 04:11:45 [..] Server Shut Down.
+|Portal| 2024-08-29 16:00:17 [..] Loaded.
+|Portal| 2024-08-29 16:00:16 [..] Loading /home/mage/Documents/7thsea_dev/env/lib64/python3.12/site-packages/evennia/server/portal/portal.py...
+|Portal| 2024-08-29 16:00:17 [..] Loaded.
+|Portal| 2024-08-29 16:00:17 [..] twistd 23.10.0 (/home/mage/Documents/7thsea_dev/env/bin/python3 3.12.4) starting up.
+|Portal| 2024-08-29 16:00:17 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+|Portal| 2024-08-29 16:00:17 [..] AMP starting on 4006
+|Portal| 2024-08-29 16:00:17 [..] Telnet starting on 4000
+|Portal| 2024-08-29 16:00:17 [..] Websocket starting on 4002
+|Portal| 2024-08-29 16:00:17 [..] Webserver-proxy starting on 4001
+|Portal| 2024-08-29 16:00:17 [..] Portal starting server ... 

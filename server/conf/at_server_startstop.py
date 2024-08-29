@@ -18,12 +18,13 @@ at_server_cold_stop()
 """
 from evennia import create_script
 from world.bboards import BBOARD_HANDLER
-
+from world.dynmap.seamap import init_sea_map
 def at_server_init():
     """
     This is called first as the server is starting up, regardless of how.
     """
     create_script("world.scripts.SheetUpdateScript")
+    init_sea_map()
 
 
 

@@ -1,0 +1,123 @@
+/* Evennia CSS styles for the game website */
+
+
+/* Old site styles, left in just in case.
+   Shouldn't break anything! */
+
+
+   @font-face {
+    font-family: 'TheRumIsGone';
+    src: url(../../../fonts/the-rum-is-gone-font/TheRumIsGone-Wy1nG.ttf) format('truetype');
+    font-weight: normal;
+    font-style: normal;
+   }
+   @media (max-width: 570px) {
+    .oneThird {
+        width: 100%;
+        border-left: none;
+    }
+
+    .quarter {
+        width: 100%;
+        border-left: none;
+    }
+
+    .headerTitle {
+        text-align: right;
+    }
+
+    .headerSubTitle {
+        text-align: right;
+    }
+
+    .headerLinks {
+        position: static;
+    }
+}
+
+/* If you for some reason need to override the default sizing model,
+   for instance, if you're using a Google Maps widget, you may need
+   to use the following code, see:
+   http://v4-alpha.getbootstrap.com/getting-started/introduction/#box-sizing */
+/*
+.selector-for-some-widget {
+  -webkit-box-sizing: content-box;
+     -moz-box-sizing: content-box;
+          box-sizing: content-box;
+}
+*/
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  /* Margin bottom by footer height plus padding against main content*/
+  margin-bottom: 92px;
+  background-color: #e8dcb8 !important;
+  background-image: url(../../images/Download\ premium\ image\ of\ Ocean\ iPhone\ wallpaper\ aesthetic\ painted\ design\ by\ Sasi\ about\ iphone\ wallpaper\,\ blue\ wallpaper\ iphone\,\ watercolor\,\ iphone\ wallpaper\ beach\,\ and\ sea\ illustration\ 424230.jpg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.navbar-brand-logo {
+    height: 50px;
+    width: 50px;
+}
+
+
+/* Default Colors */
+
+.navbar {
+  background: linear-gradient(to bottom,rgba(10, 42, 74, 0.662)E 5%, #0f3b6e77 100%) !important;
+  background-color: rgba(18, 126, 220, 0.56);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  font-family:   'TheRumIsGone', sans-serif;
+  
+}
+
+.footer {
+  display:none;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  line-height: 20px; /* Vertically center the text there */
+  background-color: #3d5c7a;
+}
+
+
+/* Fancy play - button */
+
+a.playbutton {
+box-shadow: 0px 1px 10px 5px #9fb4f2;
+background:linear-gradient(to bottom, #ff0038 5%, #660000
+ 100%);
+background-color:#ff0038;
+border-radius:12px;
+border:1px solid #4e6096;
+display:inline-block;
+cursor:pointer;
+color:#ffffff;
+font-family:Roboto;
+font-size:19px;
+padding:14px 37px;
+text-decoration:none;
+text-shadow:0px 1px 0px #00030c;
+}
+a.playbutton:hover {
+background:linear-gradient(to bottom, #476e9e7a 5%, #7892c2ab 100%);
+background-color:#8e8e8e;
+}
+a.playbutton:active {
+position:relative;
+top:1px;
+}
+

@@ -5,27 +5,13 @@ from world.combat_script.combat_system import get_combat
 from typeclasses.weapons.unarmed_types import WEAPON_TYPES
 HERO_POINTS_INITIAL = 120
 from django.core.exceptions import ObjectDoesNotExist
-from evennia.utils.dbserialize import _SaverDict, _SaverList            
+from evennia.utils.dbserialize import _SaverDict, _SaverList   
+from commands.character_based.ship_commands import ShipCmdSet
+
 class Character(ObjectParent, DefaultCharacter):
-
-
     @lazy_property
     def character_sheet(self):
-        from world.character_sheet.models import CharacterSheet
         return CharacterSheet.create_from_typeclass(self)
-
-    def at_object_creation(self):
-        super().at_object_creation()
-        # ... your existing initialization code ...
-        self.db.create_character_sheet = True
-
-    def at_init(self):
-        super().at_init()
-        if self.db.create_character_sheet:
-            # This will lazily create the character sheet if it doesn't exist
-            _ = self.character_sheet
-            self.db.create_character_sheet = False
-
 
     def at_object_creation(self):
         super().at_object_creation()
@@ -33,17 +19,10 @@ class Character(ObjectParent, DefaultCharacter):
         self.db.gender = ""
         self.db.hero_points = 0
         self.db.traits = {
-            "brawn": 1,
-            "finesse": 1,
-            "wits": 1,
-            "resolve": 1,
-            "panache": 1,
+            "brawn": 1, "finesse": 1, "wits": 1, "resolve": 1, "panache": 1,
         }
         self.db.skills = {
-            'Martial': {},
-            'Civilian': {},
-            'Professional': {},
-            'Artist': {}
+            'Martial': {}, 'Civilian': {}, 'Professional': {}, 'Artist': {}
         }
         self.db.flesh_wounds = 0
         self.db.dramatic_wounds = 0
@@ -51,7 +30,7 @@ class Character(ObjectParent, DefaultCharacter):
         self.db.nationality = ""
         self.db.is_sorcerer = False
         self.db.potential_sorcery = ""
-        self.db.sorcery_knacks = {}  # Add this line to store sorcery knacks
+        self.db.sorcery_knacks = {}
         self.db.complete_chargen = False
         self.db.xp = 0
         self.db.money = {"guilders": 0, "doubloons": 0}
@@ -60,10 +39,11 @@ class Character(ObjectParent, DefaultCharacter):
         self.db.current_parry_skill = "Footwork"
         self.db.trait_bonuses = {}
         self.db.sorte_magic_effects = {}
-        self.db.duelist_style = ""  # Add this line to store the duelist style
+        self.db.duelist_style = ""
         self.db.approved = False
         self.db.unconscious = False
         self.db.equipped_armor = {}
+        self.db.desc = self.db.description
         self.db.description = ""
         self.db.personality = ""
         self.db.biography = ""
@@ -76,9 +56,47 @@ class Character(ObjectParent, DefaultCharacter):
         self.db.eisen_bought = False
         self.db.dracheneisen_slots = {}
         self.db.total_xp_accrued = 0
-        from world.character_sheet.models import CharacterSheet
         self.db.create_character_sheet = True
         self.db.update_model_task = None
+
+    def at_init(self):
+        super().at_init()
+        if self.db.create_character_sheet:
+            # This will lazily create the character sheet if it doesn't exist
+            _ = self.character_sheet
+            self.db.create_character_sheet = False
+
+    def at_hurt(self, damtype, value):
+        self.msg(f"Debug: Entering at_hurt method. damtype: {damtype}, value: {value}")
+        self.msg(f"Debug: Type of self.hurt_levels: {type(self.hurt_levels)}")
+        
+        if callable(self.hurt_levels):
+            self.msg("Debug: hurt_levels is callable")
+        else:
+            self.msg(f"Debug: hurt_levels is not callable, it is: {self.hurt_levels}")
+
+        match damtype:
+            case "dramatic":
+                self.character_sheet.hurt_character(value, "dramatic")
+                self.msg(f"|500You've been hurt for {value} dramatic wound{'s' if value > 1 else ''}!|n")
+            case "flesh":
+                self.character_sheet.hurt_character(value, "flesh")
+                self.msg(f"|412You take {value} flesh wound{'s' if value > 1 else ''}!|n")
+            case _:
+                self.msg(f"Unknown damage type: {damtype}")
+        
+        try:
+            if callable(self.hurt_levels):
+                hurt_level = self.hurt_levels()
+                self.msg(f"You are {hurt_level}.")
+            else:
+                self.msg(f"Error: hurt_levels is not callable, current value: {self.hurt_levels}")
+        except Exception as e:
+            self.msg(f"Error when calling hurt_levels: {str(e)}")
+            import traceback
+            self.msg(f"Traceback: {traceback.format_exc()}")
+
+        self.msg("Debug: Exiting at_hurt method")
 
     def get_advantages(self):
         """
@@ -290,8 +308,19 @@ class Character(ObjectParent, DefaultCharacter):
         return resolve + armor_value, max(resolve, armor_soak_keep)
 
 
-    def at_hurt(self):
-        pass
+    def at_hurt(self, damtype, value):
+        match damtype:
+            case "dramatic":
+                self.character_sheet.hurt_character(value, "dramatic")
+                self.msg(f"|500You've been hurt for {value} dramatic wound{'s' if value > 1 else ''}!|n")
+                self.msg(f"You are {self.hurt_levels()}.")
+            case "flesh":
+                self.character_sheet.hurt_character(value, "flesh")
+                self.msg(f"|412You take {value} flesh wound{'s' if value > 1 else ''}!|n")
+                self.msg(f"You are {self.hurt_levels()}.")
+            case _:
+                pass  # Handle unexpected damage types if needed
+        
 
     def get_personality(self):
         return self.db.personality
@@ -345,6 +374,12 @@ class Character(ObjectParent, DefaultCharacter):
         super().at_post_puppet()
         self.check_combat_status()
 
+    def at_post_login(self):
+        super().at_post_login()
+        if self.approved == True:
+            self.cmdset.add(ShipCmdSet())
+
+
     def check_combat_status(self):
         from commands.mycmdset import CombatCmdSet
         if hasattr(self.db, 'combat_id'):
@@ -381,9 +416,19 @@ class Character(ObjectParent, DefaultCharacter):
         return getattr(self.db, 'armor', 0)  # Default to 0 if not set
 
     def at_death(self):
-        self.location.msg_contents(f"$You() $conj(die).", from_obj=self)
-        self.db.approved = False
-        self.update_model()
+        self.location.msg_contents(f"|500$You() $conj(die)!|n", from_obj=self)
+        self.character_sheet.approved = False
+        self.character_sheet.save(update_fields=["approved"])
+        
+        # If the character is in combat, remove them
+        combat = self.ndb.combat
+        if combat:
+            combat.remove_participant(self)
+
+        # Reset any combat-related attributes
+        self.db.wielded_weapon = None
+        self.db.current_attack_skill = "Attack (Unarmed)"
+        self.db.current_parry_skill = "Footwork"
 
     def at_first_login(self):
         super().at_first_login()
@@ -397,45 +442,7 @@ class Character(ObjectParent, DefaultCharacter):
     def complete_chargen(self):
         self.db.complete_chargen = True
 
-    def set_trait(self, trait, value):
-        if trait in self.db.traits:
-            self.db.traits[trait] = value
-            return True
-        return False
-
-    def set_sorcerer(self, sorcerer_type):
-        if sorcerer_type == "none":
-            self.db.sorcerer = False
-        elif sorcerer_type == "half":
-            self.db.sorcerer = "half"
-            self.db.hero_points -= 20
-        elif sorcerer_type == "full":
-            self.db.sorcerer = "full"
-            self.db.hero_points -= 40
-        else:
-            return False
-        self.update_model()
-        return True
-
-    def add_package(self, package_name):
-        from typeclasses.chargen import PACKAGES
-        package = PACKAGES.get(package_name)
-        if not package:
-            return False, "Invalid package."
-        if self.db.hero_points < package["cost"]:
-            return False, "Not enough Hero Points."
-        
-        # Deduct the cost
-        self.db.hero_points -= package["cost"]
-        
-        # Add skills
-        for skill, points in package["skills"].items():
-            self.db.skills[skill] += points
-        
-        # Add perks
-        self.db.advantages.extend(package.get("advantages", []))
-        
-        return True, f"Package {package_name} added successfully."
+    
 
     def get_character_sheet(self):
         """
@@ -555,32 +562,7 @@ class Character(ObjectParent, DefaultCharacter):
             return self.db.equipped_armor.db.soak_keep
         return 1
     
-    @property
-    def hurt_levels(self):
-        """
-        Describes how hurt the character is based on Dramatic Wounds.
-        The character can sustain up to twice their resolve in dramatic wounds before death.
-        """
-        dramatic_wounds = self.db.dramatic_wounds
-        resolve = self.db.traits['resolve']
-        death_threshold = resolve * 2
 
-        if dramatic_wounds == 0:
-            return "|555Healthy|n"
-        elif dramatic_wounds == 1:
-            return "|252Scratched|n"
-        elif dramatic_wounds == 2:
-            return "|352Wounded|n"
-        elif dramatic_wounds <= resolve // 2:
-            return "|320Hurt|n"
-        elif dramatic_wounds <= resolve:
-            return "|400Badly Wounded|n"
-        elif dramatic_wounds <= resolve + (resolve // 2):
-            return "|411Gravely Injured|n"
-        elif dramatic_wounds < death_threshold:
-            return "|500Near Death|n"
-        else:
-            return "|511Dead|n"
             
     def ensure_combat_attributes(self):
         """
@@ -613,14 +595,6 @@ class Character(ObjectParent, DefaultCharacter):
         print(f"Debug: Combat attributes ensured for {self.name}")
         print(f"Debug: Total Armor: {self.db.total_armor}, Armor Soak Keep: {self.db.armor_soak_keep}")
 
-    def refresh_typeclass(self):
-        """
-        Refresh the typeclass of the character.
-        """
-        current_typeclass = self.typeclass_path
-        self.swap_typeclass(current_typeclass, clean_attributes=False)
-        print(f"Debug: Typeclass refreshed for {self.name}")
-        self.update_model()
 
     @property
     def character_sheet(self):
@@ -632,7 +606,7 @@ class Character(ObjectParent, DefaultCharacter):
 
    
     def update_model(self):
-        CharacterSheet.create_from_typeclass(self)
+        self.character_sheet.create_from_typeclass(self)
 
 
     def _do_update_model(self):
@@ -643,6 +617,41 @@ class Character(ObjectParent, DefaultCharacter):
         sheet.update_from_typeclass()
         self.db.update_model_task = None
 
+    def get_hurt_level(self):
+        """
+        Calculates and returns the character's current hurt level as a string.
+        """
+        try:
+            dramatic_wounds = self.character_sheet.dramatic_wounds
+            resolve = self.db.traits.get('resolve', 1)  # Default to 1 if not set
+            death_threshold = resolve * 2 + 2
+
+            hurt_levels = [
+                (0, "|555Healthy|n"),
+                (1, "|252Scratched|n"),
+                (2, "|352Wounded|n"),
+                (resolve // 2, "|320Hurt|n"),
+                (resolve, "|400Badly Wounded|n"),
+                (resolve + (resolve // 2), "|411Gravely Injured|n"),
+                (death_threshold - 1, "|500Near Death|n"),
+                (death_threshold, "|511Dead|n")
+            ]
+
+            for threshold, level in hurt_levels:
+                if dramatic_wounds <= threshold:
+                    return level
+
+            return "|511Dead|n"  # If somehow above all thresholds
+        except Exception as e:
+            print(f"Error in get_hurt_level for {self.name}: {str(e)}")
+            return "Error: Unable to determine hurt level"
+
+    def hurt_levels(self):
+        """
+        Returns the character's current hurt level.
+        This method ensures hurt_levels remains callable.
+        """
+        return self.get_hurt_level()
     # def msg(self, text=None, from_obj=None, session=None, **kwargs):
     #     """
     #     Emits something to a session attached to the object.
@@ -652,3 +661,50 @@ class Character(ObjectParent, DefaultCharacter):
     #         text = convert_mush_tokens(text)
     #     super().msg(text, from_obj=from_obj, session=session, **kwargs)
 
+    def at_death(self):
+        self.location.msg_contents(f"|500$You() $conj(die)!|n", from_obj=self)
+        self.character_sheet.approved = False
+        self.character_sheet.save(update_fields=["approved"])
+        
+        # If the character is in combat, remove them
+        combat = self.ndb.combat
+        if combat:
+            combat.remove_participant(self)
+
+        # Reset any combat-related attributes
+        self.db.wielded_weapon = None
+        self.db.current_attack_skill = "Attack (Unarmed)"
+        self.db.current_parry_skill = "Footwork"
+
+        # Remove the default cmdset and add the dead cmdset
+        self.cmdset.delete("commands.default_cmdsets.CharacterCmdSet")
+        self.cmdset.add(DeadCmdSet, permanent=True)
+
+        # Move the character to the afterlife location
+        afterlife = self.search("Afterlife", global_search=True)
+        if afterlife:
+            self.move_to(afterlife, quiet=True)
+        else:
+            self.msg("The afterlife seems to be missing. You remain where you are.")
+
+        self.msg("You have died and entered the afterlife.")
+
+    def resurrect(self):
+        """
+        Resurrect the character
+        """
+        # Remove the dead cmdset and add back the default cmdset
+        self.cmdset.delete(DeadCmdSet)
+        self.cmdset.add("commands.default_cmdsets.CharacterCmdSet", permanent=True)
+
+        # Reset health attributes
+        self.db.dramatic_wounds = 0
+        self.db.flesh_wounds = 0
+
+        # Move the character back to a starting location
+        start_location = self.search("Main Room", global_search=True)
+        if start_location:
+            self.move_to(start_location, quiet=True)
+        
+        self.msg("You have been resurrected!")
+        self.location.msg_contents(f"{self.name} has returned to life!", exclude=[self])

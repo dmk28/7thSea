@@ -4,7 +4,7 @@ from evennia.objects.models import ObjectDB
 
 
 class Ship(models.Model):
-    evennia_object = models.OneToOneField(ObjectDB, on_delete=models.CASCADE, related_name='ship', limit_choices_to={'db_typeclass_path': 'typeclasses.domain.ships.Ships'})
+    evennia_object = models.OneToOneField(ObjectDB, on_delete=models.CASCADE, related_name='ship', limit_choices_to={'db_typeclass_path': 'typeclasses.domain.ships.Ship'})
     name = models.CharField(max_length=100)
     brawn = models.IntegerField(default=0)
     finesse = models.IntegerField(default=0)

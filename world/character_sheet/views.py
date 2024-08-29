@@ -10,7 +10,6 @@ def has_builder_permissions(user):
     account = AccountDB.objects.get(id=user.id)
     return account.check_permstring("Builders") or account.check_permstring("Admin")
 
-#@login_required
 def character_sheet(request, object_id):
     character = get_object_or_404(ObjectDB, id=object_id)
     if not character.access(request.user, 'read'):

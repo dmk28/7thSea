@@ -156,6 +156,7 @@ class CmdFeint(Command):
         else:
             self.caller.msg("You are not in combat.")
 class CmdStopThrust(Command):
+    help_category = "Swordsman"
     key="stopthrust"
     def func(self):
         combat = get_combat(self.caller)
@@ -189,6 +190,16 @@ class CmdLunge(Command):
         combat = get_combat(self.caller)
         if combat:
             combat.handle_action_input(self.caller, f"lunge {self.args}")
+        else:
+            self.caller.msg("You are not in combat.")
+
+class CmdTag(Command):
+    key="tag"
+    help_category = "Swordsman"
+    def func(self):
+        combat = get_combat(self.caller)
+        if combat:
+            combat.handle_action_input(self.caller, f"tag {self.args}")
         else:
             self.caller.msg("You are not in combat.")
 

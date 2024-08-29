@@ -1,14 +1,40 @@
 from typeclasses.objects import DefaultObject
-from evennia import AttributeProperty
+from evennia import AttributeProperty, create_object
 from world.ships.models import Ship as ShipModel, Modification, Flaw
+from django.db import transaction
 
-class Ship(DefaultObject):
+
+
+class Ship(DefaultObject):  # Changed from Object to DefaultObject
     def at_object_creation(self):
+        from typeclasses.rooms import ShipInterior
+
         super().at_object_creation()
+        self.db.ship_type = ""
+        self.db.captain = None
+        self.db.modifications = []
+        # Create the ship's interior
+        self.db.interior = create_object(ShipInterior, key=f"{self.name} - Main Deck")
+        self.db.interior.db.ship = self
+        # Create the associated ShipModel
         ShipModel.objects.create(evennia_object=self)
 
+    def return_appearance(self, looker):
+        desc = super().return_appearance(looker)
+        desc += f"\nType 'enter {self.name}' to board the ship."
+        return desc
+
+    def at_object_receive(self, moved_obj, source_location, **kwargs):
+        if moved_obj.has_account:  # If it's a player
+            moved_obj.move_to(self.db.interior, quiet=True)
+            moved_obj.msg(f"You board {self.name}.")
+
+    def at_object_leave(self, moved_obj, target_location, **kwargs):
+        if moved_obj.has_account:  # If it's a player
+            moved_obj.msg(f"You disembark from {self.name}.")
+
     @property
-    def ship_model(self):
+    def ship_model(self):  # Changed to property
         return ShipModel.objects.get_or_create(evennia_object=self)[0]
 
     @property
@@ -20,27 +46,36 @@ class Ship(DefaultObject):
         self.ship_model.brawn = value
         self.ship_model.save()
 
+    # Similar properties for finesse, resolve, wits, panache
+    @property
+    def finesse(self):
+        return self.ship_model.finesse
+
+    @finesse.setter
     def finesse(self, value):
-        self.ship_model.finesse = finesse
+        self.ship_model.finesse = value
         self.ship_model.save()
 
-    def resolve(self,value):
-        self.ship_model.resolve = resolve
-        self.ship_model.save()
-    def wits(self, value):
-        self.ship_model.wits = wits
-        self.ship_model.save()
-    def panache(self, value):
-        self.ship_model.panache = panache
+    # Add similar properties for resolve, wits, panache
+
+    @property
+    def cargo(self):
+        return self.ship_model.cargo
+
+    @cargo.setter
+    def cargo(self, value):
+        self.ship_model.cargo = value
         self.ship_model.save()
 
-    def crew(self, value):
-        self.ship_model.crew = crew
-        self.ship_model.save()
-    # Similar properties for finesse, resolve, wits, panache, cargo, draft
+    @property
+    def draft(self):
+        return self.ship_model.draft
+
+    @draft.setter
     def draft(self, value):
-        self.ship_model.draft = draft
+        self.ship_model.draft = value
         self.ship_model.save()
+
     @property
     def captain(self):
         return self.ship_model.captain
@@ -78,14 +113,37 @@ class Ship(DefaultObject):
         }
 
     # Methods to add/remove modifications and flaws
-    def add_modification(self, name):
-        Modification.objects.create(ship=self.ship_model, name=name)
+    @transaction.atomic
+    def update_attributes(self, **kwargs):
+        for attr, value in kwargs.items():
+            if hasattr(self.ship_model, attr):
+                setattr(self.ship_model, attr, value)
+        self.ship_model.save()
 
-    def remove_modification(self, name):
-        self.ship_model.modifications.filter(name=name).delete()
+    def add_modification(self, name):
+        try:
+            Modification.objects.create(ship=self.ship_model, name=name)
+        except Exception as e:
+            self.msg(f"Error adding modification: {str(e)}")
 
     def add_flaw(self, name):
-        Flaw.objects.create(ship=self.ship_model, name=name)
+        try:
+            Flaw.objects.create(ship=self.ship_model, name=name)
+        except Exception as e:
+            self.msg(f"Error adding flaw: {str(e)}")
 
-    def remove_flaw(self, name):
-        self.ship_model.flaws.filter(name=name).delete()
+    def move_to(self, destination):
+        if super().move_to(destination):
+            self.db.interior.db.location = destination
+            return True
+        return False
+        
+    def move_to_coordinates(self, coordinates):
+        sea_map = search_script("SeaMap")[0]
+        target_room = sea_map.get_sea_room(coordinates)
+        
+        if target_room:
+            self.move_to(target_room)
+            return True
+        else:
+            return False

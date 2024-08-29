@@ -19,7 +19,7 @@ class FlamebladeEffect(Script):
         
         flameblade_rank = self.attributes.get('flameblade_rank', 0)
         original_damage_bonus = weapon.db.damage_bonus 
-        weapon.db.damage_bonus = flameblade_rank * 3
+        weapon.db.damage_bonus = flameblade_rank * 2
 
         original_damage = weapon.db.damage or 0
         original_keep_dice = weapon.db.keep_dice or 1

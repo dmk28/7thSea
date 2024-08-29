@@ -9,10 +9,14 @@ from evennia.objects.objects import DefaultRoom
 
 from .objects import ObjectParent
 from evennia.utils import dedent
-
-from commands.mycmdset import CharacterGenCmdSet
-from commands.crafting.crafting_cmdset import CraftingCmdSet
+import logging
+from commands.crafting.crafting_cmdset import CraftingCmdSet, ShipBuildCmdset
 from world.banking.rooms import BankRoom
+from evennia.utils.utils import inherits_from
+
+logger = logging.getLogger("evennia")
+
+
 class Room(ObjectParent, DefaultRoom):
     """
     Rooms are like any Object, except their location is None
@@ -33,6 +37,11 @@ class MainRoom(Room):
         self.db.desc = "This is the main room. Welcome to the game!"
 
 
+class ShipInterior(Room):
+
+    def at_object_creation(self):
+        super().at_object_creation()
+        self.db.ship = None  # Will be set to the parent ship object
 
 
 
@@ -41,8 +50,12 @@ class ChargenRoom(Room):
     """
     A room for character generation.
     """
+    
+
     def at_object_creation(self):
-        self.cmdset.add(CharacterGenCmdSet, permanent=True)
+        from commands.mycmdset import CharacterGenCmdSet
+        super().at_object_creation()
+        self.cmdset.add(CharacterGenCmdSet, persistent=True)
         self.db.desc = dedent("""
             Welcome to the character generation room!
             Here you will create your 7th Sea character step by step.
@@ -101,30 +114,90 @@ class ChargenRoom(Room):
         
         return status_messages.get(state, "Type 'chargen' to begin or continue character generation.")
 
+
+# class CmdSetRoom(DefaultRoom):
+#     def at_object_creation(self):
+#         super().at_object_creation()
+#         self.db.room_cmdset = None  # This will store the cmdset class
+
+#     def at_object_receive(self, moved_obj, source_location, **kwargs):
+#         if moved_obj.has_account and self.db.room_cmdset:
+#             moved_obj.cmdset.add(self.db.room_cmdset)
+#         super().at_object_receive(moved_obj, source_location, **kwargs)
+
+#     def at_object_leave(self, moved_obj, target_location, **kwargs):
+#         if moved_obj.has_account and self.db.room_cmdset:
+#             moved_obj.cmdset.delete(self.db.room_cmdset)
+#         super().at_object_leave(moved_obj, target_location, **kwargs)
+
+# class ShipyardRoom(Room):
+#     def at_object_creation(self):
+#         self.db.desc = dedent("""This is a room you can use to make ships.""")
+
+#     def return_appearance(self, looker):
+#         text = super().return_appearance(looker)
+#         if hasattr(looker, 'db') and looker.db.approved:
+#             money = looker.db.money.get("guilders", 0)
+#             if money > 10000:
+#                 text += "\n\nType |545shipbuild <ship_type>|n to begin shipbuilding!"
+#             else:
+#                 text += '\n\nYou cannot afford shipbuilding, yet!'
+#         return text
+
+#     def at_object_receive(self, moved_obj, source_location, **kwargs):
+#         """Called when an object enters this room."""
+#         if moved_obj.has_account:
+#             moved_obj.cmdset.add(CraftingCmdSet, persistent=False)
+
+#     def at_object_leave(self, moved_obj, target_location, **kwargs):
+#         """Called when an object leaves this room."""
+#         if moved_obj.has_account:
+#             moved_obj.cmdset.delete(CraftingCmdSet)
+
+# class UsedBankRoom(BankRoom):
+
+#     pass
+
+                
 class ShipyardRoom(Room):
     def at_object_creation(self):
-        self.db.desc = dedent("""This is a room you can use to make ships.""")
+        super().at_object_creation()
+        self.cmdset.add(ShipBuildCmdset, persistent=True)
 
-    def return_appearance(self, looker):
-        text = super().return_appearance(looker)
-        if hasattr(looker, 'db') and looker.db.approved:
-            money = looker.db.money.get("guilders", 0)
-            if money > 10000:
-                text += "\n\nType |545shipbuild <ship_type>|n to begin shipbuilding!"
-            else:
-                text += '\n\nYou cannot afford shipbuilding, yet!'
-        return text
+# class TavernRoom(CmdSetRoom):
+#     def at_object_creation(self):
+#         super().at_object_creation()
+#         self.db.desc = "A cozy tavern filled with the smell of ale and roasted meat."
+#         self.db.room_cmdset = TavernCmdSet  # You'd need to create this cmdset
+
+# class MarketRoom(CmdSetRoom):
+#     def at_object_creation(self):
+#         super().at_object_creation()
+#         self.db.desc = "A bustling market with vendors hawking their wares."
+#         self.db.room_cmdset = MarketCmdSet  # You'd need to create this cmdset
+
+
+class SeaRoom(DefaultRoom):
+    def at_object_creation(self):
+        super().at_object_creation()
+        self.db.coordinates = (0, 0)  # Default coordinates
+        self.db.is_port = False
+        self.db.port_name = ""
 
     def at_object_receive(self, moved_obj, source_location, **kwargs):
-        """Called when an object enters this room."""
-        if moved_obj.has_account:
-            moved_obj.cmdset.add(CraftingCmdSet, persistent=False)
+        if inherits_from(moved_obj, "typeclasses.ships.Ship"):
+            # A ship has entered this room
+            self.msg_contents(f"{moved_obj.name} has sailed into the area.")
 
     def at_object_leave(self, moved_obj, target_location, **kwargs):
-        """Called when an object leaves this room."""
-        if moved_obj.has_account:
-            moved_obj.cmdset.delete(CraftingCmdSet)
+        if inherits_from(moved_obj, "typeclasses.ships.Ship"):
+            # A ship has left this room
+            self.msg_contents(f"{moved_obj.name} has sailed away.")
 
-class UsedBankRoom(BankRoom):
-
-    pass
+    def return_appearance(self, looker):
+        # Customize the room description based on its properties
+        desc = super().return_appearance(looker)
+        if self.db.is_port:
+            desc += f"\nYou are at the port of {self.db.port_name}."
+        desc += f"\nCoordinates: {self.db.coordinates}"
+        return desc

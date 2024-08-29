@@ -9,7 +9,7 @@ with a location in the game world (like Characters, Rooms, Exits).
 """
 
 from evennia.objects.objects import DefaultObject
-
+from world.crafts.models import WeaponModel
 class ObjectParent:
     """
     This is a mixin that can be used to override *all* entities inheriting at
@@ -216,6 +216,7 @@ class Object(ObjectParent, DefaultObject):
     pass
 
 
+
 class Weapon(DefaultObject):
     """
     This is the base parent for all weapons.
@@ -236,6 +237,50 @@ class Weapon(DefaultObject):
         self.db.attack_skill = "Attack (Generic)"
         self.db.parry_skill = "Parry (Generic)"
         self.db.damage_bonus = 0
+        self.db.cost = 0
+        self.db.weight = 0.0
+        self.db.quality_level = 0
+
+        # Create the corresponding WeaponModel
+        self.create_or_update_weapon_model()
+
+    def create_or_update_weapon_model(self):
+        """
+        Create or update the corresponding WeaponModel for this Weapon.
+        """
+        weapon_model, created = WeaponModel.objects.get_or_create(evennia_object=self)
+        
+        weapon_model.name = self.name
+        weapon_model.description = self.db.description
+        weapon_model.damage = self.db.damage
+        weapon_model.roll_keep = self.db.damage_keep
+        weapon_model.weapon_type = self.db.weapon_type
+        weapon_model.flameblade_active = self.db.flameblade_active
+        weapon_model.attack_skill = self.db.attack_skill
+        weapon_model.parry_skill = self.db.parry_skill
+        weapon_model.damage_bonus = self.db.damage_bonus
+        weapon_model.cost = self.db.cost
+        weapon_model.requirements = self.db.requirements
+        weapon_model.weight = self.db.weight
+        weapon_model.quality_level = self.db.quality_level
+        
+        weapon_model.save()
+
+    def at_post_unpuppet(self, account, session=None):
+        """
+        Called just after the Object has been successfully unpuppeted.
+        """
+        super().at_post_unpuppet(account, session)
+        # Update the WeaponModel to reflect any changes made during puppeting
+        self.create_or_update_weapon_model()
+
+    def at_pre_delete(self):
+        """
+        Called just before the object is deleted.
+        """
+        super().at_pre_delete()
+        # Delete the corresponding WeaponModel
+        WeaponModel.objects.filter(evennia_object=self).delete()
 
     def calculate_damage(self, wielder):
         """
@@ -260,6 +305,23 @@ class Weapon(DefaultObject):
         Determine which trait to use for attack rolls.
         """
         return 'finesse'  # Default to finesse for most weapons
+
+    def at_post_setattr(self, attribute_name, value, attribute_type):
+        """
+        Called after an attribute is set on this object.
+        This method will update the WeaponModel if a relevant attribute is changed.
+        """
+        super().at_post_setattr(attribute_name, value, attribute_type)
+        
+        # List of attributes that should trigger a WeaponModel update
+        weapon_attributes = [
+            "key", "db_description", "db_damage", "db_damage_keep", "db_weapon_type",
+            "db_flameblade_active", "db_attack_skill", "db_parry_skill", "db_damage_bonus",
+            "db_cost", "db_requirements", "db_weight", "db_quality_level"
+        ]
+        
+        if attribute_name in weapon_attributes:
+            self.create_or_update_weapon_model()
 
 
 
@@ -330,3 +392,5 @@ class Clothing(Armor):
         self.db.sorte_active = False
         self.db.pyeryem_effect = False
         self.db.cost = 0
+
+

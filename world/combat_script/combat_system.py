@@ -23,6 +23,7 @@ class CombatScript(DefaultScript):
         self.db.armor = 0
         self.db.round = 0  # Initialize the round counter
         self.db.soak_keep = 0
+        self.db.firearm_cooldowns = {}
   
     def at_start(self):
         self.msg_all(f"Debug: Combat script {self.id} started.")
@@ -89,6 +90,7 @@ class CombatScript(DefaultScript):
             
             if adv_name == 'Combat Reflexes' and "combat_reflexes" not in character.ndb.special_effects:
                 character.ndb.special_effects.append("combat_reflexes")
+                character.db.special_effects.append("combat_reflexes")
                 character.msg("Your Combat Reflexes advantage is active.")
             elif adv_name == "Toughness" and "toughness" not in character.ndb.special_effects:
                 character.ndb.special_effects.append("toughness")
@@ -185,6 +187,10 @@ class CombatScript(DefaultScript):
         if "indomitable_will" in character.ndb.special_effects:
             if action_type == "social_defense":
                 bonus += 2  # +2 dice when resisting Contested social rolls
+        if "flameblade" in character.character_sheet.special_effects:
+            feed_rank = character.character_sheet.get_sorcery_knack_value("Feed")
+            damage = 6 - feed_rank
+            self.resolve_automatic_wounds(character, damage)
 
         # Other effects remain the same...
         if action_type == "defense" and "portewalk" in character.ndb.special_effects:
@@ -204,16 +210,36 @@ class CombatScript(DefaultScript):
             bonus += 1  # Applies to both attack and defense
         if "arcana_boost" in character.ndb.special_effects:
             bonus += 5  # Applies to both attack and defense
+        if action_type == "attack" and "feinted" in character.ndb.special_effects:
+            bonus += 5 # Applies offense bonus
+        if action_type == "attack" and "feinted_critical" in character.ndb.special_effects:
+            bonus += 10 # Applies critical offense bonus.
+        if action_type == "attack" and "lunged" in character.ndb.special_effects:
+            bonus -= 5
+
+        if action_type == "soak" and "tag_penalty" in character.ndb.special_effects:
+            bonus -= 4
+        if action_type == "damage" and "executed_tag" in character.ndb.special_effects:
+            bonus += 4
+        if action_type == "damage" and "pommel_strike" in character.ndb.special_effects:
+            bonus += 1  # 2k1 damage for Pommel Strike
+            self.msg_all(f"{character.name}'s Pommel Strike adds 1 to the damage!")
+
+        if action_type == "damage" and "corps_a_corps" in character.ndb.special_effects:
+            bonus += 2  # 2k2 damage for Corps-a-Corps
+            self.msg_all(f"{character.name}'s Corps-a-Corps adds 2 to the damage!")
+
 
         return bonus
     
     def roll_initiative(self):
+        self.db.action_state = "initiative"
         initiative_rolls = []
         for char in self.db.participants:
             panache = char.db.traits['panache']
             base_roll = randint(1, 10) + (panache * 3)
             
-            if "combat_reflexes" in char.ndb.special_effects:
+            if "combat_reflexes" in char.ndb.special_effects or "combat_reflexes" in char.db.special_effects:
                 base_roll += 5
                 char.msg("Your Combat Reflexes give you a +5 bonus to initiative!")
 
@@ -222,14 +248,15 @@ class CombatScript(DefaultScript):
         initiative_rolls.sort(key=lambda x: x[1], reverse=True)
         
         self.db.initiative_order = [char for char, _ in initiative_rolls]
-        
+        self.msg_all(f"Initiative order: {[char.name for char in self.db.initiative_order]}")
         for char, roll in initiative_rolls:
             char.msg(f"Your initiative roll: {roll}")
 
     def next_round(self):
+        self.db.action_state = "processing_round"
         self.db.round += 1
-        if self.db.round > 100:  # Arbitrary high number
-            self.msg_all("Combat has gone on for too many rounds. Ending combat.")
+        if self.db.round > 20:  # Arbitrary high number
+            self.msg_all("|500This combat has ended inconclusively|n.")
             self.end_combat()
             return
 
@@ -238,6 +265,7 @@ class CombatScript(DefaultScript):
         self.process_next_character()
 
     def process_next_character(self):
+        self.msg_all(f"Initiative order: {[char.name for char in self.db.initiative_order]}")
         if not self.db.initiative_order:
             self.next_round()
             return
@@ -249,9 +277,16 @@ class CombatScript(DefaultScript):
         current_actor = self.db.current_actor
         if current_actor:
             self.reset_combat_states(current_actor)
+        
         self.db.action_state = None
         self.db.current_actor = None
-        self.process_next_character()
+        
+        if self.db.initiative_order:
+            # If there are still characters in the initiative order, process the next one
+            self.process_next_character()
+        else:
+            # If the initiative order is empty, start a new round
+            self.next_round()
 
     def all_characters_acted(self):
      return len(self.db.initiative_order) == 0
@@ -277,91 +312,61 @@ class CombatScript(DefaultScript):
             target = parts[1] if len(parts) > 1 else None
 
             combat_ended = False
+            action_successful = False
 
-            if action == "attack":
+            if action in ["attack", "feint", "lunge", "exploit"]:
                 if not target:
-                    character.msg("You must specify a target for attack.")
+                    character.msg(f"You must specify a target for {action}.")
                     return
                 target_character = character.search(target)
                 if not target_character or target_character not in self.db.participants:
                     character.msg(f"Invalid target: {target}")
                     return
-                combat_ended = self.perform_attack(character, target_character, character.db.wielded_weapon)
+                if target_character ==character:
+                    character.msg(f"You can't attack yourself.")
+                    return
+                if action == "attack":
+                    combat_ended = self.perform_attack(character, target_character, character.db.wielded_weapon)
+                elif action == "feint":
+                    action_successful = self.perform_feint(character, target_character, character.db.wielded_weapon)
+                elif action == "lunge":
+                    action_successful = self.perform_lunge(character, target_character, character.db.wielded_weapon)
+                elif action == "exploit":
+                    action_successful = self.perform_exploit_weakness(character, target_character)
+            elif action == "tag":
+                    target_character = character.search(target)
+                    if not target_character or target_character not in self.db.participants:
+                        character.msg(f"Invalid target {target}")
+                        return
+                    action_successful = self.perform_tagging(character, target_character, character.db.wielded_weapon)
+            elif action == "riposte":
+                action_successful = self.set_riposte(character)
+            elif action in ["stop-thrust", "stopthrust"]:
+                action_successful = self.set_stop_thrust(character)
+            elif action in ["double-parry", "doubleparry"]:
+                action_successful = self.set_double_parry(character)
+            elif action == "defend":
+                action_successful = self.set_full_defense(character)
+            elif action == "hold":
+                action_successful = self.hold_action(character)
+            elif action == "pass":
+                action_successful = self.pass_turn(character)
             else:
-                self.perform_special_move(character, action, target)
+                character.msg(f"Invalid action: {action}")
+                return
 
             if combat_ended:
                 self.end_combat()
-            else:
+            elif action_successful or action == "attack":  # We always want to finish the turn after an attack
                 self.finish_turn()
+            else:
+                self.offer_action(character)  # Allow the character to choose another action if the previous one failed
 
         except Exception as e:
             self.msg_all(f"Error in combat: {str(e)}")
+            import traceback
+            self.msg_all(f"Traceback: {traceback.format_exc()}")
             self.end_combat()
-
-    def perform_special_move(self, character, action, target=None):
-        action_successful = False
-        target_character = None
-
-        if target:
-            target_character = character.search(target)
-            if not target_character or target_character not in self.db.participants:
-                character.msg(f"Invalid target: {target}")
-                return False
-
-        try:
-            if action == "attack":
-                if not target_character:
-                    character.msg("You must specify a target for attack.")
-                    return False
-                action_successful = self.initiate_attack(character, target_character)
-
-            elif action == "feint":
-                if not target_character:
-                    character.msg("You must specify a target for feint.")
-                    return False
-                action_successful = self.perform_feint(character, target_character, character.db.wielded_weapon)
-
-            elif action == "lunge":
-                if not target_character:
-                    character.msg("You must specify a target for lunge.")
-                    return False
-                action_successful = self.perform_lunge(character, target_character, character.db.wielded_weapon)
-
-            elif action == "exploit":
-                if not target_character:
-                    character.msg("You must specify a target for exploit weakness.")
-                    return False
-                action_successful = self.perform_exploit_weakness(character, target_character)
-
-            elif action == "riposte":
-                action_successful = self.set_riposte(character)
-
-            elif action in ["stop-thrust", "stopthrust"]:
-                action_successful = self.set_stop_thrust(character)
-
-            elif action in ["double-parry", "doubleparry"]:
-                action_successful = self.set_double_parry(character)
-
-            elif action == "defend":
-                action_successful = self.set_full_defense(character)
-
-            elif action == "hold":
-                action_successful = self.hold_action(character)
-
-            elif action == "pass":
-                action_successful = self.pass_turn(character)
-
-            else:
-                character.msg(f"Invalid special move: {action}")
-                return False
-
-
-        except Exception as e:
-            self.msg_all(f"Error in perform_special_move: {str(e)}")
-            return False
-
-
 
             
     def perform_exploit_weakness(self, attacker, target_name):
@@ -475,7 +480,8 @@ class CombatScript(DefaultScript):
 
     def set_full_defense(self, character):
         if not hasattr(character.ndb, 'full_defense'):
-            character.ndb.full_defense = False
+            character.ndb.full_defense = True
+        character.ndb.special_effects += ["defending"]
         character.ndb.full_defense = True
         character.ndb.riposte = False  # Reset riposte
         # character.msg("You are now in full defense mode until your next action.")
@@ -483,18 +489,22 @@ class CombatScript(DefaultScript):
         self.finish_turn()
 
     def set_riposte(self, character):
-        if not hasattr(character.ndb, 'full_defense'):
-            character.ndb.full_defense = False
         if not self.check_knack(character, 'Riposte'):
             character.msg("You don't know how to perform a Riposte.")
             return False
-        if 'riposte_prepared' not in character.db.special_effects:
-            character.db.special_effects.append('riposte_prepared')
-        character.ndb.full_defense = True
-        character.ndb.riposte = True
-        character.msg("You prepare to riposte until your next action.")
-        # self.msg_all(f"{character.name} prepares to counter-attack.")
-        self.finish_turn()
+
+        # Remove 'riposte_prepared' from special_effects if it exists
+        if 'riposte_prepared' in character.ndb.special_effects:
+            character.ndb.special_effects.remove('riposte_prepared')
+
+        # Set the riposte state
+        character.ndb.special_effects += ['riposte_prepared']       
+
+        # Inform the character and others
+        character.msg("You prepare to counter-attack with a riposte.")
+        self.msg_all(f"{character.name} takes a defensive stance, ready to counter-attack.", exclude=character)
+
+        return True
 
     def hold_action(self, character):
         if not hasattr(character.ndb, 'held_action'):
@@ -512,13 +522,16 @@ class CombatScript(DefaultScript):
 
     
 
-    def calculate_passive_defense(self, character):
+    def calculate_passive_defense(self, character, weapon_type):
+        self.msg_all(f"{weapon_type}")
+        weapon_skill = character.character_sheet.get_knack_value(f"Parry ({weapon_type})")
+
         if not character.db.wielded_weapon:
             footwork = character.db.skills.get('Martial', {}).get('Footwork', {}).get('Basic', 0)
             return 5 + (footwork * 5)
         
         else:
-            return 15  # Default value when wielding a weapon
+            return 5 + (weapon_skill * 5)# Default value when wielding a weapon
 
     def roll_keep(self, num_dice, keep):
         """
@@ -549,10 +562,6 @@ class CombatScript(DefaultScript):
             kept_rolls = sorted(rolls, reverse=True)[:keep]
             total = sum(kept_rolls)
             
-            self.msg_all(f"Debug: roll_keep - Dice: {num_dice}, Keep: {keep}")
-            self.msg_all(f"Debug: All rolls: {rolls}")
-            self.msg_all(f"Debug: Kept rolls: {kept_rolls}")
-            self.msg_all(f"Debug: Total: {total}")
             
             return total
         
@@ -567,36 +576,47 @@ class CombatScript(DefaultScript):
         character.db.flesh_wounds = current_flesh_wounds + damage
 
     def resolve_wounds(self, character, damage):
-        current_flesh_wounds = character.character_sheet.flesh_wounds
-        character.character_sheet.flesh_wounds = current_flesh_wounds + damage
-        character.character_sheet.save(update_fields=['flesh_wounds'])
-        resolve = character.db.traits.get('resolve', 1)
+        try:
+            
+            # Update flesh wounds
+            character.at_hurt("flesh", damage)
+            
+            resolve = character.db.traits.get('resolve', 1)
+            sheet = character.character_sheet
+
+            # Check for dramatic wounds
+            while sheet.flesh_wounds >= resolve * 5:
+                character.at_hurt("dramatic", 1)
+                sheet.flesh_wounds -= resolve * 5
+                sheet.save(update_fields=['flesh_wounds'])
+                self.msg_all(f"{character.name} has received a Dramatic Wound!", exclude=None)
+
+                # Check for unconsciousness
+                if sheet.dramatic_wounds >= resolve * 2:
+                    if self.check_unconsciousness(character):
+                        self.msg_all(f"{character.name} stands at the edge of death and remains standing!")
+                    else:
+                        self.knock_unconscious(character)
+                        return True  # Indicate that the character was defeated
+
+                # Check for death
+                if sheet.dramatic_wounds >= resolve * 2 + 2:
+                    if self.check_death(character):
+                        self.msg_all(f"{character.name}, despite all odds, remains alive.")
+                    else:
+                        self.kill_character(character)
+                        return True  # Indicate that the character was defeated
+
+            return False  # Indicate that the character was not defeated
         
-        if character.character_sheet.flesh_wounds >= resolve * 5:
-            character.character_sheet.dramatic_wounds = character.character_sheet.dramatic_wounds + 1
-            character.character_sheet.flesh_wounds -= resolve * 5
-            character.character_sheet.save(update_fields=['dramatic_wounds'])
-            self.msg_all(f"{character.name} has received a Dramatic Wound!", exclude=None)
+        except Exception as e:
+            self.msg_all(f"Error in resolve_wounds: {str(e)}")
+            import traceback
+            self.msg_all(f"Traceback: {traceback.format_exc()}")
+            return False
 
-        if character.character_sheet.dramatic_wounds >= resolve * 2:
-            if self.check_unconsciousness(character):
-                self.msg_all(f"{character.name} stands at the edge of death and remains standing!")
-            else:
-                self.knock_unconscious(character)
-            return True  # Indicate that the character was defeated
-        if character.character_sheet.dramatic_wounds >= resolve * 2 + 2:
-            if self.check_death(character):
-                self.msg_all(f"{character.name}, despite all odds, remains alive.")
-            else:
-                self.kill_character(character)
-                return True
-        character.msg(f"You have received {damage} Flesh Wounds.")
-        self.msg_all(f"{character.name} has received {damage} Flesh Wounds.", exclude=character)
-        return False  # Indicate that the character was not defeated
-
-
-    def check_death(self, charaacter):
-        resolve = charaacter.db.traits.get('resolve', 1)
+    def check_death(self, character):
+        resolve = character.db.traits.get('resolve', 1)
         roll = self.roll_keep(resolve, resolve)
         target = 5 + character.db.dramatic_wounds
         return roll >= target
@@ -614,17 +634,15 @@ class CombatScript(DefaultScript):
         self.remove_participant(character)
 
     def kill_character(self, character):
-        character.msg("|rYou have been killed!|n")
-        self.msg_all(f"|500{character.name} has been killed!|n")
-        self.remove_participant(character)
-        character.character_sheet.approved = False
-        character.character_sheet.save(update_fields=['approved'])
+        character.at_death()
 
     def attempt_regain_consciousness(self, character):
         if self.check_unconsciousness(character):
             character.db.unconscious = False
             self.msg_all(f"{character.name} has regained consciousness!")
             self.add_participant(character)
+    
+    
     def display_combat_status(self):
         """
         Display the status of the combat.
@@ -633,6 +651,8 @@ class CombatScript(DefaultScript):
         for char in self.db.participants:
             status += f"- {char.name}: Flesh Wounds: {char.db.get('flesh_wounds', 0)}, Dramatic Wounds: {char.db.get('dramatic_wounds', 0)}\n"
         self.msg_all(status)
+    
+    
     def remove_combat_cmdset(self, character):
         from commands.mycmdset import CombatCmdSet
         character.cmdset.delete(CombatCmdSet)
@@ -696,13 +716,18 @@ class CombatScript(DefaultScript):
         return False
 
 
-
-
     def calculate_damage(self, attacker, weapon):
         brawn = attacker.db.traits.get('brawn', 1)
         weapon_damage = getattr(weapon.db, 'damage', 0) if weapon else 0
         weapon_keep = getattr(weapon.db, 'damage_keep', 1) if weapon else 1
         flat_bonus = getattr(weapon.db, 'damage_bonus', 0) if weapon else 0
+
+        flat_bonus += self.apply_combat_effects(attacker, "damage")
+
+        # Add lunge bonus if applicable
+        if 'lunged' in attacker.ndb.special_effects:
+            flat_bonus += 10
+            self.msg_all(f"{attacker.name}'s Lunge adds 10 to the damage!")
 
         total_dice = brawn + weapon_damage
         keep_dice = min(brawn + weapon_keep, total_dice)  # Ensure we don't keep more dice than we roll
@@ -710,10 +735,14 @@ class CombatScript(DefaultScript):
         damage_roll = self.roll_keep(total_dice, keep_dice)
         total_damage = damage_roll + flat_bonus
 
-        self.msg_all(f"Debug: Damage calculation - Brawn: {brawn}, Weapon damage: {weapon_damage}, "
-                    f"Weapon keep: {weapon_keep}, Flat bonus: {flat_bonus}, Total damage: {total_damage}")
 
         return total_damage
+
+    def decrease_firearm_cooldowns(self):
+        for attacker in list(self.db.firearm_cooldowns.keys()):
+            self.db.firearm_cooldowns[attacker] -= 1
+            if self.db.firearm_cooldowns[attacker] <= 0:
+                del self.db.firearm_cooldowns[attacker]
 
             
     def soak_damage(self, character, damage):
@@ -722,17 +751,13 @@ class CombatScript(DefaultScript):
             total_armor = getattr(character.db, 'total_armor', 0)
             soak_dice = int(resolve)
           
-            self.msg_all(f"Debug: Soak dice: {soak_dice}")
             
             soak_bonus = self.apply_combat_effects(character, "soak") + total_armor
             soak_bonus = 0 if soak_bonus is None else soak_bonus + (total_armor // 3)
-            self.msg_all(f"Debug: Soak bonus from effects: {soak_bonus}")
             soak_keep = character.db.traits['resolve'] + (total_armor // 3)
             soak_roll = self.roll_keep(soak_dice, soak_keep)
-            self.msg_all(f"Debug: Soak roll result: {soak_roll}")
             
             total_soak = soak_roll + soak_bonus
-            self.msg_all(f"Debug: Total soak (roll + bonus): {total_soak}")
             
             # Ensure total_soak is an integer
             total_soak = int(total_soak)
@@ -744,14 +769,11 @@ class CombatScript(DefaultScript):
             else:
                 damage_taken = damage
             
-            self.msg_all(f"Debug: Final damage taken: {damage_taken}")
             return damage_taken
         
         except Exception as e:
             self.msg_all(f"Error in soak_damage: {str(e)}")
-            self.msg_all(f"Debug: resolve={resolve}, total_armor={total_armor}, soak_dice={soak_dice}, "
-                        f"soak_keep={soak_keep}, soak_bonus={soak_bonus}, "
-                        f"soak_roll={soak_roll}, total_soak={total_soak}")
+            
             return damage  # If an error occurs, return full damage
                 
     def get_double_parry_skill(self, character):
@@ -785,8 +807,8 @@ class CombatScript(DefaultScript):
             character.msg("You don't know how to perform a Double-Parry.")
             return False
         
-        if 'doubleparry' not in character.db.special_effects:
-            character.db.special_effects.append('doubleparry')
+        if 'doubleparry' not in character.ndb.special_effects:
+            character.ndb.special_effects.append('doubleparry')
         
         if weapon_combination:
             character.msg(f"You prepare to perform a Double-Parry with {weapon_combination} (skill level: {double_parry_skill}) against the next attack.")
@@ -817,23 +839,31 @@ class CombatScript(DefaultScript):
                 else:
                     weapon_type = "Unarmed"
                     weapon_attack = "Attack (Unarmed)"
-            
+
             weapon_type = weapon.db.weapon_type
             weapon_attack = weapon.db.attack_skill
+            
+            if weapon_type == "Firearms":
+                return self.perform_firearm_attack(attacker, target, weapon)
 
             # Check for Stop-Thrust
             if self.check_stop_thrust(target):
                 stop_thrust_success = self.perform_stop_thrust(target, attacker)
                 if stop_thrust_success:
                     return False  # Attack was interrupted
+            
 
             # Calculate attack roll
             attack_roll = self.calculate_attack_roll(attacker, weapon_type, weapon_attack)
+            if self.check_riposte(target):
+                riposte_success = self.perform_riposte(target, attacker, attack_roll)
+                if riposte_success:
+                    return False
             
             # Determine defense
             defense_roll = self.calculate_defense_roll(target, weapon_type)
 
-            self.msg_all(f"Debug: Attack roll: {attack_roll}, Defense roll: {defense_roll}")
+            self.msg_all(f"Attack roll: |555{attack_roll}|n, Defense roll: |555{defense_roll}|n")
 
             # Resolve the attack
             if attack_roll > defense_roll:
@@ -845,10 +875,72 @@ class CombatScript(DefaultScript):
             self.msg_all(f"Error in perform_attack: {str(e)}")
             return False
 
+
+
+    def perform_firearm_attack(self, attacker, target, weapon):
+        if attacker in self.db.firearm_cooldowns and self.db.firearm_cooldowns[attacker] > 0:
+            self.db.firearm_cooldowns[attacker] -= 1
+            if self.db.firearm_cooldowns[attacker] == 0:
+                self.msg_all(f"{attacker.name} finishes reloading their firearm.")
+            else:
+                self.msg_all(f"{attacker.name} continues reloading their firearm. ({self.db.firearm_cooldowns[attacker]} actions left)")
+            return False
+
+        attack_skill = attacker.character_sheet.get_knack_value("Attack (Firearms)")
+        attack_roll = self.roll_keep(attacker.db.traits['finesse'] + attack_skill, attacker.db.traits['finesse'])
+        defense_roll = self.calculate_defense_roll(target, "Firearms")
+
+        if attack_roll > defense_roll:
+            combat_ended = self.resolve_firearm_wounds(target, dramatic_wounds=2)
+            self.msg_all(f"{attacker.name}'s shot hits {target.name}, inflicting 2 Dramatic Wounds!")
+            self.db.firearm_cooldowns[attacker] = 3  # Start the reload process
+            return combat_ended
+        else:
+            self.msg_all(f"{attacker.name}'s shot misses {target.name}!")
+            self.db.firearm_cooldowns[attacker] = 3  # Start the reload process even on a miss
+
+        return False
+
+
+    def resolve_firearm_wounds(self, character, dramatic_wounds=0):
+        try:
+
+            character.at_hurt("dramatic", dramatic_wounds)
+
+            if sheet.dramatic_wounds >= resolve*2:
+                if self.check_unconsciousness(character):
+                    self.msg_all(f"{character.name} stands at the edge of death and remains standing!")
+                else:
+                    self.knock_unconscious(character)
+                    return True
+
+            if sheet.dramatic_wounds >= resolve * 2 + 2:
+                    if self.check_death(character):
+                        self.msg_all(f"{character.name}, despite all odds, remains alive.")
+                    else:
+                        self.kill_character(character)
+                        return True  # Indicate that the character was defeated
+
+            return False  # Indicate that the character was not defeated
+        except Exception as e:
+            self.msg_all(f"Error in resolve_wounds: {str(e)}")
+            import traceback
+            self.msg_all(f"Traceback: {traceback.format_exc()}")
+            return False
+
+
+
+
+
+
+
     def check_stop_thrust(self, target):
         return (target.ndb.stop_thrust or 
                 target.ndb.held_action or 
                 'stopthrusted' in target.db.special_effects)
+
+    def check_riposte(self, target):
+        return 'riposte_prepared' in target.ndb.special_effects
 
     def calculate_attack_roll(self, attacker, weapon_type, weapon_attack):
         attack_bonus = self.apply_combat_effects(attacker, "attack")
@@ -874,58 +966,92 @@ class CombatScript(DefaultScript):
 
     def calculate_defense_roll(self, target, weapon_type):
         defense_bonus = self.apply_combat_effects(target, "defense")
-        if target.ndb.full_defense:
-            if target.ndb.riposte:
-                riposte_success = self.perform_riposte(target, self.db.current_actor, target.db.wielded_weapon)
-                if riposte_success:
-                    return None  # Indicates that the attack was interrupted
+        
+        # Calculate passive defense
+        passive_defense = self.calculate_passive_defense(target, weapon_type)
+        self.msg_all(f"Debug: {target.name}'s passive defense: {passive_defense}")
+
+        # Check if target is actively defending
+        self.msg_all(f"{target.ndb.special_effects}")
+        is_active_defense = target.ndb.full_defense or target.ndb.riposte or target.ndb.stop_thrust or "defending" in target.ndb.special_effects
+
+        if is_active_defense:
+            # Determine the appropriate defense skill
+            if weapon_type in ["Firearms", "Pugilism"]:
+                defense_skill = target.character_sheet.get_knack_value("Footwork")
+            else:
+                defense_skill = target.character_sheet.get_knack_value(f"Parry ({weapon_type})")
             
-            defense_skill = target.db.skills.get('Martial', {}).get('Parry', {}).get(f"({weapon_type})", 0)
-            defense_roll = self.roll_keep(target.db.traits['wits'] + defense_skill, target.db.traits['wits'])
-            defense_roll = max(defense_roll, self.calculate_passive_defense(target)) + defense_bonus
+            # Roll for active defense
+            defense_roll = self.roll_keep((target.db.traits['wits'] + defense_skill), target.db.traits['wits'])
+            self.msg_all(f"Debug: {target.name}'s active defense roll: {defense_roll}")
+            
+            # Use the higher of rolled defense or passive defense
+            defense_roll = max(defense_roll, passive_defense)
+            self.msg_all(f"Debug: Defense after comparing with passive: {defense_roll}")
         else:
-            defense_roll = self.calculate_passive_defense(target) + defense_bonus
+            # Use passive defense
+            defense_roll = passive_defense
+            self.msg_all(f"Debug: Using passive defense: {defense_roll}")
+
+        # Apply defense bonus
+        defense_roll += defense_bonus
+        self.msg_all(f"Debug: Defense after applying bonus: {defense_roll}")
         
         # Apply Double-Parry bonus if applicable
         if target.ndb.double_parry or 'doubleparry' in target.ndb.special_effects:
             double_parry_skill, _ = self.get_double_parry_skill(target)
             defense_roll += 5 * double_parry_skill
+            self.msg_all(f"Debug: Defense after double-parry: {defense_roll}")
             if 'doubleparry' in target.ndb.special_effects:
                 target.ndb.special_effects.remove('doubleparry')
             target.ndb.double_parry = False  # Reset after use
         
+        self.msg_all(f"Debug: {target.name}'s final defense roll: {defense_roll}")
         return defense_roll
 
 
 
     def resolve_successful_attack(self, attacker, target, weapon, attack_roll, defense_roll):
         try:
+            if "tagging" in attacker.ndb.special_effects:
+                tag_damage = 2
+                actual_damage = self.soak_damage(target, tag_damage)
+                if actual_damage > 0:
+                    character_defeated = self.resolve_wounds(target, actual_damage)
+                    self.msg_all(f"{attacker.name}'s tag hit {target.name} for |r{actual_damage}|n damage!", exclude=attacker)
+                    attacker.msg(f"Your tag hit {target.name} for {actual_damage} damage!")
+                    target.msg(f"{attacker.name}'s tag hit you for {actual_damage} damage! (Soaked {tag_damage - actual_damage})")
+                    if 'tag_penalty' not in target.ndb.special_effects:
+                        target.ndb.special_effects.add('tag_penalty')
+                        self.msg_all(f"{target.name} now has a -4 penalty to soak rolls!")
+                    if character_defeated:
+                        self.msg_all("Combat has ended due to a character being defeated.")
+                        self.end_combat()
+                        return True
+                else:
+                    self.msg_all(f"{target.name} completely |gsoaked the tag damage|n from {attacker.name}!", exclude=[attacker, target])
+                return False
+
             raw_damage = self.calculate_damage(attacker, weapon)
             is_critical = attack_roll > defense_roll + 25
-
             if is_critical:
                 raw_damage *= 2  # critical hit
                 self.msg_all(f"{attacker.name} scored a critical hit on {target.name}!")
 
-            self.msg_all(f"Debug: Raw damage before soak: {raw_damage}")
-
             actual_damage = self.soak_damage(target, raw_damage)
-
-            self.msg_all(f"Debug: Actual damage after soak: {actual_damage}")
 
             if actual_damage > 0:
                 character_defeated = self.resolve_wounds(target, actual_damage)
                 self.msg_all(f"{attacker.name} hit {target.name} for |r{actual_damage}|n damage!", exclude=attacker)
                 attacker.msg(f"You hit {target.name} for {actual_damage} damage!")
                 target.msg(f"{attacker.name} hit you for {actual_damage} damage! (Soaked {raw_damage - actual_damage})")
-
                 if character_defeated:
                     self.msg_all("Combat has ended due to a character being defeated.")
                     self.end_combat()
                     return True  # Indicate that the attack was successful and combat ended
             else:
                 self.msg_all(f"{target.name} completely |gsoaked the damage|n from {attacker.name}'s attack!", exclude=[attacker, target])
-
             return False
         except Exception as e:
             self.msg_all(f"Error in resolve_successful_attack: {str(e)}")
@@ -969,97 +1095,150 @@ class CombatScript(DefaultScript):
 
         self.stop()
 
-    def perform_feint(self, attacker, target_name, weapon):
-        target = attacker.search(target_name)
-        if not target or target not in self.db.participants:
-            attacker.msg(f"Invalid target: {target_name}")
-            return
-
-        if not self.check_knack(attacker, 'Feint'):
-            attacker.msg("You don't know how to perform a Feint.")
-            return
-
-        weapon_type = weapon.db.weapon_type if weapon else "Unarmed"
-        attack_skill = attacker.db.skills.get('Martial', {}).get('Fencing', {}).get('Feint', 0)
-        attack_roll = self.roll_keep(attacker.db.traits['finesse'] + attack_skill, attacker.db.traits['finesse'])
-        defense_roll = self.calculate_passive_defense(target)
-
-        if attack_roll > defense_roll:
-            move_dice_gain = 1
-            if attack_roll > defense_roll + 15:
-                move_dice_gain = 3
-                self.msg_all(f"{attacker.name} performed a |555brilliant|n feint against {target.name}!")
+    def perform_feint(self, attacker, target, weapon):
+        self.msg_all(f"Debug: Performing Feint for {attacker.name} against {target.name}")
+        
+        attacker_weapon = attacker.db.wielded_weapon if hasattr(attacker.db, 'wielded_weapon') else None
+        target_weapon = target.db.wielded_weapon if hasattr(target.db, 'wielded_weapon') else None
+        
+        attacker_weapon_type = attacker_weapon.db.weapon_type if attacker_weapon else "Unarmed"
+        self.msg_all(f"Attacker weapon type: {attacker_weapon_type}")
+        
+        target_weapon_type = target_weapon.db.weapon_type if target_weapon else "Unarmed"
+        self.msg_all(f"Target weapon type: {target_weapon_type}")
+        
+        attacker_knack = attacker.character_sheet.get_knack_value("Feint (Fencing)")
+        self.msg_all(f"Attacker Feint knack: {attacker_knack}")
+        
+        feint_skill = attacker_knack
+        
+        if feint_skill == 0:
+            self.msg_all(f"{attacker.name} doesn't know how to perform a Feint with the current weapon type.")
+            return False
+        
+        target_defense = target.character_sheet.get_knack_value(f"Parry ({target_weapon_type})")
+        self.msg_all(f"Target defense skill: {target_defense}")
+        
+        feint_roll = self.roll_keep((attacker.db.traits['wits'] + feint_skill), attacker.db.traits['wits'])
+        defense_roll = self.roll_keep((target.db.traits['wits'] + target_defense), target.db.traits['wits'])
+        
+        self.msg_all(f"Debug: Feint roll: {feint_roll}, Defense roll: {defense_roll}")
+        
+        if feint_roll > defense_roll:
+            feint_margin = feint_roll - defense_roll
+            if feint_margin >= 15:
+                attacker.ndb.special_effects.add('feinted_critical')
+                self.msg_all(f"{attacker.name}'s Feint is brilliantly successful against {target.name}!")
+                self.msg_all(f"{attacker.name} gains a significant advantage on their next attack.")
             else:
-                self.msg_all(f"{attacker.name} feinted against {target.name} |455successfully.|n")
-            
-            # Safely update move_dice
-            current_move_dice = attacker.db.move_dice or 0
-            attacker.db.move_dice = current_move_dice + move_dice_gain
-            attacker.msg(f"You gained {move_dice_gain} Drama Dice. Total: {attacker.db.move_dice}")
+                attacker.ndb.special_effects.add('feinted')
+                self.msg_all(f"{attacker.name}'s Feint succeeds against {target.name}!")
+                self.msg_all(f"{attacker.name} gains an advantage on their next attack.")
+            return True  # Feint was successful
         else:
-            self.msg_all(f"{attacker.name}'s feint |400failed|n against {target.name}.")
+            self.msg_all(f"{attacker.name}'s Feint fails against {target.name}.")
+            return False  # Feint failed
 
-        self.finish_turn()
+    def perform_riposte(self, defender, attacker, attacker_roll):
+        self.msg_all(f"Debug: Performing Riposte for {defender.name} against {attacker.name}")
+        
+        defense_weapon = defender.db.wielded_weapon if hasattr(defender.db, 'wielded_weapon') else None
+        offense_weapon = attacker.db.wielded_weapon if hasattr(attacker.db, 'wielded_weapon') else None
+        
+        offense_weapon_type = offense_weapon.db.weapon_type if offense_weapon else "Unarmed"
+        self.msg_all(f"Attacker weapon type: {offense_weapon_type}")
+        
+        defense_weapon_type = defense_weapon.db.weapon_type if defense_weapon else "Unarmed"
+        self.msg_all(f"Defender weapon type: {defense_weapon_type}")
+        
+        offense_weapon_attack = offense_weapon.db.attack_skill if offense_weapon else "Attack (Unarmed)"
+        self.msg_all(f"Offense weapon attack: {offense_weapon_attack}")
+        
+        defender_knack = defender.character_sheet.get_knack_value("Riposte (Fencing)")
+        self.msg_all(f"Defender Riposte knack: {defender_knack}")
+        
+        riposte_skill = defender_knack
+        
+        if riposte_skill == 0:
+            self.msg_all(f"{defender.name} doesn't know how to perform a Riposte with the current weapon type.")
+            return False
+        
+        attack_skill = attacker.character_sheet.get_knack_value(f"{offense_weapon_attack}")
+        self.msg_all(f"Attacker skill: {attack_skill}")
+        
+        defense_roll = self.roll_keep((defender.db.traits['finesse'] + riposte_skill), defender.db.traits['finesse'])
+        self.msg_all(f"Debug: Riposte roll: {defense_roll}, Attack roll: {attacker_roll}")
 
-    def perform_riposte(self, defender, attacker, weapon):
-            if not self.check_knack(defender, 'Riposte'):
-                defender.msg("You don't know how to perform a Riposte.")
-                return False
-            else:
-                weapon_type = weapon.db.weapon_type if weapon else "Unarmed"
-                defense_skill = defender.db.skills.get('Martial', {}).get('Fencing', {}).get('Riposte', 0)
-                defense_roll = self.roll_keep(defender.db.traits['wits'] + defense_skill, defender.db.traits['wits'])
-                attack_roll = self.calculate_passive_defense(attacker)
-
-                if defense_roll > attack_roll + 10:
-                    raw_damage = self.calculate_damage(defender, weapon) // 2  # Half damage
-                    actual_damage = self.soak_damage(attacker, raw_damage)
-                    
-                    if actual_damage > 0:
-                        character_defeated = self.resolve_wounds(attacker, actual_damage)
-                        self.msg_all(f"{defender.name} successfully riposted and hit {attacker.name} for {actual_damage} damage!")
-                        if character_defeated:
-                            self.msg_all("Combat has ended due to a character being defeated.")
-                            return True  # Combat ends
-                    else:
-                        self.msg_all(f"{defender.name} riposted, but {attacker.name} soaked all the damage.")
-                else:
-                    self.msg_all(f"{defender.name}'s riposte failed against {attacker.name}.")
-            
-            return False  # Combat continues
-
-    def perform_lunge(self, attacker, target_name, weapon):
-        target = attacker.search(target_name)
-        if not target or target not in self.db.participants:
-            attacker.msg(f"Invalid target: {target_name}")
-            return
-
-        if not self.check_knack(attacker, 'Lunge'):
-            attacker.msg("You don't know how to perform a Lunge.")
-            return
-
-        weapon_type = weapon.db.weapon_type if weapon else "Unarmed"
-        attack_skill = attacker.db.skills.get('Martial', {}).get('Fencing', {}).get('Lunge', 0)
-        attack_roll = self.roll_keep(attacker.db.traits['finesse'] + attack_skill, attacker.db.traits['finesse']) - 5  # -5 penalty
-        defense_roll = self.calculate_passive_defense(target)
-
-        if attack_roll > defense_roll:
-            raw_damage = self.calculate_damage(attacker, weapon) + 10  # +10 damage
-            actual_damage = self.soak_damage(target, raw_damage)
-            
+        if defense_roll > attacker_roll:
+            damage = self.calculate_damage(defender, defense_weapon)
+            actual_damage = self.soak_damage(attacker, damage)
             if actual_damage > 0:
-                character_defeated = self.resolve_wounds(target, actual_damage)
-                self.msg_all(f"{attacker.name}'s lunge hit {target.name} for {actual_damage} damage!")
-                if character_defeated:
-                    self.msg_all("Combat has ended due to a character being defeated.")
-                    return True  # Combat ends
+                self.resolve_wounds(attacker, actual_damage)
+                self.msg_all(f"{defender.name}'s Riposte succeeds and deals {actual_damage} damage to {attacker.name}!")
             else:
-                self.msg_all(f"{attacker.name}'s lunge was soaked by {target.name}.")
+                self.msg_all(f"{defender.name}'s Riposte succeeds but deals no damage to {attacker.name}.")
+            
+            if 'riposte_prepared' in defender.ndb.special_effects:
+                defender.ndb.special_effects.remove('riposte_prepared')
+            return True  # Riposte was successful
         else:
-            self.msg_all(f"{attacker.name}'s lunge missed {target.name}.")
+            self.msg_all(f"{defender.name}'s Riposte fails against {attacker.name}'s attack.")
+            if 'riposte_prepared' in defender.ndb.special_effects:
+                defender.ndb.special_effects.remove('riposte_prepared')
+            return False  # Riposte failed
+
+
+
+
+
+    def perform_lunge(self, attacker, target, weapon):
+        self.msg_all(f"Debug: Performing Lunge for {attacker.name} against {target.name}")
+        
+        attacker_weapon = attacker.db.wielded_weapon if hasattr(attacker.db, 'wielded_weapon') else None
+        target_weapon = target.db.wielded_weapon if hasattr(target.db, 'wielded_weapon') else None
+        
+        attacker_weapon_type = attacker_weapon.db.weapon_type if attacker_weapon else "Unarmed"
+        self.msg_all(f"Attacker weapon type: {attacker_weapon_type}")
+        
+        target_weapon_type = target_weapon.db.weapon_type if target_weapon else "Unarmed"
+        self.msg_all(f"Target weapon type: {target_weapon_type}")
+        
+        attacker_knack = attacker.character_sheet.get_knack_value("Lunge (Fencing)")
+        self.msg_all(f"Attacker Lunge knack: {attacker_knack}")
+        
+        lunge_skill = attacker_knack
+        
+        if lunge_skill == 0:
+            self.msg_all(f"{attacker.name} doesn't know how to perform a Lunge with the current weapon type.")
+            return False
+        
+        target_defense = target.character_sheet.get_knack_value(f"Parry ({target_weapon_type})")
+        self.msg_all(f"Target defense skill: {target_defense}")
+        
+        # Apply -5 penalty to the attack roll
+        attack_roll = self.roll_keep((attacker.db.traits['finesse'] + lunge_skill), attacker.db.traits['finesse']) - 5
+        defense_roll = self.roll_keep((target.db.traits['wits'] + target_defense), target.db.traits['wits'])
+        
+        self.msg_all(f"Debug: Lunge attack roll: {attack_roll}, Defense roll: {defense_roll}")
+        
+        if attack_roll > defense_roll:
+            # Add 'lunged' to special effects to increase damage later
+            attacker.ndb.special_effects.add('lunged')
+            self.msg_all(f"{attacker.name}'s Lunge succeeds against {target.name}!")
+            
+            # Perform the attack
+            combat_ended = self.perform_attack(attacker, target, weapon)
+            
+            # Remove the 'lunged' effect after the attack
+            attacker.ndb.special_effects.remove('lunged')
+            
+            return combat_ended
+        else:
+            self.msg_all(f"{attacker.name}'s Lunge fails against {target.name}.")
+            return False  # Lunge failed
 
     def perform_stop_thrust(self, defender, attacker):
-        self.msg_all(f"Debug: Performing Stop-Thrust for {defender.name} against {attacker.name}")
+        self.msg_all(f"|500{defender.name} uses a preemptive maneuver against {attacker.name}")
         defense_weapon = defender.db.wielded_weapon if hasattr(attacker.db, 'wielded_weapon') else None
         offense_weapon = attacker.db.wielded_weapon if hasattr(defender.db, 'wielded_weapon' ) else None
         offense_weapon_type = offense_weapon.db.weapon_type if offense_weapon else "Unarmed"
@@ -1084,9 +1263,6 @@ class CombatScript(DefaultScript):
         defense_roll = self.roll_keep((defender.db.traits['wits'] + stop_thrust_skill), defender.db.traits['wits'])
         attack_roll = self.roll_keep((attacker.db.traits['finesse'] + attack_skill), attacker.db.traits['finesse'])
 
-    # ... rest of the method ...
-
-        self.msg_all(f"Debug: Stop-Thrust roll: {defense_roll}, Attack roll: {attack_roll}")
 
         if defense_roll > attack_roll:
             damage = self.roll_keep(3, 2)  # 3k2 wounds for Stop-Thrust
@@ -1106,7 +1282,77 @@ class CombatScript(DefaultScript):
             if 'stopthrusted' in defender.db.special_effects:
                 defender.db.special_effects.remove('stopthrusted')
             return False  # Stop-Thrust failed
+    
+    def perform_pommel_strike(self, attacker, target, weapon):
+        self.msg_all(f"Debug: Performing Pommel Strike for {attacker.name} against {target.name}")
+        
+        attacker_knack = attacker.character_sheet.get_knack_value("Pommel Strike (Fencing)")
+        if attacker_knack == 0:
+            self.msg_all(f"{attacker.name} doesn't know how to perform a Pommel Strike.")
+            return False
+        
+        attack_roll = self.roll_keep((attacker.db.traits['finesse'] + attacker_knack), attacker.db.traits['finesse'])
+        defense_roll = self.calculate_defense_roll(target, weapon.db.weapon_type if weapon else "Unarmed")
+        
+        if attack_roll > defense_roll:
+            attacker.ndb.special_effects.add('pommel_strike')
+            combat_ended = self.perform_attack(attacker, target, weapon)
+            attacker.ndb.special_effects.remove('pommel_strike')
+            
+            if not combat_ended:
+                self.remove_from_initiative(target)
+                self.msg_all(f"{target.name} is removed from the current initiative order!")
+            
+            return combat_ended
+        else:
+            self.msg_all(f"{attacker.name}'s Pommel Strike misses {target.name}.")
+            return False
 
+    def perform_corps_a_corps(self, attacker, target, weapon):
+        self.msg_all(f"Debug: Performing Corps-a-Corps for {attacker.name} against {target.name}")
+        
+        attacker_knack = attacker.character_sheet.get_knack_value("Corps-a-Corps (Fencing)")
+        if attacker_knack == 0:
+            self.msg_all(f"{attacker.name} doesn't know how to perform Corps-a-Corps.")
+            return False
+        
+        attack_roll = self.roll_keep((attacker.db.traits['brawn'] + attacker_knack), attacker.db.traits['brawn'])
+        defense_roll = self.roll_keep((target.db.traits['brawn'] + target.character_sheet.get_knack_value("Footwork")), target.db.traits['brawn'])
+        
+        if attack_roll > defense_roll:
+            attacker.ndb.special_effects.add('corps_a_corps')
+            combat_ended = self.perform_attack(attacker, target, weapon)
+            attacker.ndb.special_effects.remove('corps_a_corps')
+            
+            if not combat_ended:
+                self.remove_from_initiative(target)
+                self.msg_all(f"{target.name} is removed from the current initiative order!")
+            
+            return combat_ended
+        else:
+            self.msg_all(f"{attacker.name}'s Corps-a-Corps fails against {target.name}.")
+            return False
+    
+    def perform_tagging(self, attacker, target, weapon):
+        self.msg_all(f"Debug: Performing Tagging for {attacker.name} against {target.name}")
+        attacker_knack = attacker.character_sheet.get_knack_value("Tagging (Fencing)")
+        if attacker_knack == 0:
+            self.msg_all(f"{attacker.name} doesn't know how to perform Tagging.")
+            return False
+
+        # Add 'tagging' to special effects for this attack
+        attacker.ndb.special_effects += ['tagging']
+
+        # Perform the attack
+        combat_ended = self.perform_attack(attacker, target, weapon)
+
+        # Remove 'tagging' from special effects
+        attacker.ndb.special_effects.remove('tagging')
+        attacker.ndb.special_effects += ['executed_tag']
+        if not combat_ended:
+            self.finish_turn()
+
+        return combat_ended
 
 
 
