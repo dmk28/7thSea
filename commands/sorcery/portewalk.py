@@ -32,7 +32,7 @@ class CmdPorteWalk(Command):
 
         # Create and start the Porte Walk effect script
         script = create_script(
-            "typeclasses.scripts.sorcery_scripts.Porte.PorteWalkEffect",
+            "typeclasses.scripts.sorcery_scripts.portewalk.PorteWalkEffect",
             obj=caller,
             attributes=[
                 ("walk_rank", walk_rank)
