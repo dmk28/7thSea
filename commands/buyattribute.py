@@ -147,7 +147,7 @@ class CmdBuyAttribute(Command):
             caller.msg(f"Unknown advantage: {name}")
             return
 
-        if advantage in sheet.perks:
+        if advantage in sheet.advantages:
             caller.msg(f"You already have the {advantage} advantage.")
             return
 
@@ -158,8 +158,8 @@ class CmdBuyAttribute(Command):
 
         if self.convert_xp_to_hp(xp_cost):
             if advantage not in ["Twisted Blade", "Unbound", "Left-Handed", "Foul Weather Jack", "Faith"]:
-                sheet.perks.append(advantage)
-                sheet.save()
+                sheet.advantages.append(advantage)
+                sheet.save(update_fields=['advantages'])
                 caller.msg(f"You have purchased the {advantage} advantage. You have {sheet.hero_points} hero points and {sheet.xp} XP remaining.")
         else:
             caller.msg(f"You don't have enough XP for this advantage. You need {xp_cost} XP.")
@@ -239,7 +239,7 @@ class CmdBuyAttribute(Command):
             return
 
         current_value = getattr(sheet, name.lower())
-        max_value = 6 if "Legendary Trait" in sheet.perks else 5
+        max_value = 6 if "Legendary Trait" in sheet.advantages else 5
         if value > max_value:
             caller.msg(f"You cannot increase {name} beyond {max_value}.")
             return
@@ -313,7 +313,7 @@ class CmdBuyAttribute(Command):
                 current_value = school_knacks[matching_knack]
                 new_value = current_value + 1 if value is None else value
 
-                max_value = 6 if "Legendary Trait" in caller.db.perks else 5
+                max_value = 5
                 if new_value > max_value:
                     caller.msg(f"You cannot increase {matching_knack} beyond {max_value}.")
                     return
