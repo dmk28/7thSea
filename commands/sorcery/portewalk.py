@@ -1,4 +1,4 @@
-from evennia import Command, create_script, Script
+from evennia import Command, create_script, search_script
 
 class CmdPorteWalk(Command):
     """
