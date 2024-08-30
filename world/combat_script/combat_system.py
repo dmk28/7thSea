@@ -531,15 +531,22 @@ class CombatScript(DefaultScript):
     
 
     def calculate_passive_defense(self, character, weapon_type):
-        self.msg_all(f"{weapon_type}")
-        weapon_skill = character.character_sheet.get_knack_value(f"Parry ({weapon_type})")
-
-        if not character.db.wielded_weapon:
-            footwork = character.db.skills.get('Martial', {}).get('Footwork', {}).get('Basic', 0)
-            return 5 + (footwork * 5)
+        self.msg_all(f"Calculating passive defense for weapon type: {weapon_type}")
         
+        base_defense = 5  # Base defense value
+        
+        if weapon_type is None or weapon_type == "Unarmed":
+            # For unarmed or no weapon, use Footwork
+            footwork = character.character_sheet.get_knack_value("Footwork") or 0
+            defense = base_defense + (footwork * 5)
+            self.msg_all(f"Unarmed defense: base {base_defense} + (Footwork {footwork} * 5) = {defense}")
         else:
-            return 5 + (weapon_skill * 5)# Default value when wielding a weapon
+            # For armed combat, use the appropriate Parry skill
+            parry_skill = character.character_sheet.get_knack_value(f"Parry ({weapon_type})") or 0
+            defense = base_defense + (parry_skill * 5)
+            self.msg_all(f"Armed defense: base {base_defense} + (Parry {parry_skill} * 5) = {defense}")
+        
+        return defense
 
     def roll_keep(self, num_dice, keep):
         """
@@ -836,30 +843,29 @@ class CombatScript(DefaultScript):
         return False
 
 
-
-
     def perform_attack(self, attacker, target, weapon):
         try:
-            weapon = weapon
             # Store Initial DW and prepare for attack
             attacker.ndb.dramatic_wounds_before_attack = attacker.db.dramatic_wounds
+
             # Handle the case where weapon is None
             if weapon is None:
-                dirty_fighting_option = True if attacker.character_sheet.get_knack_value("Attack (Dirty Fighting)") > 0 else "Unarmed"
-                pugilism_option = True if attacker.character_sheet.get_knack_value(f'Attack (Pugilism)', 0) > 0 else "Unarmed"
-                if pugilism_option:
-                    weapon_type = "Pugilism" if pugilism_option else "Unarmed"
-                    weapon_attack = "Attack (Pugilism)" if pugilism_option else "Attack (Unarmed)"
-                elif dirty_fighting_option:
+                dirty_fighting_skill = attacker.character_sheet.get_knack_value("Attack (Dirty Fighting)")
+                pugilism_skill = attacker.character_sheet.get_knack_value("Attack (Pugilism)")
+                
+                if pugilism_skill > 0:
+                    weapon_type = "Pugilism"
+                    weapon_attack = "Attack (Pugilism)"
+                elif dirty_fighting_skill > 0:
                     weapon_type = "Dirty Fighting"
                     weapon_attack = "Attack (Dirty Fighting)"
                 else:
-                    weapon_type = None
-                    weapon_attack = None
+                    weapon_type = "Unarmed"
+                    weapon_attack = "Attack (Unarmed)"
             else:
                 weapon_type = weapon.db.weapon_type
                 weapon_attack = weapon.db.attack_skill
-            
+
             if weapon_type == "Firearms":
                 return self.perform_firearm_attack(attacker, target, weapon)
 
@@ -868,15 +874,15 @@ class CombatScript(DefaultScript):
                 stop_thrust_success = self.perform_stop_thrust(target, attacker)
                 if stop_thrust_success:
                     return False  # Attack was interrupted
-            
 
             # Calculate attack roll
             attack_roll = self.calculate_attack_roll(attacker, weapon_type, weapon_attack)
+
             if self.check_riposte(target):
                 riposte_success = self.perform_riposte(target, attacker, attack_roll)
                 if riposte_success:
                     return False
-            
+
             # Determine defense
             defense_roll = self.calculate_defense_roll(target, weapon_type)
 
@@ -890,8 +896,9 @@ class CombatScript(DefaultScript):
 
         except Exception as e:
             self.msg_all(f"Error in perform_attack: {str(e)}")
+            import traceback
+            self.msg_all(f"Traceback: {traceback.format_exc()}")
             return False
-
 
 
     def perform_firearm_attack(self, attacker, target, weapon):
