@@ -6,6 +6,7 @@ class PorteWalkEffect(Script):
         self.desc = "Increases passive defense using Porte Walk"
         self.interval = 300  # 5 minutes, adjust as needed
         self.persistent = False
+        self.repeats = 1
 
     def at_start(self):
         """Apply the Porte Walk effect."""

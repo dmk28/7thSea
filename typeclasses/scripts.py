@@ -159,7 +159,7 @@ class UpdateSheetsScript(DefaultScript):
     def at_script_creation(self):
         self.key = "update_sheets_script"
         self.desc = "Runs the update_sheets command every minute"
-        self.interval = 10  # Run every 10 seconds
+        self.interval = 60  # Run every 10 seconds
         self.persistent = True
 
     def at_repeat(self):
