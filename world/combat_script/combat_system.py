@@ -345,6 +345,8 @@ class CombatScript(DefaultScript):
                 action_successful = self.set_stop_thrust(character)
             elif action in ["double-parry", "doubleparry"]:
                 action_successful = self.set_double_parry(character)
+            elif action == "sidestep":
+                action_successful = self.set_sidestep(character)
             elif action == "defend":
                 action_successful = self.set_full_defense(character)
             elif action == "hold":
@@ -450,6 +452,12 @@ class CombatScript(DefaultScript):
             character.msg("You prepare to perform a Stop-Thrust against the next attack.")
             # self.msg_all(f"{character.name} prepares a defensive stance.")
             self.finish_turn()
+        elif move == "sidestep":
+            if not self.check_knack(character, 'Sidestep'):
+                character.msg("You don't know how to perform a Sidestep.")
+                return
+            character.ndb.combat_state = "sidestep"
+            self.set_sidestep(character)
         else:
             character.msg("Invalid special move.")
 
@@ -820,6 +828,15 @@ class CombatScript(DefaultScript):
         return True
 
 
+    def set_sidestep(self, character):
+
+        if self.check_knack(character, "Sidestep"):
+            character.ndb.special_effects.append('sidestep')
+            return True
+        return False
+
+
+
 
     def perform_attack(self, attacker, target, weapon):
         try:
@@ -828,8 +845,8 @@ class CombatScript(DefaultScript):
             attacker.ndb.dramatic_wounds_before_attack = attacker.db.dramatic_wounds
             # Handle the case where weapon is None
             if weapon is None:
-                dirty_fighting_option = True if attacker.db.skills.get('Dirty Fighting', {}).get(f'Attack (Dirty Fighting)', 0) > 0 else "Unarmed"
-                pugilism_option = True if attacker.db.skills.get('Pugilism', {}).get(f'Attack (Pugilism)', 0) > 0 else "Unarmed"
+                dirty_fighting_option = True if attacker.character_sheet.get_knack_value("Attack (Dirty Fighting)") > 0 else "Unarmed"
+                pugilism_option = True if attacker.character_sheet.get_knack_value(f'Attack (Pugilism)', 0) > 0 else "Unarmed"
                 if pugilism_option:
                     weapon_type = "Pugilism" if pugilism_option else "Unarmed"
                     weapon_attack = "Attack (Pugilism)" if pugilism_option else "Attack (Unarmed)"
@@ -837,11 +854,11 @@ class CombatScript(DefaultScript):
                     weapon_type = "Dirty Fighting"
                     weapon_attack = "Attack (Dirty Fighting)"
                 else:
-                    weapon_type = "Unarmed"
-                    weapon_attack = "Attack (Unarmed)"
-
-            weapon_type = weapon.db.weapon_type
-            weapon_attack = weapon.db.attack_skill
+                    weapon_type = None
+                    weapon_attack = None
+            else:
+                weapon_type = weapon.db.weapon_type
+                weapon_attack = weapon.db.attack_skill
             
             if weapon_type == "Firearms":
                 return self.perform_firearm_attack(attacker, target, weapon)
@@ -945,8 +962,11 @@ class CombatScript(DefaultScript):
     def calculate_attack_roll(self, attacker, weapon_type, weapon_attack):
         attack_bonus = self.apply_combat_effects(attacker, "attack")
         
+        if weapon_type == None:
+            attack_skill = 0
         # Attempt to fetch the skill for the weapon type
-        attack_skill = attacker.db.skills.get('Martial', {}).get(weapon_type, {}).get(weapon_attack, 0)
+        else:
+            attack_skill = attacker.db.skills.get('Martial', {}).get(weapon_type, {}).get(weapon_attack, 0)
         
         # If not found, try to fetch under a different structure
         if attack_skill == 0:

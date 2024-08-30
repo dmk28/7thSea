@@ -323,7 +323,34 @@ class Weapon(DefaultObject):
         if attribute_name in weapon_attributes:
             self.create_or_update_weapon_model()
 
+class Unarmed(Weapon):
+        super().at_object_creation()
+        self.db.weapon_type = "Unarmed"
+        self.db.damage_keep = 1
+        self.db.damage = 0
+        self.db.attack_skill = None
+        self.db.parry_skill = None
+        self.db.cost = 0
+        self.db.damage_bonus = 0
 
+class Pugilism(Unarmed):
+    super().at_object_creation()
+    self.db.weapon_type = "Pugilism"
+    self.db.damage_keep = 2
+    self.db.damage = 1
+    self.db.attack_skill = "Attack (Pugilism)"
+    self.db.parry_skill = "Footwork"
+    self.db.cost = 0
+    self.db.damage_bonus = 0
+
+class DirtyFighting(Unarmed):
+    self.db.weapon_type = "Dirty Fighting"
+    self.db.damage_keep = 1
+    self.db.damage = 1
+    self.db.attack_skill = "Attack (Dirty Fighting)"
+    self.db.parry_skill = "Footwork"
+    self.db.cost = 0
+    self.db.damage_bonus = 0
 
 class HeavySword(Weapon):
     def at_object_creation(self):
