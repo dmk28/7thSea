@@ -1,5 +1,4 @@
-
-from evennia import Script
+from evennia.typeclass.scripts import Script
 
 class PorteWalkEffect(Script):
     def at_script_creation(self):
