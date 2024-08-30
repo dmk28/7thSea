@@ -1,3 +1,8 @@
 env
 server/evennia.db3
 server/evennia.db3
+world/character_sheet/migrations
+world/banking/migrations
+world/ships/migrations
+world/crafts/migrations
+world/adventuring_guilds/migrations
