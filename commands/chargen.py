@@ -782,10 +782,23 @@ def node_store_description(caller, raw_string):
     if len(processed_string.replace('\n', '').replace('\t', '')) < 100:
         caller.msg("Your description is too short. Please provide more detail.")
         return chargen_description(caller)
-    sheet.description = raw_string  # Store the original input
-    sheet.save()  # This will also update the typeclass
-    return chargen_personality(caller)
+    caller.ndb.temp_description = raw_string  # Store temporarily
+    return confirm_description(caller)
 
+def confirm_description(caller):
+    text = f"Your character's description:\n\n{caller.ndb.temp_description}\n\nIs this correct? (yes/no)"
+    options = [
+        {"key": "yes", "goto": "save_description"},
+        {"key": "no", "goto": "chargen_description"}
+    ]
+    return text, options
+
+def save_description(caller, raw_string):
+    sheet = ensure_chargen_data(caller)
+    sheet.description = caller.ndb.temp_description
+    sheet.save()
+    del caller.ndb.temp_description
+    return chargen_personality(caller)
 
 def chargen_personality(caller):
     text = "Please describe your character's personality (minimum 150 characters):"
@@ -793,13 +806,26 @@ def chargen_personality(caller):
     return text, options
 
 def node_store_personality(caller, raw_string):
-    sheet = ensure_chargen_data(caller)
     processed_string = process_ansi_codes(raw_string)
     if len(processed_string.replace('\n', '').replace('\t', '')) < 150:
         caller.msg("Your personality description is too short. Please provide more detail.")
         return chargen_personality(caller)
-    sheet.personality = raw_string  # Store the original input
-    sheet.save()  # This will also update the typeclass
+    caller.ndb.temp_personality = raw_string  # Store temporarily
+    return confirm_personality(caller)
+
+def confirm_personality(caller):
+    text = f"Your character's personality:\n\n{caller.ndb.temp_personality}\n\nIs this correct? (yes/no)"
+    options = [
+        {"key": "yes", "goto": "save_personality"},
+        {"key": "no", "goto": "chargen_personality"}
+    ]
+    return text, options
+
+def save_personality(caller, raw_string):
+    sheet = ensure_chargen_data(caller)
+    sheet.personality = caller.ndb.temp_personality
+    sheet.save()
+    del caller.ndb.temp_personality
     return chargen_biography(caller)
 
 def chargen_biography(caller):
@@ -808,15 +834,27 @@ def chargen_biography(caller):
     return text, options
 
 def node_store_biography(caller, raw_string):
-    sheet = ensure_chargen_data(caller)
     processed_string = process_ansi_codes(raw_string)
     if len(processed_string.replace('\n', '').replace('\t', '')) < 200:
         caller.msg("Your biography is too short. Please provide more detail.")
         return chargen_biography(caller)
-    sheet.biography = raw_string  # Store the original input
-    sheet.save()  # This will also update the typeclass
-    return chargen_eye_color(caller)
+    caller.ndb.temp_biography = raw_string  # Store temporarily
+    return confirm_biography(caller)
 
+def confirm_biography(caller):
+    text = f"Your character's biography:\n\n{caller.ndb.temp_biography}\n\nIs this correct? (yes/no)"
+    options = [
+        {"key": "yes", "goto": "save_biography"},
+        {"key": "no", "goto": "chargen_biography"}
+    ]
+    return text, options
+
+def save_biography(caller, raw_string):
+    sheet = ensure_chargen_data(caller)
+    sheet.biography = caller.ndb.temp_biography
+    sheet.save()
+    del caller.ndb.temp_biography
+    return chargen_eye_color(caller)
 
 def chargen_eye_color(caller):
     text = "Please enter your character's eye color:"
