@@ -324,6 +324,7 @@ class Weapon(DefaultObject):
             self.create_or_update_weapon_model()
 
 class Unarmed(Weapon):
+    def at_object_creation():
         super().at_object_creation()
         self.db.weapon_type = "Unarmed"
         self.db.damage_keep = 1
@@ -334,6 +335,7 @@ class Unarmed(Weapon):
         self.db.damage_bonus = 0
 
 class Pugilism(Unarmed):
+   def at_object_creation():
     super().at_object_creation()
     self.db.weapon_type = "Pugilism"
     self.db.damage_keep = 2
@@ -344,6 +346,8 @@ class Pugilism(Unarmed):
     self.db.damage_bonus = 0
 
 class DirtyFighting(Unarmed):
+   def at_object_creation():
+    super().at_object_creation()
     self.db.weapon_type = "Dirty Fighting"
     self.db.damage_keep = 1
     self.db.damage = 1
