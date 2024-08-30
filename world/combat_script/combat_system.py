@@ -24,7 +24,7 @@ class CombatScript(DefaultScript):
         self.db.round = 0  # Initialize the round counter
         self.db.soak_keep = 0
         self.db.firearm_cooldowns = {}
-  
+
     def at_start(self):
         self.msg_all(f"Debug: Combat script {self.id} started.")
 
@@ -289,7 +289,7 @@ class CombatScript(DefaultScript):
             self.next_round()
 
     def all_characters_acted(self):
-     return len(self.db.initiative_order) == 0
+        return len(self.db.initiative_order) == 0
 
     def reset_combat_states(self, character):
                 character.ndb.combat_state = None
@@ -383,7 +383,7 @@ class CombatScript(DefaultScript):
 
         exploit_skill = attacker.db.skills.get('Martial', {}).get('Fencing', {}).get('Exploit Weakness', 0)
         exploit_roll = self.roll_keep(attacker.db.traits['wits'] + exploit_skill, attacker.db.traits['wits'])
-        defense_roll = self.calculate_passive_defense(target)
+        defense_roll = self.calculate_passive_defense(target, target.db.wielded_weapon.weapon_type)
 
         if exploit_roll > defense_roll:
             move_dice_gain = 1
@@ -532,9 +532,9 @@ class CombatScript(DefaultScript):
 
     def calculate_passive_defense(self, character, weapon_type):
         self.msg_all(f"Calculating passive defense for weapon type: {weapon_type}")
-        
+
         base_defense = 5  # Base defense value
-        
+
         if weapon_type is None or weapon_type == "Unarmed":
             # For unarmed or no weapon, use Footwork
             footwork = character.character_sheet.get_knack_value("Footwork") or 0
@@ -545,9 +545,8 @@ class CombatScript(DefaultScript):
             parry_skill = character.character_sheet.get_knack_value(f"Parry ({weapon_type})") or 0
             defense = base_defense + (parry_skill * 5)
             self.msg_all(f"Armed defense: base {base_defense} + (Parry {parry_skill} * 5) = {defense}")
-        
-        return defense
 
+        return defense
     def roll_keep(self, num_dice, keep):
         """
         Roll a number of dice and keep the highest.
@@ -704,7 +703,7 @@ class CombatScript(DefaultScript):
                     char.msg(observer_msg)
 
         # No need to send a separate message to the room
-   
+
     def resolve_held_actions(self):
         held_actors = [char for char in self.db.participants if char.ndb.held_action]
         for char in held_actors:
@@ -765,7 +764,7 @@ class CombatScript(DefaultScript):
             resolve = character.db.traits.get('resolve', 1)
             total_armor = getattr(character.db, 'total_armor', 0)
             soak_dice = int(resolve)
-          
+        
             
             soak_bonus = self.apply_combat_effects(character, "soak") + total_armor
             soak_bonus = 0 if soak_bonus is None else soak_bonus + (total_armor // 3)
@@ -884,7 +883,8 @@ class CombatScript(DefaultScript):
                     return False
 
             # Determine defense
-            defense_roll = self.calculate_defense_roll(target, weapon_type)
+            # Determine defense
+            defense_roll = self.calculate_defense_roll(target, target.db.wielded_weapon.db.weapon_type if target.db.wielded_weapon else "Unarmed")
 
             self.msg_all(f"Attack roll: |555{attack_roll}|n, Defense roll: |555{defense_roll}|n")
 
@@ -991,11 +991,11 @@ class CombatScript(DefaultScript):
 
         return attack_roll
 
-    def calculate_defense_roll(self, target, weapon_type):
+    def calculate_defense_roll(self, target, defender_weapon_type):
         defense_bonus = self.apply_combat_effects(target, "defense")
-        
+
         # Calculate passive defense
-        passive_defense = self.calculate_passive_defense(target, weapon_type)
+        passive_defense = self.calculate_passive_defense(target, defender_weapon_type)
         self.msg_all(f"Debug: {target.name}'s passive defense: {passive_defense}")
 
         # Check if target is actively defending
@@ -1004,15 +1004,15 @@ class CombatScript(DefaultScript):
 
         if is_active_defense:
             # Determine the appropriate defense skill
-            if weapon_type in ["Firearms", "Pugilism"]:
+            if defender_weapon_type in ["Firearms", "Pugilism"]:
                 defense_skill = target.character_sheet.get_knack_value("Footwork")
             else:
-                defense_skill = target.character_sheet.get_knack_value(f"Parry ({weapon_type})")
-            
+                defense_skill = target.character_sheet.get_knack_value(f"Parry ({defender_weapon_type})")
+
             # Roll for active defense
             defense_roll = self.roll_keep((target.db.traits['wits'] + defense_skill), target.db.traits['wits'])
             self.msg_all(f"Debug: {target.name}'s active defense roll: {defense_roll}")
-            
+
             # Use the higher of rolled defense or passive defense
             defense_roll = max(defense_roll, passive_defense)
             self.msg_all(f"Debug: Defense after comparing with passive: {defense_roll}")
@@ -1024,7 +1024,7 @@ class CombatScript(DefaultScript):
         # Apply defense bonus
         defense_roll += defense_bonus
         self.msg_all(f"Debug: Defense after applying bonus: {defense_roll}")
-        
+
         # Apply Double-Parry bonus if applicable
         if target.ndb.double_parry or 'doubleparry' in target.ndb.special_effects:
             double_parry_skill, _ = self.get_double_parry_skill(target)
@@ -1033,10 +1033,9 @@ class CombatScript(DefaultScript):
             if 'doubleparry' in target.ndb.special_effects:
                 target.ndb.special_effects.remove('doubleparry')
             target.ndb.double_parry = False  # Reset after use
-        
+
         self.msg_all(f"Debug: {target.name}'s final defense roll: {defense_roll}")
         return defense_roll
-
 
 
     def resolve_successful_attack(self, attacker, target, weapon, attack_roll, defense_roll):
@@ -1319,7 +1318,7 @@ class CombatScript(DefaultScript):
             return False
         
         attack_roll = self.roll_keep((attacker.db.traits['finesse'] + attacker_knack), attacker.db.traits['finesse'])
-        defense_roll = self.calculate_defense_roll(target, weapon.db.weapon_type if weapon else "Unarmed")
+        defense_roll = self.calculate_defense_roll(target, target.db.wielded_weapon.weapon_type if target.db.wielded_weapon else "Unarmed")
         
         if attack_roll > defense_roll:
             attacker.ndb.special_effects.add('pommel_strike')
@@ -1392,6 +1391,6 @@ def get_combat(caller):
             return combat
         else:
             del caller.db.combat_id  # Remove the invalid combat_id
-  
+
     return None
     
