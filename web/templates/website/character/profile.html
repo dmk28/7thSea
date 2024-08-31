@@ -1,18 +1,91 @@
 {% extends "website/base.html" %}
 
+{% block extra_css %}
+<style>
+    .character-profile {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    .profile-section {
+        background-color: #ffefd5; /* Papyrus yellow */
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .section-buttons {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+    .section-button {
+        background-color: #8b4513; /* Saddle Brown */
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        margin: 0 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    .section-button:hover {
+        background-color: #a0522d; /* Sienna */
+    }
+    .section-content {
+        display: none;
+    }
+    .section-content.active {
+        display: block;
+    }
+    h1, h2 {
+        color: #8b4513; /* Saddle Brown */
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<h1>{{ character.name }}</h1>
+<div class="character-profile">
+    <h1>{{ character.name }}</h1>
 
-<h2>Character Details</h2>
-<ul>
-{% for trait, value in public_traits.items %}
-    <li><strong>{{ trait }}:</strong> {{ value }}</li>
-{% endfor %}
-</ul>
+    <div class="section-buttons">
+        <button class="section-button" onclick="showSection('details')">Details</button>
+        <button class="section-button" onclick="showSection('biography')">Biography</button>
+        <button class="section-button" onclick="showSection('personality')">Personality</button>
+    </div>
 
-<h2>Biography</h2>
-<p>{{ biography }}</p>
+    <div id="details" class="profile-section section-content">
+        <h2>Character Details</h2>
+        <ul>
+        {% for trait, value in public_traits.items %}
+            <li><strong>{{ trait }}:</strong> {{ value }}</li>
+        {% endfor %}
+        </ul>
+    </div>
 
-<h2>Personality</h2>
-<p>{{ personality }}</p>
+    <div id="biography" class="profile-section section-content">
+        <h2>Biography</h2>
+        <p>{{ biography }}</p>
+    </div>
+
+    <div id="personality" class="profile-section section-content">
+        <h2>Personality</h2>
+        <p>{{ personality }}</p>
+    </div>
+</div>
+
+<script>
+    function showSection(sectionId) {
+        // Hide all sections
+        var sections = document.getElementsByClassName('section-content');
+        for (var i = 0; i < sections.length; i++) {
+            sections[i].classList.remove('active');
+        }
+        // Show the selected section
+        document.getElementById(sectionId).classList.add('active');
+    }
+
+    // Show the details section by default
+    showSection('details');
+</script>
 {% endblock %}
