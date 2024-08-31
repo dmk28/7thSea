@@ -18,7 +18,6 @@ from django.urls import include, path
 # default evennia patterns
 from evennia.web.urls import urlpatterns as evennia_default_urlpatterns
 # from web.website.views.views import  CustomCharacterListView
-from .website.views.views import CustomCharacterListView
 # add patterns
 urlpatterns = [
     # website
@@ -27,10 +26,8 @@ urlpatterns = [
     path("webclient/", include("web.webclient.urls")),
     # web admin
     path("admin/", include("web.admin.urls")),
-    path('characters/', CustomCharacterListView.as_view(), name='character_list'),
-    # add any extra urls here:
-    # path("mypath/", include("path.to.my.urls.file")),
-    path('ships/', include('world.ships.urls')),
+  
+
 ]
 
 # 'urlpatterns' must be named such for Django to find it.

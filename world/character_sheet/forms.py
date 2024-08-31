@@ -1,6 +1,6 @@
 
 from django import forms
-from .models import CharacterSheet, Skill, Knack, SorceryKnack, SwordsmanKnack
+from .models import CharacterSheet, Skill, Knack  # SwordsmanKnack #SorceryKnack,
 
 class CharacterSheetForm(forms.ModelForm):
     class Meta:
@@ -11,8 +11,8 @@ class CharacterSheetForm(forms.ModelForm):
         ]
 
     skills = forms.ModelMultipleChoiceField(queryset=Skill.objects.all(), required=False, widget=forms.CheckboxSelectMultiple)
-    sorcery_knacks = forms.ModelMultipleChoiceField(queryset=SorceryKnack.objects.all(), required=False, widget=forms.CheckboxSelectMultiple)
-    swordsman_knacks = forms.ModelMultipleChoiceField(queryset=SwordsmanKnack.objects.all(), required=False, widget=forms.CheckboxSelectMultiple)
+    # sorcery_knacks = forms.ModelMultipleChoiceField(queryset=SorceryKnack.objects.all(), required=False, widget=forms.CheckboxSelectMultiple)
+    # swordsman_knacks = forms.ModelMultipleChoiceField(queryset=SwordsmanKnack.objects.all(), required=False, widget=forms.CheckboxSelectMultiple)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -42,7 +42,7 @@ class CharacterSheetForm(forms.ModelForm):
             self.save_m2m()
         return instance
 
-@login_required
+# @login_required
 def edit_character_sheet(request, object_id):
     if not has_builder_permissions(request.user):
         raise PermissionDenied("You don't have permission to edit character sheets.")

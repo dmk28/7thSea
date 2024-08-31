@@ -20,7 +20,6 @@ def character_sheet(request, object_id):
         sheet.update_from_typeclass()
     
     form = CharacterSheetForm(instance=sheet)
-    
     context = {
         'character': character,
         'sheet': sheet,
@@ -42,18 +41,15 @@ def edit_character_sheet(request, object_id):
         form = CharacterSheetForm(request.POST, instance=sheet)
         if form.is_valid():
             form.save()
-            
             # Update the in-game character object
             char = sheet.db_object
             for field in form.cleaned_data:
                 if field not in ['skills', 'sorcery_knacks', 'swordsman_knacks']:
                     setattr(char.db, field, form.cleaned_data[field])
-            
             # Update skills, sorcery knacks, and swordsman knacks
             char.db.skills = sheet.get_skills_by_category()
             char.db.sorcery_knacks = {sk.name: sk.value for sk in sheet.sorcery_knacks.all()}
             char.db.swordsman_knacks = {sk.name: sk.value for sk in sheet.swordsman_knacks.all()}
-            
             char.save()
             return redirect('character_sheet:character_sheet', object_id=object_id)
     else:
@@ -66,3 +62,4 @@ def edit_character_sheet(request, object_id):
         'skills': sheet.get_skills_by_category(),
     }
     return render(request, 'character_sheet/edit_character_sheet.html', context)
+

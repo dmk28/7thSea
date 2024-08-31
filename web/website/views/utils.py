@@ -1,3 +1,6 @@
+from django.http import Http404
+from django.shortcuts import render
+
 def render_to_response(request, template, context=None):
     """
     Wrapper for render() that catches Http404 errors and renders a 404 page.

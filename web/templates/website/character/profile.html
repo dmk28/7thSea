@@ -1,0 +1,18 @@
+{% extends "website/base.html" %}
+
+{% block content %}
+<h1>{{ character.name }}</h1>
+
+<h2>Character Details</h2>
+<ul>
+{% for trait, value in public_traits.items %}
+    <li><strong>{{ trait }}:</strong> {{ value }}</li>
+{% endfor %}
+</ul>
+
+<h2>Biography</h2>
+<p>{{ biography }}</p>
+
+<h2>Personality</h2>
+<p>{{ personality }}</p>
+{% endblock %}
