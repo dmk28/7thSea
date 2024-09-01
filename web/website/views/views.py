@@ -1,11 +1,12 @@
 from django.views.generic import ListView, TemplateView
+from django.views.generic.detail import DetailView
 from evennia.objects.models import ObjectDB
 from django.urls import reverse
 from .utils import render_to_response, mush_to_html
 from django.shortcuts import get_object_or_404, render
 import logging
 from world.character_sheet.models import CharacterSheet
-
+from world.nations.models import Nation
 logger = logging.getLogger(__name__)
 
 class CustomCharacterListView(ListView):
@@ -88,6 +89,18 @@ class NationDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         nation = self.object
+        context['nation_details'] = {
+            'Capital': nation.capital,
+            'Population': nation.population,
+            'Government Type': nation.government_type,
+            'Ruler': nation.ruler,
+            'Currency': nation.currency,
+            'Major Exports': ', '.join(nation.major_exports) if nation.major_exports else 'None',
+            'Major Imports': ', '.join(nation.major_imports) if nation.major_imports else 'None',
+            'Important Cities': ', '.join(nation.important_cities) if nation.important_cities else 'None',
+        }
+        context['recent_history'] = nation.recent_history
+        context['notable_npcs'] = nation.notable_npcs
         context['characters'] = nation.get_characters()
         return context
 

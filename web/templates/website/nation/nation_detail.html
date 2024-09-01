@@ -1,0 +1,177 @@
+    {% extends "website/base.html" %}
+    {% block extra_css %}
+
+    <style>
+        .nation-profile {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .profile-container {
+            background-color: #ffefd5; /* Papyrus yellow */
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .section-buttons {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .section-button {
+            background-color: #8b4513; /* Saddle Brown */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .section-button:hover {
+            background-color: #a0522d; /* Sienna */
+        }
+        .section-button.active {
+            background-color: #a0522d; /* Sienna */
+        }
+        h1, h2 {
+            color: #8b4513; /* Saddle Brown */
+        }
+        .nation-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        .detail-item {
+            padding: 10px;
+        }
+        .detail-item.full-width {
+            grid-column: 1 / -1;
+        }
+        .detail-item strong {
+            display: block;
+            margin-bottom: 5px;
+            color: #8b4513;
+        }
+
+            .section-content {
+            display: none;
+            }
+            .section-content.active {
+                display: block;
+            }
+
+
+    </style>
+    {% endblock %}
+    
+   
+
+
+
+
+    {% block content %}
+
+    <div class="nation-profile">
+        <h1>{{ nation.name }}</h1>
+
+        <div class="profile-container">
+            <div class="section-buttons">
+                <button class="section-button" onclick="showSection('details')">Details</button>
+                <button class="section-button" onclick="showSection('history')">History</button>
+                <button class="section-button" onclick="showSection('characters')">Characters</button>
+            </div>
+
+            <div id="details" class="section-content active">
+                <h2>Nation Details</h2>
+                <div class="nation-details">
+                    {% for field, value in nation_details.items %}
+                        {% if field == 'Description' %}
+                            <div class="detail-item full-width">
+                                <strong>{{ field }}:</strong>
+                                <p>{{ value }}</p>
+                            </div>
+                        {% else %}
+                            <div class="detail-item">
+                                <strong>{{ field }}:</strong> {{ value }}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div id="history" class="section-content">
+                <h2>Recent History</h2>
+                <p>{{ nation.recent_history|linebreaks }}</p>
+
+                <h3>Notable NPCs</h3>
+                <ul>
+                    {% for npc in nation.notable_npcs %}
+                        <li>{{ npc }}</li>
+                    {% empty %}
+                        <li>No notable NPCs listed.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div id="characters" class="section-content">
+                <h2>Characters from {{ nation.name }}</h2>
+                <ul>
+                    {% for character in characters %}
+                        <li>{{ character }}</li>
+                    {% empty %}
+                        <li>No characters from this nation.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+                // Hide all sections
+                var sections = document.getElementsByClassName('section-content');
+                for (var i = 0; i < sections.length; i++) {
+                    sections[i].classList.remove('active');
+                }
+                // Show the selected section
+                document.getElementById(sectionId).classList.add('active');
+
+                // Update button styles
+                var buttons = document.getElementsByClassName('section-button');
+                for (var i = 0; i < buttons.length; i++) {
+                    buttons[i].classList.remove('active');
+                }
+                event.target.classList.add('active');
+                };
+
+                // Show the details section by default
+                showSection('details');
+                document.querySelector('.section-button').classList.add('active');
+    </script>
+
+
+    {% endblock %}
+
+
+    {% block extra_js %}
+
+    <script>
+    
+        // Add event listeners to section buttons
+    
+        var buttons = document.getElementsByClassName('section-button');
+    
+        for (var i = 0; i < buttons.length; i++) {
+    
+            buttons[i].addEventListener('click', function() {
+    
+                showSection(this.getAttribute('data-section'));
+    
+            });
+    
+        }
+    
+    </script>
+    {% endblock %}

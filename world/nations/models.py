@@ -33,7 +33,7 @@ class Nation(models.Model):
         
         logger.log_info(f"Returning characters for {self.name}: {characters}")
         return characters
-
+    
 
 
 class Stronghold(models.Model):

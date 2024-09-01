@@ -5,7 +5,7 @@ so it can reroute to all website pages.
 """
 from django.urls import path, include
 from evennia.web.website.urls import urlpatterns as evennia_website_urlpatterns
-from .views.views import CustomCharacterListView, public_character_profile, NationListView, NationDetailView
+from .views.views import CustomCharacterListView, public_character_profile, NationListView, NationDetailView, WorldMapView
 
 # add patterns here
 urlpatterns = [
@@ -19,7 +19,7 @@ urlpatterns = [
     # path("mypath/", include("path.to.my.urls.file")),
     path('ships/', include('world.ships.urls')),
     path('nations/', include([
-        path('', NationListView.as_view(), name='nation_list'),
+        path('', NationListView.as_view(), name='nation_list'),  # This is the main nations list view
         path('detail/<str:nation>/<int:pk>/', NationDetailView.as_view(), name='nation_detail'),
         path('map/', WorldMapView.as_view(), name='world_map'),
     ])),
