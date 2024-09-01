@@ -3,6 +3,8 @@ from evennia.utils.idmapper.models import SharedMemoryModel
 from evennia.typeclasses.models import TypedObject
 from evennia.objects.models import ObjectDB
 from django.db.models import Q
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 # Create your models here.
 
 class Holding(SharedMemoryModel):

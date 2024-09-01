@@ -3,7 +3,7 @@ from .handlers import AdventuringGuildHandler
 from evennia.utils.create import create_object
 from .models import AdventuringGuild, Holding
 from typeclasses.holdings import Holding as HoldingTypeClass
-
+from world.banking.models import Bank
 
 class CmdCreateGuild(Command):
     """
@@ -312,3 +312,50 @@ class CmdHoldingDetails(Command):
         self.caller.msg(f"Specialization: {details['specialization'] or 'None'}")
         self.caller.msg(f"Staff: {', '.join(details['staff']) if details['staff'] else 'None'}")
         self.caller.msg(f"Active Events: {', '.join(details['events']) if details['events'] else 'None'}")
+
+
+class CmdCreateGuildAccount(Command):
+    """
+    Create a bank account for your guild.
+
+    Usage:
+      createguildaccount <bank>
+
+    Creates a new bank account for your guild at the specified bank.
+    """
+    key = "createguildaccount"
+    locks = "cmd:all()"  # You might want to restrict this to guild leaders
+
+    def func(self):
+        if not self.args:
+            self.caller.msg("Usage: createguildaccount <bank>")
+            return
+        
+        banks = Bank.objects.filter(name__iexact=self.args)
+        if not banks:
+            self.caller.msg(f"No bank named '{self.args}' found.")
+            return
+        
+        bank = banks[0]
+        
+        # Check if the caller is a guild leader and get their guild
+        guild = None
+        for g in self.caller.adventuring_guilds.all():
+            if g.db_founder == self.caller:
+                guild = g
+                break
+
+        if not guild:
+            self.caller.msg("You are not a leader of any guild.")
+            return
+        
+        if guild.bank_account:
+            self.caller.msg(f"Your guild already has an account at {guild.bank_account.bank.name}.")
+            return
+        
+        account = guild.create_bank_account(bank)
+        
+        if account:
+            self.caller.msg(f"Guild account created at {bank.name}. The account number is {account.account_number}.")
+        else:
+            self.caller.msg("Failed to create a guild account.")

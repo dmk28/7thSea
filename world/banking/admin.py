@@ -14,19 +14,24 @@ class BankAccountAdmin(admin.ModelAdmin):
     search_fields = ['account_holder__db_key', 'account_number']
     raw_id_fields = ('account_holder',)
 
-@admin.register(HoldingAccount)
-class HoldingAccountAdmin(admin.ModelAdmin):
-    list_display = ('holding', 'bank', 'account_number', 'guilders_balance', 'doubloons_balance')
-    list_filter = ('bank',)
-    search_fields = ['holding__name', 'account_number']
-    raw_id_fields = ('holding',)
-
 @admin.register(GuildAccount)
 class GuildAccountAdmin(admin.ModelAdmin):
     list_display = ('guild', 'bank', 'account_number', 'guilders_balance', 'doubloons_balance')
     list_filter = ('bank',)
     search_fields = ['guild__db_name', 'account_number']
     raw_id_fields = ('guild',)
+
+@admin.register(HoldingAccount)
+class HoldingAccountAdmin(admin.ModelAdmin):
+    list_display = ('holding', 'guild_account', 'account_number', 'guilders_balance', 'doubloons_balance')
+    list_filter = ('guild_account__bank',)
+    search_fields = ['holding__name', 'account_number']
+    raw_id_fields = ('holding', 'guild_account')
+
+    def guild_account(self, obj):
+        return obj.guild_account
+
+    guild_account.short_description = 'Guild Account'
 
 class HoldingIncomeScriptProxy(ScriptDB):
     class Meta:

@@ -1,8 +1,8 @@
-from evennia import DefaultScript
+from typeclasses.scripts import Script
 from evennia.utils import logger
 from .models import AdventuringGuild
 
-class IncomeCollectionScript(DefaultScript):
+class IncomeCollectionScript(Script):
     """A script to periodically collect income from all guild holdings."""
     
     def at_script_creation(self):
@@ -10,6 +10,7 @@ class IncomeCollectionScript(DefaultScript):
         self.desc = "Collects income from guild holdings"
         self.interval = 3600 * 24 * 7  # Run every week (adjust as needed)
         self.persistent = True
+        self.repeats = 0
 
     def at_repeat(self):
         logger.log_info("Starting income collection for all guilds.")

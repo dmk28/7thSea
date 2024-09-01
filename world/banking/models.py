@@ -7,7 +7,7 @@ class Bank(SharedMemoryModel):
     description = models.TextField(blank=True)
     guilders_balance = models.IntegerField(default=0)
     doubloons_balance = models.IntegerField(default=0)
-    
+
     def __str__(self):
         return self.name
 
@@ -17,19 +17,9 @@ class BankAccount(SharedMemoryModel):
     account_number = models.CharField(max_length=20, unique=True)
     guilders_balance = models.IntegerField(default=0)
     doubloons_balance = models.IntegerField(default=0)
-    
+
     def __str__(self):
         return f"{self.account_holder}'s account at {self.bank}"
-
-class HoldingAccount(SharedMemoryModel):
-    bank = models.ForeignKey(Bank, on_delete=models.CASCADE, related_name='holding_accounts')
-    holding = models.OneToOneField(Holding, on_delete=models.CASCADE, related_name='bank_account')
-    account_number = models.CharField(max_length=20, unique=True)
-    guilders_balance = models.IntegerField(default=0)
-    doubloons_balance = models.IntegerField(default=0)
-    
-    def __str__(self):
-        return f"{self.holding}'s account at {self.bank}"
 
 class GuildAccount(SharedMemoryModel):
     bank = models.ForeignKey(Bank, on_delete=models.CASCADE, related_name='guild_accounts')
@@ -37,6 +27,16 @@ class GuildAccount(SharedMemoryModel):
     account_number = models.CharField(max_length=20, unique=True)
     guilders_balance = models.IntegerField(default=0)
     doubloons_balance = models.IntegerField(default=0)
-    
+
     def __str__(self):
         return f"{self.guild}'s account at {self.bank}"
+
+class HoldingAccount(SharedMemoryModel):
+    guild_account = models.ForeignKey(GuildAccount, on_delete=models.CASCADE, related_name='holding_accounts', default=0)
+    holding = models.OneToOneField(Holding, on_delete=models.CASCADE, related_name='bank_account')
+    account_number = models.CharField(max_length=20, unique=True)
+    guilders_balance = models.IntegerField(default=0)
+    doubloons_balance = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.holding}'s account under {self.guild_account}"

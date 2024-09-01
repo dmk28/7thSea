@@ -1,7 +1,7 @@
 from evennia import DefaultScript
 from evennia.utils.create import create_script
 from world.adventuring_guilds.models import AdventuringGuild
-from world.banking.models import Bank, GuildAccount
+from world.banking.models import Bank, GuildAccount, HoldingAccount
 
 class HoldingIncomeScript(DefaultScript):
     """
@@ -21,20 +21,29 @@ class HoldingIncomeScript(DefaultScript):
         guilds = AdventuringGuild.objects.all()
         for guild in guilds:
             total_guilders, total_doubloons = guild.collect_all_income()
-            
+
             # Find or create a bank account for the guild
             bank = Bank.objects.first()  # Assuming there's at least one bank
             if bank:
                 guild_account, created = GuildAccount.objects.get_or_create(
                     guild=guild,
                     bank=bank,
-                    defaults={'account_number': f"G-{guild.id}"}
+                    defaults={'account_number': f"G-{guild.id}-{bank.id}"}
                 )
 
                 # Deposit the collected income into the guild's bank account
                 guild_account.guilders_balance += total_guilders
                 guild_account.doubloons_balance += total_doubloons
                 guild_account.save()
+
+                # Update or create HoldingAccounts
+                for holding in guild.get_holdings():
+                    holding_account, created = HoldingAccount.objects.get_or_create(
+                        guild_account=guild_account,
+                        holding=holding,
+                        defaults={'account_number': f"H-{holding.id}-{guild_account.id}"}
+                    )
+                    # You might want to update holding_account balances here if needed
 
                 # Notify the guild (you might want to implement a notification system)
                 guild_members = guild.db_members.all()
