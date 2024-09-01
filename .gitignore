@@ -9,3 +9,8 @@ world/adventuring_guilds/migrations
 server/oldevennia.db3
 server/logs/portal.log
 server/logs/portal.log
+server/logs/portal.log
+server/logs/portal.log.2024_08_31
+server/logs/channel_public.log
+server/logs/http_requests.log
+server/logs/lockwarnings.log
