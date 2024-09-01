@@ -48,7 +48,7 @@ DEFAULT_CMDSETS = [
     'commands.mycmdset.MyCmdset'
 
 ]
-INSTALLED_APPS += ['world.character_sheet', 'world.adventuring_guilds', 'world.ships', 'world.banking', 'world.crafts']
+INSTALLED_APPS += ['world.character_sheet', 'world.adventuring_guilds', 'world.ships', 'world.banking', 'world.crafts', 'world.nations']
 
 
 ######################################################################

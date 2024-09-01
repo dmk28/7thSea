@@ -1,9 +1,9 @@
-from evennia import DefaultScript
+from typeclasses.scripts import Script
 from evennia.utils.create import create_script
 from world.adventuring_guilds.models import AdventuringGuild
 from world.banking.models import Bank, GuildAccount, HoldingAccount
 
-class HoldingIncomeScript(DefaultScript):
+class HoldingIncomeScript(Script):
     """
     This script runs periodically to collect income from holdings
     and deposit it into the guild's bank account.
@@ -13,6 +13,7 @@ class HoldingIncomeScript(DefaultScript):
         self.desc = "Collects income from holdings and deposits into guild bank accounts"
         self.interval = 86400  # Run daily (24 hours * 60 minutes * 60 seconds)
         self.persistent = True
+        self.repeats = 0
 
     def at_repeat(self):
         """
@@ -21,7 +22,6 @@ class HoldingIncomeScript(DefaultScript):
         guilds = AdventuringGuild.objects.all()
         for guild in guilds:
             total_guilders, total_doubloons = guild.collect_all_income()
-
             # Find or create a bank account for the guild
             bank = Bank.objects.first()  # Assuming there's at least one bank
             if bank:
@@ -30,7 +30,6 @@ class HoldingIncomeScript(DefaultScript):
                     bank=bank,
                     defaults={'account_number': f"G-{guild.id}-{bank.id}"}
                 )
-
                 # Deposit the collected income into the guild's bank account
                 guild_account.guilders_balance += total_guilders
                 guild_account.doubloons_balance += total_doubloons
@@ -52,18 +51,24 @@ class HoldingIncomeScript(DefaultScript):
                         member.msg(f"Your guild '{guild.db_name}' has collected {total_guilders} guilders and {total_doubloons} doubloons from its holdings.")
             else:
                 print("No bank found. Unable to process guild income.")
-
         self.logger.info("Holding income collection completed.")
 
-def start_holding_income_script():
-    """
-    Function to start the HoldingIncomeScript
-    """
-    try:
-        script = create_script(HoldingIncomeScript)
-        if script:
-            print("HoldingIncomeScript started successfully.")
-        else:
-            print("Failed to start HoldingIncomeScript.")
-    except Exception as e:
-        print(f"Error starting HoldingIncomeScript: {str(e)}")
+    @classmethod
+    def start(cls):
+        """
+        Class method to start the HoldingIncomeScript
+        """
+        try:
+            script = cls.objects.get(db_key="holding_income_collector")
+            print("HoldingIncomeScript is already running.")
+        except cls.DoesNotExist:
+            script = create_script(cls)
+            if script:
+                print("HoldingIncomeScript started successfully.")
+            else:
+                print("Failed to start HoldingIncomeScript.")
+
+# Start the script when this module is imported
+HoldingIncomeScript.start()
+
+HoldingIncomeScript.start_holding_income_script()
