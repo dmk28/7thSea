@@ -32,7 +32,7 @@ class GuildAccount(SharedMemoryModel):
         return f"{self.guild}'s account at {self.bank}"
 
 class HoldingAccount(SharedMemoryModel):
-    guild_account = models.ForeignKey(GuildAccount, on_delete=models.CASCADE, related_name='holding_accounts', default=0)
+    guild_account = models.ForeignKey(GuildAccount, on_delete=models.CASCADE, related_name='holding_accounts', null=True, blank=True)
     holding = models.OneToOneField(Holding, on_delete=models.CASCADE, related_name='bank_account')
     account_number = models.CharField(max_length=20, unique=True)
     guilders_balance = models.IntegerField(default=0)
