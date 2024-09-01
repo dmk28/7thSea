@@ -1,7 +1,7 @@
 from django.views.generic import ListView
 from evennia.objects.models import ObjectDB
 from django.urls import reverse
-from .utils import render_to_response
+from .utils import render_to_response, mush_to_html
 from django.shortcuts import get_object_or_404, render
 import logging
 from world.character_sheet.models import CharacterSheet
@@ -51,8 +51,9 @@ def public_character_profile(request, character, object_id):
             'Nation': sheet.nationality or character.db.nationality or 'N/A',
             'Eye Color': sheet.eye_color or character.db.eye_color or 'N/A',
             'Hair Color': sheet.hair_color or character.db.hair_color or 'N/A',
+            'Description': mush_to_html(sheet.description) or mush_to_html(character.db.description) or 'N/A'
         },
-        'biography': sheet.biography or character.db.biography or 'N/A',
-        'personality': sheet.personality or character.db.personality or 'N/A',
+        'biography': mush_to_html(sheet.biography) or mush_to_html(character.db.biography) or 'N/A',
+        'personality': mush_to_html(sheet.personality) or mush_to_html(character.db.personality) or 'N/A',
     }
     return render_to_response(request, f'character/profile.html', context)

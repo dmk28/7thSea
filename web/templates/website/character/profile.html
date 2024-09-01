@@ -1,5 +1,4 @@
 {% extends "website/base.html" %}
-
 {% block extra_css %}
 <style>
     .character-profile {
@@ -7,7 +6,7 @@
         margin: 0 auto;
         padding: 20px;
     }
-    .profile-section {
+    .profile-container {
         background-color: #ffefd5; /* Papyrus yellow */
         border-radius: 10px;
         padding: 20px;
@@ -32,6 +31,9 @@
     .section-button:hover {
         background-color: #a0522d; /* Sienna */
     }
+    .section-button.active {
+        background-color: #a0522d; /* Sienna */
+    }
     .section-content {
         display: none;
     }
@@ -41,51 +43,83 @@
     h1, h2 {
         color: #8b4513; /* Saddle Brown */
     }
+    .character-details {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+    .detail-item {
+        padding: 10px;
+    }
+    .detail-item.full-width {
+        grid-column: 1 / -1;
+    }
+    .detail-item strong {
+        display: block;
+        margin-bottom: 5px;
+        color: #8b4513;
+    }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="character-profile">
     <h1>{{ character.name }}</h1>
-
-    <div class="section-buttons">
-        <button class="section-button" onclick="showSection('details')">Details</button>
-        <button class="section-button" onclick="showSection('biography')">Biography</button>
-        <button class="section-button" onclick="showSection('personality')">Personality</button>
-    </div>
-
-    <div id="details" class="profile-section section-content">
-        <h2>Character Details</h2>
-        <ul>
-        {% for trait, value in public_traits.items %}
-            <li><strong>{{ trait }}:</strong> {{ value }}</li>
-        {% endfor %}
-        </ul>
-    </div>
-
-    <div id="biography" class="profile-section section-content">
-        <h2>Biography</h2>
-        <p>{{ biography }}</p>
-    </div>
-
-    <div id="personality" class="profile-section section-content">
-        <h2>Personality</h2>
-        <p>{{ personality }}</p>
+    <div class="profile-container">
+        <div class="section-buttons">
+            <button class="section-button" onclick="showSection('details')">Details</button>
+            <button class="section-button" onclick="showSection('biography')">Biography</button>
+            <button class="section-button" onclick="showSection('personality')">Personality</button>
+        </div>
+        <div id="details" class="section-content">
+            <h2>Character Details</h2>
+            <div class="character-details">
+                {% for trait, value in public_traits.items %}
+                    {% if trait == 'Description' %}
+                        <div class="detail-item full-width">
+                            <strong>{{ trait }}:</strong>
+                            <p>{{ value }}</p>
+                        </div>
+                    {% else %}
+                        <div class="detail-item">
+                            <strong>{{ trait }}:</strong>
+                            {{ value }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        <div id="biography" class="section-content">
+            <h2>Biography</h2>
+            <p>{{ biography }}</p>
+        </div>
+        <div id="personality" class="section-content">
+            <h2>Personality</h2>
+            <p>{{ personality }}</p>
+        </div>
     </div>
 </div>
 
 <script>
-    function showSection(sectionId) {
-        // Hide all sections
-        var sections = document.getElementsByClassName('section-content');
-        for (var i = 0; i < sections.length; i++) {
-            sections[i].classList.remove('active');
-        }
-        // Show the selected section
-        document.getElementById(sectionId).classList.add('active');
+function showSection(sectionId) {
+    // Hide all sections
+    var sections = document.getElementsByClassName('section-content');
+    for (var i = 0; i < sections.length; i++) {
+        sections[i].classList.remove('active');
     }
+    // Show the selected section
+    document.getElementById(sectionId).classList.add('active');
+    
+    // Update button styles
+    var buttons = document.getElementsByClassName('section-button');
+    for (var i = 0; i < buttons.length; i++) {
+        buttons[i].classList.remove('active');
+    }
+    event.target.classList.add('active');
+}
 
-    // Show the details section by default
-    showSection('details');
+// Show the details section by default
+showSection('details');
+document.querySelector('.section-button').classList.add('active');
 </script>
 {% endblock %}
