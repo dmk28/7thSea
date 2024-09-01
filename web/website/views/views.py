@@ -1,4 +1,4 @@
-from django.views.generic import ListView
+from django.views.generic import ListView, TemplateView
 from evennia.objects.models import ObjectDB
 from django.urls import reverse
 from .utils import render_to_response, mush_to_html
@@ -57,3 +57,47 @@ def public_character_profile(request, character, object_id):
         'personality': mush_to_html(sheet.personality) or mush_to_html(character.db.personality) or 'N/A',
     }
     return render_to_response(request, f'character/profile.html', context)
+
+class NationListView(ListView):
+    template_name = 'website/nation/nation_list.html'
+    context_object_name = 'nations'
+
+    def get_queryset(self):
+        logger.info("NationListView.get_queryset() called")
+        nations = Nation.objects.all().order_by('name')
+        logger.info(f"Found {nations.count()} nations")
+        return nations
+
+    def render_to_response(self, context, **response_kwargs):
+        return render_to_response(self.request, self.template_name, context)
+
+class NationDetailView(DetailView):
+    model = Nation
+    template_name = 'website/nation/nation_detail.html'
+    context_object_name = 'nation'
+
+    def get_object(self, queryset=None):
+        if queryset is None:
+            queryset = self.get_queryset()
+        pk = self.kwargs.get('pk')
+        nation_name = self.kwargs.get('nation')
+        if pk is None:
+            return get_object_or_404(queryset, name__iexact=nation_name)
+        return get_object_or_404(queryset, pk=pk)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        nation = self.object
+        context['characters'] = nation.get_characters()
+        return context
+
+    def render_to_response(self, context, **response_kwargs):
+        return render_to_response(self.request, self.template_name, context)
+
+class WorldMapView(TemplateView):
+    template_name = 'website/nation/world_map.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['nations'] = Nation.objects.all()
+        return context

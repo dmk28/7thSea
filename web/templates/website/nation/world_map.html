@@ -1,0 +1,26 @@
+{% extends "website/base.html" %}
+{% load static %}
+{% block titleblock %}World Map{% endblock %}
+{% block content %}
+
+<div class="row">
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <h1 class="card-title">World Map</h1>
+                <img src="{% static 'images/world_map.jpg' %}" usemap="#world-map" alt="World Map" class="img-fluid">
+                <map name="world-map">
+                    <area shape="poly" coords="400,300,500,280,550,350,480,400,420,370" href="{% url 'nation_detail' 'Castille' 1 %}" alt="Castille" title="Castille">
+                    <area shape="poly" coords="200,200,350,180,380,300,250,350,180,280" href="{% url 'nation_detail' 'Montaigne' 2 %}" alt="Montaigne" title="Montaigne">
+                    <area shape="poly" coords="50,50,150,30,180,100,120,150,40,120" href="{% url 'nation_detail' 'Avalon' 3 %}" alt="Avalon" title="Avalon">
+                    <area shape="poly" coords="450,200,550,180,580,250,520,300,470,280" href="{% url 'nation_detail' 'Eisen' 4 %}" alt="Eisen" title="Eisen">
+                    <area shape="poly" coords="600,300,700,280,730,350,670,400,620,380" href="{% url 'nation_detail' 'Vodacce' 5 %}" alt="Vodacce" title="Vodacce">
+                    <area shape="poly" coords="300,50,400,30,420,80,380,120,320,100" href="{% url 'nation_detail' 'Vendel' 6 %}" alt="Vendel/Vesten" title="Vendel/Vesten">
+                    <area shape="circle" coords="350,400,30" href="{% url 'nation_detail' 'Dragons Cove' 7 %}" alt="Dragon's Cove" title="Dragon's Cove">
+                </map>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
