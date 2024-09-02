@@ -500,7 +500,7 @@ def set_skill_package(caller, raw_string):
         caller.msg("Invalid input. Please enter the category and package name (e.g., 'Martial Fencing') or 'done' to finish.")
         return select_skills(caller)
 
-    category, package = parts[0].capitalize(), parts[1].strip().capitalize()
+    category, package = parts[0].capitalize(), parts[1].strip().title()
 
     if category in PACKAGES and package in PACKAGES[category]:
         if process_skill_package(caller, package, category):
