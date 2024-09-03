@@ -1427,7 +1427,14 @@ class CombatScript(DefaultScript):
 
         # Calculate attack roll
         attack_roll = self.calculate_attack_roll(attacker, weapon_type, weapon_attack)
-
+        if self.check_stop_thrust(target):
+            stop_thrust_success = self.perform_stop_thrust(target, attacker)
+            if stop_thrust_success:
+                return False
+        if self.check_riposte(target):
+            riposte_success = self.perform_riposte(target, attacker, attack_roll)
+            if riposte_success:
+                return False
         # Calculate defense roll with +10 bonus
         defense_roll = self.calculate_defense_roll(target, target.db.wielded_weapon.db.weapon_type if target.db.wielded_weapon else "Unarmed")
         defense_roll += 10  # Add 10 to the defense roll for double attack
