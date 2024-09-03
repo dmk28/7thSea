@@ -49,7 +49,7 @@ DEFAULT_CMDSETS = [
 
 ]
 INSTALLED_APPS += ['world.character_sheet', 'world.adventuring_guilds', 'world.ships', 'world.banking', 'world.crafts', 'world.nations']
-
+GAME_SLOGAN = "Adventures in the High Seas"
 
 ######################################################################
 # Settings given in secret_settings.py override those in this file.
