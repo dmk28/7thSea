@@ -23,6 +23,8 @@ urlpatterns = [
         path('detail/<str:nation>/<int:pk>/', NationDetailView.as_view(), name='nation_detail'),
         path('map/', WorldMapView.as_view(), name='world_map'),
     ])),
+
+    path('guilds/', include('world.adventuring_guilds.urls')),
 ]
 # read by Django
 urlpatterns = urlpatterns + evennia_website_urlpatterns

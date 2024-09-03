@@ -1,0 +1,82 @@
+{% extends "website/base.html" %}
+{% block titleblock %}{{ guild.db_name }}{% endblock %}
+{% block content %}
+
+<div class="guild-profile">
+    <h1>{{ guild.db_name }}</h1>
+
+    <div class="profile-container">
+        <div class="section-buttons">
+            <button class="section-button active" data-section="details">Details</button>
+            <button class="section-button" data-section="history">History</button>
+            <button class="section-button" data-section="holdings">Holdings</button>
+            <button class="section-button" data-section="members">Members</button>
+        </div>
+
+        <div id="details" class="section-content active">
+            <h2>Guild Details</h2>
+            <div class="guild-details">
+                <div class="detail-item"><strong>Founder:</strong> {{ guild.db_founder.db_key }}</div>
+                <div class="detail-item"><strong>Founding Date:</strong> {{ guild.db_founding_date }}</div>
+                <div class="detail-item full-width"><strong>Description:</strong> {{ guild.db_description }}</div>
+            </div>
+        </div>
+
+        <div id="history" class="section-content">
+            <h2>Guild History</h2>
+            <h3>Founding History</h3>
+            {{ guild.db_history|linebreaks }}
+            <h3>Recent History</h3>
+            {{ guild.db_recent_history|linebreaks }}
+        </div>
+
+        <div id="holdings" class="section-content">
+            <h2>Guild Holdings</h2>
+            <ul>
+                {% for holding in guild.holdings.all %}
+                    <li>
+                        <strong>{{ holding.get_display_name }}</strong> ({{ holding.holding_type }})
+                        <br>Level: {{ holding.level }}
+                        <br>Income: {{ holding.calculate_income_rate }} {{ holding.income_type }} per month
+                    </li>
+                {% empty %}
+                    <li>No holdings for this guild.</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div id="members" class="section-content">
+            <h2>Guild Members</h2>
+            <ul>
+                {% for member in guild.db_members.all %}
+                    <li>{{ member.db_key }}</li>
+                {% empty %}
+                    <li>No members in this guild.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const sectionButtons = document.querySelectorAll('.section-button');
+        const sectionContents = document.querySelectorAll('.section-content');
+
+        sectionButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const sectionName = this.getAttribute('data-section');
+                
+                sectionButtons.forEach(btn => btn.classList.remove('active'));
+                sectionContents.forEach(content => content.classList.remove('active'));
+                
+                this.classList.add('active');
+                document.getElementById(sectionName).classList.add('active');
+            });
+        });
+    });
+</script>
+{% endblock %}

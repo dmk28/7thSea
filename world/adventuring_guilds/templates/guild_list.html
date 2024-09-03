@@ -1,0 +1,40 @@
+{% extends "website/base.html" %}
+{% block titleblock %}Adventuring Guilds{% endblock %}
+{% block content %}
+
+<div class="row">
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <h1 class="card-title">Factions</h1>
+                <hr>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Founder</th>
+                            <th>Founding Date</th>
+                            <th>Number of Holdings</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for guild in guilds %}
+                            <tr>
+                                <td><a href="{% url 'guild_detail' guild.db_name guild.id %}">{{ guild.db_name }}</a></td>
+                                <td>{{ guild.db_founder.db_key }}</td>
+                                <td>{{ guild.db_founding_date }}</td>
+                                <td>{{ guild.holdings.count }}</td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="4">No adventuring guilds available.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
