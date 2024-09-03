@@ -1040,6 +1040,56 @@ SWORDSMAN_SCHOOLS = {
              
             }
         },
+
+        "Desaix": {
+            "country": "Montaigne",
+            "requirements": {
+                "Fencing",
+                "Knife"
+            },
+            "knacks": {
+                "Desaix": {
+                    "Double-Parry (Fencing/Knife)": 1,
+                    "Feint (Fencing)": 1,
+                    "Double-Attack": 1,
+                    "Exploit Weakness (Desaix)": 1,
+                }
+            }
+        },
+
+        "Ladestreza": {
+            "country": "Castille",
+            "requirements": {
+                "Fencing",
+                "Pugilism"
+            },
+            "knacks": {
+                "Destreza": {
+                    "Double-Attack (Fencing)": 1,
+                    "Exploit Weakness (Ladestreza)": 1,
+                    "Stop-Thrust (Fencing)": 1,
+                    "Double-Parry (Fencing/Fencing)": 1,
+
+
+                }
+            }
+        },
+
+        "Gaulle": {
+            "country": "Montaigne",
+            "requirements": {
+                "Fencing",
+                "Knife"
+            },
+            "knacks": {
+                "Gaulle": {
+                    "Double-Parry (Fencing/Knife)": 1,
+                    "Bind (Knife)": 1,
+                    "Disarm (Knife)": 1,
+                    "Exploit Weakness (Gaulle)": 1,
+                }
+            }
+        }
         
         }
     

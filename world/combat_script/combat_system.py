@@ -230,6 +230,7 @@ class CombatScript(DefaultScript):
             self.msg_all(f"{character.name}'s Corps-a-Corps adds 2 to the damage!")
 
 
+
         return bonus
     
     def roll_initiative(self):
@@ -345,6 +346,18 @@ class CombatScript(DefaultScript):
                 action_successful = self.set_stop_thrust(character)
             elif action in ["double-parry", "doubleparry"]:
                 action_successful = self.set_double_parry(character)
+            elif action in ["double-attack", "doubleattack"]:
+                if not target:
+                    character.msg("You must specify a target for double-attack.")
+                    return
+                target_character = character.search(target)
+                if not target_character or target_character not in self.db.participants:
+                    character.msg(f"Invalid target: {target}")
+                    return
+                if target_character == character:
+                    character.msg("You can't double-attack yourself.")
+                    return
+                action_successful = self.perform_double_attack(character, target_character, character.db.wielded_weapon)
             elif action == "sidestep":
                 action_successful = self.set_sidestep(character)
             elif action == "defend":
@@ -460,6 +473,15 @@ class CombatScript(DefaultScript):
             self.set_sidestep(character)
         else:
             character.msg("Invalid special move.")
+
+    def set_double_attack(self, character):
+        double_attack_skill = character.character_sheet.get_knack_value("Double-Attack (Fencing)")
+        if double_attack_skill == 0:
+            character.msg("You don't know how to perform a Double-Attack.")
+            return False
+        
+        self.msg_all(f"{character.name} prepares for a double attack. (Skill level: {double_attack_skill})")
+        return True
 
     def set_stop_thrust(self, character):
         if not self.check_knack(character, 'Stop-Thrust'):
@@ -851,7 +873,7 @@ class CombatScript(DefaultScript):
             if weapon is None:
                 dirty_fighting_skill = attacker.character_sheet.get_knack_value("Attack (Dirty Fighting)")
                 pugilism_skill = attacker.character_sheet.get_knack_value("Attack (Pugilism)")
-                
+
                 if pugilism_skill > 0:
                     weapon_type = "Pugilism"
                     weapon_attack = "Attack (Pugilism)"
@@ -1380,8 +1402,42 @@ class CombatScript(DefaultScript):
 
         return combat_ended
 
+    def perform_double_attack(self, attacker, target, weapon):
+        double_attack_skill = attacker.character_sheet.get_knack_value("Double-Attack (Fencing)")
+        if double_attack_skill == 0:
+            attacker.msg("You don't know how to perform a Double-Attack.")
+            return False
 
+        self.msg_all(f"{attacker.name} attempts a double attack against {target.name}!")
+        
+        # Perform first attack
+        combat_ended = self.perform_single_attack_of_double_attack(attacker, target, weapon)
+        if combat_ended:
+            return True
 
+        # Perform second attack if the first one didn't end combat
+        combat_ended = self.perform_single_attack_of_double_attack(attacker, target, weapon)
+        
+        return combat_ended
+
+    def perform_single_attack_of_double_attack(self, attacker, target, weapon):
+        weapon_type = weapon.db.weapon_type if weapon else "Unarmed"
+        weapon_attack = weapon.db.attack_skill if weapon else "Attack (Unarmed)"
+
+        # Calculate attack roll
+        attack_roll = self.calculate_attack_roll(attacker, weapon_type, weapon_attack)
+
+        # Calculate defense roll with +10 bonus
+        defense_roll = self.calculate_defense_roll(target, target.db.wielded_weapon.db.weapon_type if target.db.wielded_weapon else "Unarmed")
+        defense_roll += 10  # Add 10 to the defense roll for double attack
+
+        self.msg_all(f"Attack roll: |555{attack_roll}|n, Defense roll (with +10 bonus): |555{defense_roll}|n")
+
+        # Resolve the attack
+        if attack_roll > defense_roll:
+            return self.resolve_successful_attack(attacker, target, weapon, attack_roll, defense_roll)
+        else:
+            return self.resolve_missed_attack(attacker, target)
 
 def get_combat(caller):
     if hasattr(caller.db, 'combat_id'):
