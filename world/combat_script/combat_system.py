@@ -358,11 +358,7 @@ class CombatScript(DefaultScript):
                     character.msg("You can't double-attack yourself.")
                     return
                 combat_ended = self.perform_double_attack(character, target_character, character.db.wielded_weapon)
-                if combat_ended:
-                    self.end_combat()
-                else:
-                    self.finish_turn()
-                return 
+            
             elif action == "sidestep":
                 action_successful = self.set_sidestep(character)
             elif action == "defend":
@@ -377,7 +373,7 @@ class CombatScript(DefaultScript):
 
             if combat_ended:
                 self.end_combat()
-            elif action_successful or action == "attack":  # We always want to finish the turn after an attack
+            elif action_successful or action == "attack" or action in ["double-attack", "doubleattack"]:  # We always want to finish the turn after an attack
                 self.finish_turn()
             else:
                 self.offer_action(character)  # Allow the character to choose another action if the previous one failed
