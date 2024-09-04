@@ -1132,7 +1132,7 @@ class CombatScript(DefaultScript):
         character.ndb.riposte = False
         character.ndb.held_action = False
         character.ndb.stop_thrust = False
-        if 'nosestruck' in character.ndb.special_effects:
+        if 'facestruck' in character.ndb.special_effects:
             character.ndb.special_effects.remove('facestruck')
 
 
