@@ -221,7 +221,6 @@ class CmdDoubleAttack(Command):
         else:
             self.caller.msg("You are not in combat.")
 
-
 class CmdPommelStrike(Command):
     key = "pommelstrike"
     aliases = ["pommel"]
@@ -230,24 +229,34 @@ class CmdPommelStrike(Command):
 
     def func(self):
         combat = get_combat(self.caller)
-
         if combat:
             if not self.args:
                 self.caller.msg("You must specify a target for your pommel strike.")
                 return
+
             weapon = self.caller.db.wielded_weapon
             if not weapon:
                 self.caller.msg("You need a weapon to perform Pommel Strike!")
                 return
+
             weapon_type = weapon.db.weapon_type
-            knack_name = f"Pommel Strike {weapon_type}"
-            if not self.caller.character_sheet.get_knack_value(knack_name):
+            
+            # Check for both possible knack names
+            knack_name1 = f"Pommel Strike ({weapon_type})"
+            knack_name2 = f"Pommel Strike"
+            
+            knack_value = max(
+                self.caller.character_sheet.get_knack_value(knack_name1),
+                self.caller.character_sheet.get_knack_value(knack_name2)
+            )
+
+            if knack_value == 0:
                 self.caller.msg(f"You don't know how to perform a Pommel Strike with a {weapon_type}.")
                 return
+
             combat.handle_action_input(self.caller, f"pommelstrike {self.args}")
         else:
             self.caller.msg("You are not in combat.")
-
 # Similar classes for Riposte, Lunge, etc.
 
 # class CmdSpecial(Command):
