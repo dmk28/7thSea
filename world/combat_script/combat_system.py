@@ -358,7 +358,15 @@ class CombatScript(DefaultScript):
                     character.msg("You can't double-attack yourself.")
                     return
                 combat_ended = self.perform_double_attack(character, target_character, character.db.wielded_weapon)
-            
+            elif action in ["pommel", "pommelstrike"]:
+                target_character = character.search(target)
+                if not target_character or target_character not in self.db.participants:
+                    character.msg(f"Invalid target: {target}")
+                    return
+                if target_character == character:
+                    character.msg("You can't attack yourself.")
+                    return
+                combat_ended = self.perform_pommel_strike(character, target, character.db.wielded_weapon)
             elif action == "sidestep":
                 action_successful = self.set_sidestep(character)
             elif action == "defend":

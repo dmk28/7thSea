@@ -11,3 +11,4 @@ class MovesCmdSet(CmdSet):
         self.add(CmdLunge())
         self.add(CmdTag())
         self.add(CmdDoubleAttack())
+        self.add(CmdPommelStrike())
