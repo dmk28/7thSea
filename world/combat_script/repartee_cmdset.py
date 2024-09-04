@@ -140,11 +140,12 @@ class CmdEndRepartee(Command):
 
         repartee = SocialCombat.get_or_create(repartee_id)
         if not repartee:
-            self.caller.msg("Error: Could not find or create the repartee script.")
+            self.caller.msg(f"Error: Could not find the repartee script with ID {repartee_id}.")
             return
 
         self.caller.msg(f"Debug: Repartee object: {repartee}")
         self.caller.msg(f"Debug: Repartee type: {type(repartee)}")
+        self.caller.msg(f"Debug: Repartee typeclass path: {repartee.typeclass_path}")
         self.caller.msg(f"Debug: Repartee attributes: {dir(repartee)}")
 
         if hasattr(repartee, 'end_repartee'):
@@ -152,7 +153,9 @@ class CmdEndRepartee(Command):
             self.caller.msg("You have ended the repartee.")
         else:
             self.caller.msg("Error: The repartee script doesn't have an end_repartee method.")
+            self.caller.msg(f"Available methods: {[method for method in dir(repartee) if callable(getattr(repartee, method))]}")
 
+            
 def get_repartee(caller):
     from world.combat_script.social_combat import SocialCombat
     if hasattr(caller.db, 'repartee_id'):

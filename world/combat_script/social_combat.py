@@ -35,9 +35,9 @@ class SocialCombat(DefaultScript):
 
     @classmethod
     def get_or_create(cls, id):
-        script = ScriptDB.objects.filter(id=id).first()
+        script = ScriptDB.objects.filter(id=id, db_typeclass_path__endswith='SocialCombat').first()
         if script:
-            return script.upgrade()
+            return script
         return None
 
     def at_start(self):
