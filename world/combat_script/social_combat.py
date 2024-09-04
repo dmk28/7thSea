@@ -71,17 +71,20 @@ class SocialCombat(DefaultScript):
     def next_round(self):
         self.db.round += 1
         self.msg_all(f"Round {self.db.round} of repartee begins.")
+        self.db.initiative_order = self.db.participants.copy()  # Reset initiative order
         self.process_next_character()
 
     def process_next_character(self):
         if not self.db.initiative_order:
-            self.next_round()
+            if len(self.db.participants) < 2:
+                self.end_repartee()
+            else:
+                self.next_round()
             return
 
         self.db.current_actor = self.db.initiative_order.pop(0)
         if self.db.current_actor not in self.db.participants:
-            self.msg_all(f"{self.db.current_actor.name} is no longer in the repartee. Skipping their turn.")
-            self.process_next_character()
+            self.process_next_character()  # Skip to the next character
         else:
             self.offer_action(self.db.current_actor)
 
@@ -197,10 +200,7 @@ class SocialCombat(DefaultScript):
     def finish_turn(self):
         self.db.action_state = None
         self.db.current_actor = None
-        if len(self.db.participants) < 2:
-            self.end_repartee()
-        else:
-            self.process_next_character()
+        self.process_next_character()
 
     def roll_keep(self, num_dice, keep):
         rolls = [randint(1, 10) for _ in range(num_dice)]
@@ -222,6 +222,7 @@ class SocialCombat(DefaultScript):
             self.end_repartee()
 
     def end_repartee(self):
+    
         self.msg_all("The repartee has ended.")
         for char in self.db.participants:
             if hasattr(char.ndb, 'repartee_id'):
