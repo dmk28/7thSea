@@ -65,6 +65,7 @@ class CmdFlameblade(Command):
         caller.location.msg_contents(f"{caller.name}'s weapon erupts in magical flames!", exclude=caller)
 
 
+
 class CmdExtinguishFlameblade(Command):
     """
     Deactivate all Flameblade sorcery effects on your weapons and character.
@@ -84,9 +85,9 @@ class CmdExtinguishFlameblade(Command):
         caller = self.caller
 
         # Search for all FlamebladeEffect scripts on the caller and their inventory
-        flameblade_scripts = search_script("flameblade_effect", obj=caller) + \
-                             [script for item in caller.contents 
-                              for script in search_script("flameblade_effect", obj=item)]
+        flameblade_scripts = list(search_script("flameblade_effect", obj=caller))
+        for item in caller.contents:
+            flameblade_scripts.extend(list(search_script("flameblade_effect", obj=item)))
 
         if not flameblade_scripts:
             caller.msg("You don't have any active Flameblade effects.")
