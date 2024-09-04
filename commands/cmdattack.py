@@ -240,6 +240,7 @@ class CmdPommelStrike(Command):
                 self.caller.msg("You need a weapon to perform Pommel Strike!")
                 return
             weapon_type = weapon.db.weapon_type
+            knack_name = f"Pommel Strike {weapon_type}"
             if not self.caller.character_sheet.get_knack_value(knack_name):
                 self.caller.msg(f"You don't know how to perform a Pommel Strike with a {weapon_type}.")
                 return
