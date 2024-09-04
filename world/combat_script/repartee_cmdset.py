@@ -15,7 +15,7 @@ class SocialActionMixin:
 
 class CmdStartRepartee(Command):
     key = "startrepartee"
-    locks = "cmd:attr(approved) or perm(Admin)"
+    # locks = "cmd:attr(approved) or perm(Admin)"
     help_category = "Social"
 
     def func(self):
