@@ -125,3 +125,10 @@ class CmdWearChoice(Command):
             caller.msg(f"You can't wear {item.name} on your {location}.")
 
         del caller.ndb._wear_choice
+
+
+class WearCmdset(CmdSet):
+    def at_cmdset_creation(self):
+        self.add(CmdWear())
+        self.add(CmdRemove())
+        self.add(CmdWearChoice())
