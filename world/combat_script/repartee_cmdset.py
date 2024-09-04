@@ -116,13 +116,7 @@ class CmdPassRepartee(Command):
             return
         repartee.handle_action_input(self.caller, "pass")
 
-def get_repartee(caller):
-    if hasattr(caller.db, 'repartee_id'):
-        repartee_id = caller.db.repartee_id
-        repartee = ScriptDB.objects.filter(id=repartee_id, db_key='SocialCombatScript').first()
-        if repartee:
-            return repartee
-    return None
+
 
 class CmdEndRepartee(Command):
     """
@@ -146,7 +140,13 @@ class CmdEndRepartee(Command):
         repartee.force_end_repartee()
         self.caller.msg("You have ended the repartee.")
 
-
+def get_repartee(caller):
+        if hasattr(caller.db, 'repartee_id'):
+            repartee_id = caller.db.repartee_id
+            repartee = ScriptDB.objects.filter(id=repartee_id, db_key='SocialCombatScript').first()
+            if repartee:
+                return repartee
+        return None
 class ReparteeCmdSet(CmdSet):
     key = "repartee"
 

@@ -122,9 +122,6 @@ class SocialCombat(DefaultScript):
             self.msg_all(f"An error occurred: {str(e)}")
             self.force_end_repartee()
 
-
-
-
     def force_end_repartee(self):
         self.msg_all("The repartee has been forcibly ended.")
         for char in self.db.participants:
