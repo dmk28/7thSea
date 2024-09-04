@@ -19,6 +19,20 @@ class SocialCombat(DefaultScript):
         self.db.current_actor = None
         self.db.action_state = None
         self.db.round = 0
+    
+    def end_repartee(self):
+        self.msg_all("The repartee has ended.")
+        for char in self.db.participants:
+            if hasattr(char.db, 'repartee_id'):
+                del char.db.repartee_id
+            self.remove_repartee_cmdset(char)
+            
+            # Clear any repartee-specific attributes
+            for attr in ['reputation', 'social_health', 'attack_trait', 'defense_trait', 'special_effects']:
+                if hasattr(char.ndb, attr):
+                    delattr(char.ndb, attr)
+
+        self.stop()
 
     def at_start(self):
         self.msg_all(f"Debug: Repartee script {self.id} started.")
@@ -235,19 +249,7 @@ class SocialCombat(DefaultScript):
     def debug_info(self):
      return f"SocialCombat Script ID: {self.id}, Key: {self.key}, DB fields: {self.db.all()}"
 
-    def end_repartee(self):
-        self.msg_all("The repartee has ended.")
-        for char in self.db.participants:
-            if hasattr(char.db, 'repartee_id'):
-                del char.db.repartee_id
-            self.remove_repartee_cmdset(char)
-            
-            # Clear any repartee-specific attributes
-            for attr in ['reputation', 'social_health', 'attack_trait', 'defense_trait', 'special_effects']:
-                if hasattr(char.ndb, attr):
-                    delattr(char.ndb, attr)
-
-        self.stop()
+    
 
     def remove_repartee_cmdset(self, character):
         character.cmdset.delete(ReparteeCmdSet)
