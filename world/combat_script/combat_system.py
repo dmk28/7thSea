@@ -366,7 +366,7 @@ class CombatScript(DefaultScript):
                 if target_character == character:
                     character.msg("You can't attack yourself.")
                     return
-                combat_ended = self.perform_pommel_strike(character, target, character.db.wielded_weapon)
+                combat_ended = self.perform_pommel_strike(character, target_character, character.db.wielded_weapon)
             elif action == "sidestep":
                 action_successful = self.set_sidestep(character)
             elif action == "defend":
