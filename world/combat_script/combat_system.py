@@ -1343,13 +1343,20 @@ class CombatScript(DefaultScript):
     def perform_pommel_strike(self, attacker, target, weapon):
         self.msg_all(f"Debug: Performing Pommel Strike for {attacker.name} against {target.name}")
         
-        attacker_knack = attacker.character_sheet.get_knack_value("Pommel Strike (Fencing)")
+        if not weapon:
+            self.msg_all(f"{attacker.name} needs to wield a weapon to perform a Pommel Strike.")
+            return False
+
+        weapon_type = weapon.db.weapon_type
+        knack_name = f"Pommel Strike ({weapon_type})"
+        attacker_knack = attacker.character_sheet.get_knack_value(knack_name)
+        
         if attacker_knack == 0:
-            self.msg_all(f"{attacker.name} doesn't know how to perform a Pommel Strike.")
+            self.msg_all(f"{attacker.name} doesn't know how to perform a Pommel Strike with a {weapon_type}.")
             return False
         
         attack_roll = self.roll_keep((attacker.db.traits['finesse'] + attacker_knack), attacker.db.traits['finesse'])
-        defense_roll = self.calculate_defense_roll(target, target.db.wielded_weapon.weapon_type if target.db.wielded_weapon else "Unarmed")
+        defense_roll = self.calculate_defense_roll(target, weapon_type)
         
         if attack_roll > defense_roll:
             attacker.ndb.special_effects.add('pommel_strike')

@@ -230,12 +230,18 @@ class CmdPommelStrike(Command):
 
     def func(self):
         combat = get_combat(self.caller)
+
         if combat:
             if not self.args:
                 self.caller.msg("You must specify a target for your pommel strike.")
                 return
-            if not self.caller.character_sheet.get_knack_value("Pommel Strike (Fencing)") or not self.caller.character_sheet.get_knack_value("Pommel Strike (Heavy Weapon)"):
-                self.caller.msg("You don't know how to perform a Pommel Strike.")
+            weapon = self.caller.db.wielded_weapon
+            if not weapon:
+                self.caller.msg("You need a weapon to perform Pommel Strike!")
+                return
+            weapon_type = weapon.db.weapon_type
+            if not self.caller.character_sheet.get_knack_value(knack_name):
+                self.caller.msg(f"You don't know how to perform a Pommel Strike with a {weapon_type}.")
                 return
             combat.handle_action_input(self.caller, f"pommelstrike {self.args}")
         else:
