@@ -79,7 +79,11 @@ class SocialCombat(DefaultScript):
             return
 
         self.db.current_actor = self.db.initiative_order.pop(0)
-        self.offer_action(self.db.current_actor)
+        if self.db.current_actor not in self.db.participants:
+            self.msg_all(f"{self.db.current_actor.name} is no longer in the repartee. Skipping their turn.")
+            self.process_next_character()
+        else:
+            self.offer_action(self.db.current_actor)
 
     def offer_action(self, character):
         self.db.action_state = "choosing_action"
@@ -88,34 +92,52 @@ class SocialCombat(DefaultScript):
         self.msg_all(f"Waiting for {character.name} to choose an action.")
 
     def handle_action_input(self, character, choice):
-        if self.db.current_actor != character:
-            character.msg("It's not your turn to act.")
-            return
-
-        parts = choice.split(None, 1)
-        action = parts[0].lower()
-        target = parts[1] if len(parts) > 1 else None
-
-        if action in ["taunt", "charm", "intimidate", "gossip", "ridicule", "blackmail"]:
-            if not target:
-                character.msg(f"You must specify a target for {action}.")
+        try:
+            if self.db.current_actor != character:
+                character.msg("It's not your turn to act.")
                 return
-            self.perform_social_action(character, action, target)
-        elif action == "pass":
-            self.pass_turn(character)
-        else:
-            character.msg("Invalid action. Use 'taunt', 'charm', 'intimidate', 'gossip', 'ridicule', 'blackmail', or 'pass'.")
 
+            parts = choice.split(None, 1)
+            action = parts[0].lower()
+            target = parts[1] if len(parts) > 1 else None
+
+            if action in ["taunt", "charm", "intimidate", "gossip", "ridicule", "blackmail"]:
+                if not target:
+                    character.msg(f"You must specify a target for {action}.")
+                    return
+                self.perform_social_action(character, action, target)
+            elif action == "pass":
+                self.pass_turn(character)
+            else:
+                character.msg("Invalid action. Use 'taunt', 'charm', 'intimidate', 'gossip', 'ridicule', 'blackmail', or 'pass'.")
+        except Exception as e:
+     
+            self.msg_all(f"An error occurred: {str(e)}")
+            self.force_end_repartee()
+
+
+    def force_end_repartee(self):
+        self.msg_all("Repartee is being forcibly ended due to an error.")
+        for char in self.db.participants:
+            if hasattr(char.ndb, 'repartee_id'):
+                del char.ndb.repartee_id
+            self.remove_repartee_cmdset(char)
+        self.stop()
     def perform_social_action(self, attacker, action, target_name):
-        target = attacker.search(target_name)
-        if not target or target not in self.db.participants:
-            attacker.msg(f"Invalid target: {target_name}")
-            return
 
-        if action in ["taunt", "charm", "intimidate"]:
-            self.perform_basic_action(attacker, target, action)
-        elif action in ["gossip", "ridicule", "blackmail"]:
-            self.perform_advanced_action(attacker, target, action)
+        try:
+            target = attacker.search(target_name)
+            if not target or target not in self.db.participants:
+                attacker.msg(f"Invalid target: {target_name}")
+                return
+
+            if action in ["taunt", "charm", "intimidate"]:
+                self.perform_basic_action(attacker, target, action)
+            elif action in ["gossip", "ridicule", "blackmail"]:
+                self.perform_advanced_action(attacker, target, action)
+        except Exception as e:
+            self.msg_all(f"An error occurred during social action: {str(e)}")
+            self.force_end_repartee()
 
     def perform_basic_action(self, attacker, target, action):
         action_index = {"taunt": 0, "charm": 2, "intimidate": 1}
@@ -175,7 +197,10 @@ class SocialCombat(DefaultScript):
     def finish_turn(self):
         self.db.action_state = None
         self.db.current_actor = None
-        self.process_next_character()
+        if len(self.db.participants) < 2:
+            self.end_repartee()
+        else:
+            self.process_next_character()
 
     def roll_keep(self, num_dice, keep):
         rolls = [randint(1, 10) for _ in range(num_dice)]
