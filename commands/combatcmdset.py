@@ -1,5 +1,5 @@
 from evennia import CmdSet
-from commands.cmdattack import CmdDoubleParry, CmdStopThrust, CmdFeint, CmdRiposte, CmdViewCombatEffects, CmdLunge, CmdTag, CmdDoubleAttack
+from commands.cmdattack import CmdDoubleParry, CmdStopThrust, CmdFeint, CmdRiposte, CmdViewCombatEffects, CmdLunge, CmdTag, CmdDoubleAttack, CmdPommelStrike
 
 class MovesCmdSet(CmdSet):
     def at_cmdset_creation(self):
