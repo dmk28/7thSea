@@ -24,7 +24,6 @@ class SocialCombat(DefaultScript):
         for char in self.db.participants:
             if hasattr(char.db, 'repartee_id'):
                 del char.db.repartee_id
-            self.remove_repartee_cmdset(char)
             
             # Clear any repartee-specific attributes
             for attr in ['reputation', 'social_health', 'attack_trait', 'defense_trait', 'special_effects']:
@@ -148,7 +147,6 @@ class SocialCombat(DefaultScript):
         for char in self.db.participants:
             if hasattr(char.db, 'repartee_id'):
                 del char.db.repartee_id
-            self.remove_repartee_cmdset(char)
             
             # Clear any repartee-specific attributes
             for attr in ['reputation', 'social_health', 'attack_trait', 'defense_trait', 'special_effects']:
@@ -255,9 +253,5 @@ class SocialCombat(DefaultScript):
     def debug_info(self):
      return f"SocialCombat Script ID: {self.id}, Key: {self.key}, DB fields: {self.db.all()}"
 
-    
-
-    def remove_repartee_cmdset(self, character):
-        character.cmdset.delete(ReparteeCmdSet)
 
 # Add other necessary methods
