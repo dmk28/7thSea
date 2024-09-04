@@ -148,7 +148,6 @@ class CmdEndRepartee(Command):
             self.caller.msg("Error: The repartee script doesn't have an end_repartee method.")
 
 def get_repartee(caller):
-    from world.combat_script.social_combat import SocialCombat
     if hasattr(caller.db, 'repartee_id'):
         repartee_id = caller.db.repartee_id
         repartee = ScriptDB.objects.filter(id=repartee_id, db_key='SocialCombatScript').first()
