@@ -1080,7 +1080,7 @@ class CombatScript(DefaultScript):
                     attacker.msg(f"Your tag hit {target.name} for {actual_damage} damage!")
                     target.msg(f"{attacker.name}'s tag hit you for {actual_damage} damage! (Soaked {tag_damage - actual_damage})")
                     if 'tag_penalty' not in target.ndb.special_effects:
-                        target.ndb.special_effects.add('tag_penalty')
+                        target.ndb.special_effects += ('tag_penalty')
                         self.msg_all(f"{target.name} now has a -4 penalty to soak rolls!")
                     if character_defeated:
                         self.msg_all("Combat has ended due to a character being defeated.")
@@ -1280,7 +1280,7 @@ class CombatScript(DefaultScript):
         
         if attack_roll > defense_roll:
             # Add 'lunged' to special effects to increase damage later
-            attacker.ndb.special_effects.add('lunged')
+            attacker.ndb.special_effects += ['lunged']
             self.msg_all(f"{attacker.name}'s Lunge succeeds against {target.name}!")
             
             # Perform the attack
@@ -1357,7 +1357,7 @@ class CombatScript(DefaultScript):
         defense_roll = self.calculate_defense_roll(target, weapon_type)
         
         if attack_roll > defense_roll:
-            attacker.ndb.special_effects.add('pommel_strike')
+            attacker.ndb.special_effects += ['pommel_strike']
             combat_ended = self.perform_attack(attacker, target, weapon)
             attacker.ndb.special_effects.remove('pommel_strike')
             
@@ -1382,7 +1382,7 @@ class CombatScript(DefaultScript):
         defense_roll = self.roll_keep((target.db.traits['brawn'] + target.character_sheet.get_knack_value("Footwork")), target.db.traits['brawn'])
         
         if attack_roll > defense_roll:
-            attacker.ndb.special_effects.add('corps_a_corps')
+            attacker.ndb.special_effects += ['corps_a_corps']
             combat_ended = self.perform_attack(attacker, target, weapon)
             attacker.ndb.special_effects.remove('corps_a_corps')
             
