@@ -65,8 +65,6 @@ class CmdFlameblade(Command):
         caller.location.msg_contents(f"{caller.name}'s weapon erupts in magical flames!", exclude=caller)
 
 
-
-
 class CmdExtinguishFlameblade(Command):
     """
     Deactivate the Flameblade sorcery effect on your weapon.
@@ -75,7 +73,7 @@ class CmdExtinguishFlameblade(Command):
       extinguish_flameblade
 
     This will remove the Flameblade effect from your currently wielded weapon,
-    returning it to its normal state and stopping all associated Flameblade scripts.
+    returning it to its normal state and stopping the associated Flameblade script.
     """
     key = "extinguish_flameblade"
     aliases = ["extinguish"]
@@ -91,11 +89,15 @@ class CmdExtinguishFlameblade(Command):
 
         weapon = caller.db.wielded_weapon
 
-        # Search for all FlamebladeEffect scripts associated with the caller
-        flameblade_scripts = search_script("flameblade_effect", obj=caller)
+        if not weapon.db.flameblade_active:
+            caller.msg("Your weapon doesn't have an active Flameblade effect.")
+            return
+
+        # Search for the FlamebladeEffect script on the wielded weapon
+        flameblade_scripts = search_script("flameblade_effect", obj=weapon)
 
         if not flameblade_scripts:
-            caller.msg("You don't have any active Flameblade effects.")
+            caller.msg("Error: Flameblade effect is active but no script found. Please inform an admin.")
             return
 
         # Remove 'flameblade' from special_effects
@@ -106,15 +108,11 @@ class CmdExtinguishFlameblade(Command):
             sheet.special_effects = special_effects
             sheet.save(update_fields=['special_effects'])
 
-        # Reset weapon damage bonus
-        weapon.db.damage_bonus = 0
-
-        # Stop all FlamebladeEffect scripts
+        # Stop all FlamebladeEffect scripts on the weapon
         for script in flameblade_scripts:
             script.stop()
 
+        # The script's at_stop method will handle resetting the weapon stats
+
         caller.msg("The magical flames on your weapon flicker and die out.")
         caller.location.msg_contents(f"The magical flames on {caller.name}'s weapon flicker and die out.", exclude=caller)
-
-        # Clear the flameblade_active flag on the weapon
-        weapon.db.flameblade_active = False
