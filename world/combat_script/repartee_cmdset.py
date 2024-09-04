@@ -132,9 +132,15 @@ class CmdEndRepartee(Command):
     help_category = "Social"
 
     def func(self):
-        repartee = get_repartee(self.caller)
-        if not repartee:
+        from world.combat_script.social_combat import SocialCombat
+        repartee_id = self.caller.db.repartee_id
+        if not repartee_id:
             self.caller.msg("You are not in repartee.")
+            return
+
+        repartee = SocialCombat.get_or_create(repartee_id)
+        if not repartee:
+            self.caller.msg("Error: Could not find or create the repartee script.")
             return
 
         self.caller.msg(f"Debug: Repartee object: {repartee}")
@@ -148,11 +154,13 @@ class CmdEndRepartee(Command):
             self.caller.msg("Error: The repartee script doesn't have an end_repartee method.")
 
 def get_repartee(caller):
+    from world.combat_script.social_combat import SocialCombat
     if hasattr(caller.db, 'repartee_id'):
         repartee_id = caller.db.repartee_id
-        repartee = ScriptDB.objects.filter(id=repartee_id, db_key='SocialCombatScript').first()
+        repartee = ScriptDB.objects.filter(id=repartee_id, db_typeclass_path__endswith='SocialCombat').first()
         if repartee:
             caller.msg(f"Debug: Repartee script found. Type: {type(repartee)}")
+            caller.msg(f"Debug: Script typeclass path: {repartee.typeclass_path}")
             return repartee
         else:
             caller.msg(f"Debug: No repartee script found for ID {repartee_id}")

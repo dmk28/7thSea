@@ -3,7 +3,6 @@ from evennia.utils.utils import inherits_from
 from evennia import ScriptDB
 from random import randint
 from world.character_sheet.models import CharacterSheet
-from world.combat_script.social_combat import ReparteeCmdSet
 
 class SocialCombat(DefaultScript):
     """
@@ -33,6 +32,13 @@ class SocialCombat(DefaultScript):
                     delattr(char.ndb, attr)
 
         self.stop()
+
+    @classmethod
+    def get_or_create(cls, id):
+        script = ScriptDB.objects.filter(id=id).first()
+        if script:
+            return script.upgrade()
+        return None
 
     def at_start(self):
         self.msg_all(f"Debug: Repartee script {self.id} started.")
