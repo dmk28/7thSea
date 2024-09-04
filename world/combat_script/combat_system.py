@@ -1372,6 +1372,7 @@ class CombatScript(DefaultScript):
         else:
             self.msg_all(f"{attacker.name}'s Pommel Strike misses {target.name}.")
             return False
+    
 
     def perform_corps_a_corps(self, attacker, target, weapon):
         self.msg_all(f"Debug: Performing Corps-a-Corps for {attacker.name} against {target.name}")
@@ -1397,6 +1398,9 @@ class CombatScript(DefaultScript):
         else:
             self.msg_all(f"{attacker.name}'s Corps-a-Corps fails against {target.name}.")
             return False
+
+    def remove_from_initiative(self, target):
+        return self.db.initiative_order.pop(target)
     
     def perform_tagging(self, attacker, target, weapon):
         self.msg_all(f"Debug: Performing Tagging for {attacker.name} against {target.name}")
