@@ -14,3 +14,6 @@ server/logs/portal.log.2024_08_31
 server/logs/channel_public.log
 server/logs/http_requests.log
 server/logs/lockwarnings.log
+*.pyc
+*.log
+*.cypthon-*
