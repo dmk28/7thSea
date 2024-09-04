@@ -26,10 +26,10 @@ class CombatScript(DefaultScript):
         self.db.firearm_cooldowns = {}
 
     def at_start(self):
-        self.msg_all(f"Debug: Combat script {self.id} started.")
+        self.msg_all(f"|500Combat has begun|n.")
 
     def at_stop(self):
-        self.msg_all(f"Debug: Combat script {self.id} stopped.")
+        self.msg_all(f"|432Combat has stopped|n.")
 
     def start_combat(self):
         for participant in self.db.participants:
@@ -1035,7 +1035,6 @@ class CombatScript(DefaultScript):
 
         # Calculate passive defense
         passive_defense = self.calculate_passive_defense(target, defender_weapon_type)
-        self.msg_all(f"Debug: {target.name}'s passive defense: {passive_defense}")
 
         # Check if target is actively defending
         self.msg_all(f"{target.ndb.special_effects}")
@@ -1050,30 +1049,24 @@ class CombatScript(DefaultScript):
 
             # Roll for active defense
             defense_roll = self.roll_keep((target.db.traits['wits'] + defense_skill), target.db.traits['wits'])
-            self.msg_all(f"Debug: {target.name}'s active defense roll: {defense_roll}")
 
             # Use the higher of rolled defense or passive defense
             defense_roll = max(defense_roll, passive_defense)
-            self.msg_all(f"Debug: Defense after comparing with passive: {defense_roll}")
         else:
             # Use passive defense
             defense_roll = passive_defense
-            self.msg_all(f"Debug: Using passive defense: {defense_roll}")
 
         # Apply defense bonus
         defense_roll += defense_bonus
-        self.msg_all(f"Debug: Defense after applying bonus: {defense_roll}")
 
         # Apply Double-Parry bonus if applicable
         if target.ndb.double_parry or 'doubleparry' in target.ndb.special_effects:
             double_parry_skill, _ = self.get_double_parry_skill(target)
             defense_roll += 5 * double_parry_skill
-            self.msg_all(f"Debug: Defense after double-parry: {defense_roll}")
             if 'doubleparry' in target.ndb.special_effects:
                 target.ndb.special_effects.remove('doubleparry')
             target.ndb.double_parry = False  # Reset after use
 
-        self.msg_all(f"Debug: {target.name}'s final defense roll: {defense_roll}")
         return defense_roll
 
 
@@ -1165,7 +1158,6 @@ class CombatScript(DefaultScript):
         self.stop()
 
     def perform_feint(self, attacker, target, weapon):
-        self.msg_all(f"Debug: Performing Feint for {attacker.name} against {target.name}")
         
         attacker_weapon = attacker.db.wielded_weapon if hasattr(attacker.db, 'wielded_weapon') else None
         target_weapon = target.db.wielded_weapon if hasattr(target.db, 'wielded_weapon') else None
@@ -1191,7 +1183,6 @@ class CombatScript(DefaultScript):
         feint_roll = self.roll_keep((attacker.db.traits['wits'] + feint_skill), attacker.db.traits['wits'])
         defense_roll = self.roll_keep((target.db.traits['wits'] + target_defense), target.db.traits['wits'])
         
-        self.msg_all(f"Debug: Feint roll: {feint_roll}, Defense roll: {defense_roll}")
         
         if feint_roll > defense_roll:
             feint_margin = feint_roll - defense_roll
@@ -1209,7 +1200,6 @@ class CombatScript(DefaultScript):
             return False  # Feint failed
 
     def perform_riposte(self, defender, attacker, attacker_roll):
-        self.msg_all(f"Debug: Performing Riposte for {defender.name} against {attacker.name}")
         
         defense_weapon = defender.db.wielded_weapon if hasattr(defender.db, 'wielded_weapon') else None
         offense_weapon = attacker.db.wielded_weapon if hasattr(attacker.db, 'wielded_weapon') else None
@@ -1236,7 +1226,6 @@ class CombatScript(DefaultScript):
         self.msg_all(f"Attacker skill: {attack_skill}")
         
         defense_roll = self.roll_keep((defender.db.traits['finesse'] + riposte_skill), defender.db.traits['finesse'])
-        self.msg_all(f"Debug: Riposte roll: {defense_roll}, Attack roll: {attacker_roll}")
 
         if defense_roll > attacker_roll:
             damage = self.calculate_damage(defender, defense_weapon)
@@ -1261,19 +1250,15 @@ class CombatScript(DefaultScript):
 
 
     def perform_lunge(self, attacker, target, weapon):
-        self.msg_all(f"Debug: Performing Lunge for {attacker.name} against {target.name}")
         
         attacker_weapon = attacker.db.wielded_weapon if hasattr(attacker.db, 'wielded_weapon') else None
         target_weapon = target.db.wielded_weapon if hasattr(target.db, 'wielded_weapon') else None
         
         attacker_weapon_type = attacker_weapon.db.weapon_type if attacker_weapon else "Unarmed"
-        self.msg_all(f"Attacker weapon type: {attacker_weapon_type}")
         
         target_weapon_type = target_weapon.db.weapon_type if target_weapon else "Unarmed"
-        self.msg_all(f"Target weapon type: {target_weapon_type}")
         
         attacker_knack = attacker.character_sheet.get_knack_value("Lunge (Fencing)")
-        self.msg_all(f"Attacker Lunge knack: {attacker_knack}")
         
         lunge_skill = attacker_knack
         
@@ -1288,7 +1273,6 @@ class CombatScript(DefaultScript):
         attack_roll = self.roll_keep((attacker.db.traits['finesse'] + lunge_skill), attacker.db.traits['finesse']) - 5
         defense_roll = self.roll_keep((target.db.traits['wits'] + target_defense), target.db.traits['wits'])
         
-        self.msg_all(f"Debug: Lunge attack roll: {attack_roll}, Defense roll: {defense_roll}")
         
         if attack_roll > defense_roll:
             # Add 'lunged' to special effects to increase damage later
@@ -1412,7 +1396,6 @@ class CombatScript(DefaultScript):
         return self.db.initiative_order.pop(target)
     
     def perform_tagging(self, attacker, target, weapon):
-        self.msg_all(f"Debug: Performing Tagging for {attacker.name} against {target.name}")
         attacker_knack = attacker.character_sheet.get_knack_value("Tagging (Fencing)")
         if attacker_knack == 0:
             self.msg_all(f"{attacker.name} doesn't know how to perform Tagging.")
