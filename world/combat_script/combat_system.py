@@ -1365,7 +1365,7 @@ class CombatScript(DefaultScript):
             attacker.ndb.special_effects.remove('pommel_strike')
             
             if not combat_ended:
-                self.db.initiative_order -= ['target']
+                self.db.initiative_order.remove(target)
                 self.msg_all(f"{target.name} is removed from the current initiative order!")
             
             return combat_ended
@@ -1391,7 +1391,7 @@ class CombatScript(DefaultScript):
             attacker.ndb.special_effects.remove('corps_a_corps')
             
             if not combat_ended:
-                self.db.initiative_order -= ['target']
+                self.db.initiative_order.remove(target)
                 self.msg_all(f"{target.name} is removed from the current initiative order!")
             
             return combat_ended
