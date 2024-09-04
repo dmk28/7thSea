@@ -121,6 +121,7 @@ class ReparteeCmdSet(CmdSet):
     key = "repartee"
 
     def at_cmdset_creation(self):
+        self.add(CmdStartRepartee())
         self.add(CmdTaunt())
         self.add(CmdCharm())
         self.add(CmdIntimidate())
