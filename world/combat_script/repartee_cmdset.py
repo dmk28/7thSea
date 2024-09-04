@@ -6,6 +6,13 @@ class SocialActionMixin:
     locks = "cmd:attr(approved) or perm(Admin)"
     help_category = "Social"
 
+    def func(self):
+        action = self.key.split('_')[1] if '_' in self.key else self.key
+        if not self.args:
+            self.caller.msg(f"You must specify a target to {action}.")
+            return
+        self.execute_social_action(action)
+
     def execute_social_action(self, action):
         repartee = get_repartee(self.caller)
         if not repartee:
@@ -53,8 +60,8 @@ class CmdTaunt(SocialActionMixin, Command):
         self.execute_social_action("taunt")
 
 class CmdCharm(SocialActionMixin, Command):
-    key = "charm"
-
+    key = "repartee_charm"
+    aliases = ["charm"]
     def func(self):
         if not self.args:
             self.caller.msg("You must specify a target to charm.")
@@ -62,8 +69,8 @@ class CmdCharm(SocialActionMixin, Command):
         self.execute_social_action("charm")
 
 class CmdIntimidate(SocialActionMixin, Command):
-    key = "intimidate"
-
+    key = "repartee_intimidate"
+    aliases = ["intimidate"]
     def func(self):
         if not self.args:
             self.caller.msg("You must specify a target to intimidate.")
@@ -71,8 +78,8 @@ class CmdIntimidate(SocialActionMixin, Command):
         self.execute_social_action("intimidate")
 
 class CmdGossip(SocialActionMixin, Command):
-    key = "gossip"
-
+    key = "repartee_gossip"
+    aliases = ["gossip"]
     def func(self):
         if not self.args:
             self.caller.msg("You must specify a target to gossip about.")
@@ -80,8 +87,8 @@ class CmdGossip(SocialActionMixin, Command):
         self.execute_social_action("gossip")
 
 class CmdRidicule(SocialActionMixin, Command):
-    key = "ridicule"
-
+    key = "repartee_ridicule"
+    aliases = ["ridicule"]
     def func(self):
         if not self.args:
             self.caller.msg("You must specify a target to ridicule.")
@@ -89,8 +96,8 @@ class CmdRidicule(SocialActionMixin, Command):
         self.execute_social_action("ridicule")
 
 class CmdBlackmail(SocialActionMixin, Command):
-    key = "blackmail"
-
+    key = "repartee_blackmail"
+    aliases = ["blackmail"]
     def func(self):
         if not self.args:
             self.caller.msg("You must specify a target to blackmail.")
@@ -117,6 +124,29 @@ def get_repartee(caller):
             return repartee
     return None
 
+class CmdEndRepartee(Command):
+    """
+    End the current repartee.
+
+    Usage:
+      endrepartee
+
+    This command ends the current repartee that you're participating in.
+    """
+    key = "endrepartee"
+    locks = "cmd:attr(approved) or perm(Admin)"
+    help_category = "Social"
+
+    def func(self):
+        repartee = get_repartee(self.caller)
+        if not repartee:
+            self.caller.msg("You are not in repartee.")
+            return
+
+        repartee.force_end_repartee()
+        self.caller.msg("You have ended the repartee.")
+
+
 class ReparteeCmdSet(CmdSet):
     key = "repartee"
 
@@ -129,3 +159,6 @@ class ReparteeCmdSet(CmdSet):
         self.add(CmdRidicule())
         self.add(CmdBlackmail())
         self.add(CmdPassRepartee())
+        self.add(CmdEndRepartee())
+    def at_cmdset_addition(self):
+        self.priority = 1

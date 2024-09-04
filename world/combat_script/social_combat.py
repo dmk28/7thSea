@@ -3,6 +3,7 @@ from evennia.utils.utils import inherits_from
 from evennia import ScriptDB
 from random import randint
 from world.character_sheet.models import CharacterSheet
+from commands.mycmdset import ReparteeCmdSet
 
 class SocialCombat(DefaultScript):
     """
@@ -104,28 +105,41 @@ class SocialCombat(DefaultScript):
             action = parts[0].lower()
             target = parts[1] if len(parts) > 1 else None
 
-            if action in ["taunt", "charm", "intimidate", "gossip", "ridicule", "blackmail"]:
-                if not target:
-                    character.msg(f"You must specify a target for {action}.")
-                    return
-                self.perform_social_action(character, action, target)
-            elif action == "pass":
-                self.pass_turn(character)
-            else:
+            valid_actions = ["taunt", "charm", "intimidate", "gossip", "ridicule", "blackmail", "pass"]
+            
+            if action not in valid_actions:
                 character.msg("Invalid action. Use 'taunt', 'charm', 'intimidate', 'gossip', 'ridicule', 'blackmail', or 'pass'.")
+                return
+
+            if action == "pass":
+                self.pass_turn(character)
+            elif not target:
+                character.msg(f"You must specify a target for {action}.")
+            else:
+                self.perform_social_action(character, action, target)
+
         except Exception as e:
-     
             self.msg_all(f"An error occurred: {str(e)}")
             self.force_end_repartee()
 
 
+
+
     def force_end_repartee(self):
-        self.msg_all("Repartee is being forcibly ended due to an error.")
+        self.msg_all("The repartee has been forcibly ended.")
         for char in self.db.participants:
-            if hasattr(char.ndb, 'repartee_id'):
-                del char.ndb.repartee_id
+            if hasattr(char.db, 'repartee_id'):
+                del char.db.repartee_id
             self.remove_repartee_cmdset(char)
+            
+            # Clear any repartee-specific attributes
+            for attr in ['reputation', 'social_health', 'attack_trait', 'defense_trait', 'special_effects']:
+                if hasattr(char.ndb, attr):
+                    delattr(char.ndb, attr)
+
         self.stop()
+
+        
     def perform_social_action(self, attacker, action, target_name):
 
         try:
@@ -228,10 +242,10 @@ class SocialCombat(DefaultScript):
             if hasattr(char.ndb, 'repartee_id'):
                 del char.ndb.repartee_id
             self.remove_repartee_cmdset(char)
+
         self.stop()
 
     def remove_repartee_cmdset(self, character):
-        from commands.mycmdset import ReparteeCmdSet
         character.cmdset.delete(ReparteeCmdSet)
 
 # Add other necessary methods
