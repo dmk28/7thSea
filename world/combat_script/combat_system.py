@@ -1141,7 +1141,10 @@ class CombatScript(DefaultScript):
         character.ndb.stop_thrust = False
         if 'nosestruck' in character.ndb.special_effects:
             character.ndb.special_effects.remove('facestruck')
+        if defending in character.ndb.special_effects:
+            character.ndb.special_effects.remove('defending')
 
+            
     def force_end_combat(self):
         
         self.msg_all("Combat has been forcefully ended by a staff member.")

@@ -2,7 +2,7 @@
 
 from evennia import ScriptDB
 from typeclasses.scripts import Script
-
+from world.crafts.models import WeaponModel
 class FlamebladeEffect(Script):
     def at_script_creation(self):
         self.key = "flameblade_effect"
@@ -38,7 +38,10 @@ class FlamebladeEffect(Script):
         """Remove the Flameblade effect."""
         weapon = self.obj
         if weapon and weapon.db.flameblade_active:
+            weapon.weapon_model.damage_bonus = 0
             weapon.db.damage = weapon.db.original_damage
             weapon.db.damage_bonus = 0
             del weapon.db.original_damage
             weapon.db.flameblade_active = False
+            weapon.weapon_model.flameblade_active = False
+            weapon.weapon_model.save(update_fields=['damage_bonus', 'flameblade_active'])
