@@ -43,7 +43,7 @@ class SocialCombat(DefaultScript):
         participant.ndb.special_effects = []
 
     def add_repartee_cmdset(self, character):
-        from commands.mycmdset import ReparteeCmdSet
+        from world.combat_script.repartee_cmdset import ReparteeCmdSet
         character.cmdset.add(ReparteeCmdSet(), persistent=False)
 
     def check_repartee_advantages(self, character):
