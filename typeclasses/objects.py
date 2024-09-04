@@ -240,7 +240,7 @@ class Weapon(DefaultObject):
         self.db.cost = 0
         self.db.weight = 0.0
         self.db.quality_level = 0
-
+        self.db.details = ""  # New attribute for additional details
         # Create the corresponding WeaponModel
         self.create_or_update_weapon_model()
 
@@ -307,21 +307,18 @@ class Weapon(DefaultObject):
         return 'finesse'  # Default to finesse for most weapons
 
     def at_post_setattr(self, attribute_name, value, attribute_type):
-        """
-        Called after an attribute is set on this object.
-        This method will update the WeaponModel if a relevant attribute is changed.
-        """
+        """Called after an attribute is set on this object."""
         super().at_post_setattr(attribute_name, value, attribute_type)
         
-        # List of attributes that should trigger a WeaponModel update
         weapon_attributes = [
-            "key", "db_description", "db_damage", "db_damage_keep", "db_weapon_type",
+            "key", "db_description", "db_details", "db_damage", "db_damage_keep", "db_weapon_type",
             "db_flameblade_active", "db_attack_skill", "db_parry_skill", "db_damage_bonus",
             "db_cost", "db_requirements", "db_weight", "db_quality_level"
         ]
         
         if attribute_name in weapon_attributes:
             self.create_or_update_weapon_model()
+
 
 class Unarmed(Weapon):
     def at_object_creation():
@@ -397,18 +394,64 @@ class Firearm(Weapon):
         self.db.parry_skill = None
 
 class Armor(DefaultObject):
-
     def at_object_creation(self):
         super().at_object_creation()
         self.db.armor = 0
         self.db.soak_keep = 1
         self.db.description = "A generic armor"
         self.db.armor_type = "Generic"
-        self.db.wear_location = None
+        self.db.wear_location = []
         self.db.traits = {}
-        self.db.sorte_active = False
-        self.db.pyeryem_effect = False
         self.db.cost = 0
+        self.db.worn_by = None
+        self.db.requirements = {}
+        self.db.quality_level = 0
+        self.db.details = ""  # New attribute for additional details
+        # Create the corresponding ArmorModel
+        self.create_or_update_armor_model()
+
+    def create_or_update_armor_model(self):
+        """Create or update the corresponding ArmorModel for this Armor."""
+        armor_model, created = ArmorModel.objects.get_or_create(evennia_object=self)
+        armor_model.sync_from_typeclass()
+        armor_model.save()
+
+    def wear(self, character):
+        if self.db.worn_by:
+            return False
+        self.db.worn_by = character
+        self.create_or_update_armor_model()
+        return True
+
+    def remove(self):
+        if not self.db.worn_by:
+            return False
+        self.db.worn_by = None
+        self.create_or_update_armor_model()
+        return True
+
+    def at_post_unpuppet(self, account, session=None):
+        """Called just after the Object has been successfully unpuppeted."""
+        super().at_post_unpuppet(account, session)
+        self.create_or_update_armor_model()
+
+    def at_pre_delete(self):
+        """Called just before the object is deleted."""
+        super().at_pre_delete()
+        ArmorModel.objects.filter(evennia_object=self).delete()
+
+    def at_post_setattr(self, attribute_name, value, attribute_type):
+        """Called after an attribute is set on this object."""
+        super().at_post_setattr(attribute_name, value, attribute_type)
+        
+        armor_attributes = [
+            "key", "db_description", "db_armor", "db_soak_keep", "db_armor_type",
+            "db_wear_location", "db_traits", "db_cost", "db_requirements", "db_quality_level"
+        ]
+        
+        if attribute_name in armor_attributes:
+            self.create_or_update_armor_model()
+
 
 
 class Clothing(Armor):

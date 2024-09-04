@@ -1,19 +1,22 @@
 from evennia import Command, CmdSet
 from evennia.utils.utils import inherits_from
 from typeclasses.armor.armor_and_clothes import Armor, DracheneisenArmor
+from evennia import Command
+from typeclasses.objects import Armor
 
 class CmdWear(Command):
     """
-    Wear a piece of armor.
+    Wear a piece of armor or clothing.
 
     Usage:
-      wear <armor>
+      wear <item>
+      wear/examine <item>
 
-    This will wear the specified armor piece, updating your combat stats.
+    This will wear the specified item, adding its armor value to your total armor.
+    Use 'wear/examine <item>' to see detailed information about the item before wearing it.
     """
     key = "wear"
     locks = "cmd:all()"
-    help_category = "Combat"
 
     def func(self):
         caller = self.caller
@@ -21,56 +24,56 @@ class CmdWear(Command):
             caller.msg("Wear what?")
             return
 
-        armor_name = self.args.strip()
-        armor = caller.search(armor_name, location=caller)
-        if not armor:
-            return  # caller.search() already sends an appropriate error message
+        if "examine" in self.switches:
+            self.examine_item()
+        else:
+            self.wear_item()
 
-        if not inherits_from(armor, Armor) and not inherits_from(armor, DracheneisenArmor):
-            caller.msg("That's not a piece of armor.")
+    def examine_item(self):
+        item = self.caller.search(self.args, location=self.caller)
+        if not item:
             return
 
-        # Initialize equipped_armor if it doesn't exist
-        if not hasattr(caller.db, 'equipped_armor'):
-            caller.db.equipped_armor = {}
-
-        # Check if the wear location exists and is not already occupied
-        wear_location = getattr(armor.db, 'wear_location', None)
-        if not wear_location:
-            caller.msg(f"Error: {armor.name} doesn't have a valid wear location.")
+        if not isinstance(item, Armor):
+            self.caller.msg("That's not a piece of armor or clothing.")
             return
 
-        if wear_location in caller.db.equipped_armor:
-            caller.msg(f"You are already wearing armor on your {wear_location}.")
-            return
+        # Display detailed information about the item
+        self.caller.msg(f"|cItem:|n {item.name}")
+        self.caller.msg(f"|cDescription:|n {item.db.desc}")
+        if item.db.details:
+            self.caller.msg(f"|cDetails:|n {item.db.details}")
+        self.caller.msg(f"|cArmor Value:|n {item.db.armor}")
+        self.caller.msg(f"|cSoak Keep:|n {item.db.soak_keep}")
+        self.caller.msg(f"|cWear Location:|n {', '.join(item.db.wear_location) if isinstance(item.db.wear_location, list) else item.db.wear_location}")
 
-        # Wear the new armor
-        caller.db.equipped_armor[wear_location] = armor
-        caller.msg(f"You wear {armor.name} on your {wear_location}.")
+    def wear_item(self):
+        if not location and isinstance(item.db.wear_location, list):
+            location = item.db.wear_location[0]
+        elif not location:
+            location = item.db.wear_location
 
-        # Update combat stats
-        self.update_armor_stats(caller)
+        if location in self.caller.db.worn_items:
+            self.caller.msg(f"You are already wearing something on your {location}.")
+            return False
 
+        if item.wear(self.caller):
+            self.caller.db.worn_items[location] = item
+            self.caller.calc_total_armor()
+            return True
+        return False
 
-    def update_armor_stats(self, character):
-        total_armor = sum(getattr(piece.db, 'armor', 0) for piece in character.db.equipped_armor.values())
-        max_soak_keep = max((getattr(piece.db, 'soak_keep', 0) for piece in character.db.equipped_armor.values()), default=0)
-        character.db.total_armor = total_armor
-        character.db.armor_soak_keep = max_soak_keep
-        character.msg(f"Your total armor is now {total_armor} and your armor soak keep is {max_soak_keep}.")
-    
 class CmdRemove(Command):
     """
-    Remove a piece of worn armor.
+    Remove a worn piece of armor or clothing.
 
     Usage:
-      remove <armor>
+      remove <item>
 
-    This will remove the specified armor piece, updating your combat stats.
+    This will remove the specified worn item, subtracting its armor value from your total armor.
     """
     key = "remove"
     locks = "cmd:all()"
-    help_category = "Combat"
 
     def func(self):
         caller = self.caller
@@ -78,42 +81,47 @@ class CmdRemove(Command):
             caller.msg("Remove what?")
             return
 
-        armor_name = self.args.strip()
-        
-        if not hasattr(caller.db, 'equipped_armor'):
-            caller.db.equipped_armor = {}
+        item_name = self.args.strip().lower()
+        for location, item in caller.db.worn_items.items():
+            if item.name.lower() == item_name:
+                if item.remove():
+                    del caller.db.worn_items[location]
+                    caller.calc_total_armor()
+                    caller.msg(f"You remove {item.name}.")
+                    caller.location.msg_contents(f"{caller.name} removes {item.name}.", exclude=caller)
+                else:
+                    caller.msg(f"You can't remove {item.name}.")
+                return
 
-        # Find the armor piece by name
-        armor_to_remove = None
-        for location, armor in caller.db.equipped_armor.items():
-            if armor.name.lower() == armor_name.lower():
-                armor_to_remove = armor
-                break
+        caller.msg(f"You're not wearing {item_name}.")
 
-        if not armor_to_remove:
-            caller.msg(f"You are not wearing {armor_name}.")
+# This is a new command to handle multi-location wear choices
+class CmdWearChoice(Command):
+    """
+    Hidden command to handle wear location choices for multi-location items.
+    """
+    key = "wear_choice"
+    locks = "cmd:all()"
+
+    def func(self):
+        caller = self.caller
+        item = caller.ndb._wear_choice
+        if not item:
+            caller.msg("Wear what?")
             return
 
-        # Remove the armor
-        wear_location = getattr(armor_to_remove.db, 'wear_location', None)
-        if wear_location:
-            del caller.db.equipped_armor[wear_location]
-            caller.msg(f"You remove {armor_to_remove.name} from your {wear_location}.")
+        try:
+            choice = int(self.args) - 1
+            location = item.db.wear_location[choice]
+        except (ValueError, IndexError):
+            caller.msg("Invalid choice.")
+            del caller.ndb._wear_choice
+            return
+
+        if CmdWear.wear_item(self, item, location):
+            caller.msg(f"You wear {item.name} on your {location}.")
+            caller.location.msg_contents(f"{caller.name} wears {item.name} on their {location}.", exclude=caller)
         else:
-            caller.msg(f"Error: {armor_to_remove.name} doesn't have a valid wear location.")
+            caller.msg(f"You can't wear {item.name} on your {location}.")
 
-        # Update combat stats
-        self.update_armor_stats(caller)
-
-    def update_armor_stats(self, character):
-        total_armor = sum(getattr(piece.db, 'armor', 0) for piece in character.db.equipped_armor.values())
-        max_soak_keep = max((getattr(piece.db, 'soak_keep', 0) for piece in character.db.equipped_armor.values()), default=0)
-        character.db.total_armor = total_armor
-        character.db.armor_soak_keep = max_soak_keep
-        character.msg(f"Your total armor is now {total_armor} and your armor soak keep is {max_soak_keep}.")
-
-
-class WearCmdset(CmdSet):
-    def at_cmdset_creation(self):
-        self.add(CmdRemove())
-        self.add(CmdWear())
+        del caller.ndb._wear_choice
