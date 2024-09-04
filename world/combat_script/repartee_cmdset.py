@@ -137,16 +137,32 @@ class CmdEndRepartee(Command):
             self.caller.msg("You are not in repartee.")
             return
 
-        repartee.end_repartee()
-        self.caller.msg("You have ended the repartee.")
+        self.caller.msg(f"Debug: Repartee object: {repartee}")
+        self.caller.msg(f"Debug: Repartee type: {type(repartee)}")
+        self.caller.msg(f"Debug: Repartee attributes: {dir(repartee)}")
+
+        if hasattr(repartee, 'end_repartee'):
+            repartee.end_repartee()
+            self.caller.msg("You have ended the repartee.")
+        else:
+            self.caller.msg("Error: The repartee script doesn't have an end_repartee method.")
 
 def get_repartee(caller):
-        if hasattr(caller.db, 'repartee_id'):
-            repartee_id = caller.db.repartee_id
-            repartee = ScriptDB.objects.filter(id=repartee_id, db_key='SocialCombatScript').first()
-            if repartee:
-                return repartee
-        return None
+    from world.combat_script.social_combat import SocialCombat
+    if hasattr(caller.db, 'repartee_id'):
+        repartee_id = caller.db.repartee_id
+        repartee = ScriptDB.objects.filter(id=repartee_id, db_key='SocialCombatScript').first()
+        if repartee:
+            caller.msg(f"Debug: Repartee script found. Type: {type(repartee)}")
+            return repartee
+        else:
+            caller.msg(f"Debug: No repartee script found for ID {repartee_id}")
+    else:
+        caller.msg("Debug: caller.db has no repartee_id attribute")
+    return None
+
+
+
 class ReparteeCmdSet(CmdSet):
     key = "repartee"
 

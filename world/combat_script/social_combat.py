@@ -32,6 +32,7 @@ class SocialCombat(DefaultScript):
             participant.db.repartee_id = self.id
             self.add_repartee_cmdset(participant)
             self.check_repartee_advantages(participant)
+            participant.msg(f"Debug: Repartee started. Script info: {self.debug_info()}")
         
         self.roll_initiative()
         self.next_round()
@@ -231,14 +232,20 @@ class SocialCombat(DefaultScript):
         
         if len(self.db.participants) < 2:
             self.end_repartee()
+    def debug_info(self):
+     return f"SocialCombat Script ID: {self.id}, Key: {self.key}, DB fields: {self.db.all()}"
 
     def end_repartee(self):
-    
         self.msg_all("The repartee has ended.")
         for char in self.db.participants:
-            if hasattr(char.ndb, 'repartee_id'):
-                del char.ndb.repartee_id
+            if hasattr(char.db, 'repartee_id'):
+                del char.db.repartee_id
             self.remove_repartee_cmdset(char)
+            
+            # Clear any repartee-specific attributes
+            for attr in ['reputation', 'social_health', 'attack_trait', 'defense_trait', 'special_effects']:
+                if hasattr(char.ndb, attr):
+                    delattr(char.ndb, attr)
 
         self.stop()
 
