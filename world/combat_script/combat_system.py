@@ -1144,7 +1144,7 @@ class CombatScript(DefaultScript):
         if defending in character.ndb.special_effects:
             character.ndb.special_effects.remove('defending')
 
-            
+
     def force_end_combat(self):
         
         self.msg_all("Combat has been forcefully ended by a staff member.")
@@ -1371,7 +1371,7 @@ class CombatScript(DefaultScript):
         
         if attack_roll > defense_roll:
             attacker.ndb.special_effects += ['pommel_strike']
-            combat_ended = self.perform_attack(attacker, target, weapon)
+            combat_ended = self.resolve_wounds(target, 3)
             attacker.ndb.special_effects.remove('pommel_strike')
             
             if not combat_ended:
