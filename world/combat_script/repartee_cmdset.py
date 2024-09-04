@@ -36,7 +36,7 @@ class CmdStartRepartee(Command):
             self.caller.msg("You are already in repartee.")
             return
 
-        repartee = create_script("world.social_combat.SocialCombat")
+        repartee = create_script("world.combat_script.social_combat.SocialCombat")
         repartee.db.participants = [self.caller, target]
         repartee.start_repartee()
 
