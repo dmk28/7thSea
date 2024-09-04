@@ -946,7 +946,7 @@ def finish_chargen(caller):
     new_request.db.description = f"New character {caller.name} requires approval."
 
     # Move the character to a waiting room
-    waiting_room = caller.search("Character Approval Room", global_search=True)
+    waiting_room = caller.search("Main Room", global_search=True)
     if waiting_room:
         caller.move_to(waiting_room, quiet=True)
 
