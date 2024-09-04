@@ -228,6 +228,8 @@ class CombatScript(DefaultScript):
         if action_type == "damage" and "corps_a_corps" in character.ndb.special_effects:
             bonus += 2  # 2k2 damage for Corps-a-Corps
             self.msg_all(f"{character.name}'s Corps-a-Corps adds 2 to the damage!")
+        if action_type == "initiative" and "facestruck" in character.ndb.special_effects:
+            bonus -= 10
 
 
 
@@ -243,6 +245,9 @@ class CombatScript(DefaultScript):
             if "combat_reflexes" in char.ndb.special_effects or "combat_reflexes" in char.db.special_effects:
                 base_roll += 5
                 char.msg("Your Combat Reflexes give you a +5 bonus to initiative!")
+            if "facestruck" in char.ndb.special_effects:
+                base_roll -= 10
+                char.msg("Because you were struck in the face, you're slower this round.")
 
             initiative_rolls.append((char, base_roll))
         
@@ -1134,6 +1139,8 @@ class CombatScript(DefaultScript):
         character.ndb.riposte = False
         character.ndb.held_action = False
         character.ndb.stop_thrust = False
+        if 'nosestruck' in character.ndb.special_effects:
+            character.ndb.special_effects.remove('facestruck')
 
     def force_end_combat(self):
         
@@ -1365,8 +1372,8 @@ class CombatScript(DefaultScript):
             attacker.ndb.special_effects.remove('pommel_strike')
             
             if not combat_ended:
-                self.db.initiative_order.remove(target)
-                self.msg_all(f"{target.name} is removed from the current initiative order!")
+                target.ndb.special_effects += ['facestruck']
+                self.msg_all(f"{target.name} is struck in the face by {attacker.name}'s pommel!")
             
             return combat_ended
         else:
