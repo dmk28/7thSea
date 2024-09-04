@@ -1058,7 +1058,7 @@ SWORDSMAN_SCHOOLS = {
         },
 
         "Ladestreza": {
-            "country": "Castille",
+            "country": ["Castille", "Vodacce"],
             "requirements": {
                 "Fencing",
                 "Pugilism"
