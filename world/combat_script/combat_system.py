@@ -1449,7 +1449,7 @@ class CombatScript(DefaultScript):
                 return False
         # Calculate defense roll with +10 bonus
         defense_roll = self.calculate_defense_roll(target, target.db.wielded_weapon.db.weapon_type if target.db.wielded_weapon else "Unarmed")
-        defense_roll += 10  # Add 10 to the defense roll for double attack
+        defense_roll += 5  # Add 10 to the defense roll for double attack
 
         self.msg_all(f"Attack roll: |555{attack_roll}|n, Defense roll (with +10 bonus): |555{defense_roll}|n")
 
