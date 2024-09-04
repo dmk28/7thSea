@@ -39,5 +39,6 @@ class FlamebladeEffect(Script):
         weapon = self.obj
         if weapon and weapon.db.flameblade_active:
             weapon.db.damage = weapon.db.original_damage
+            weapon.db.damage_bonus = 0
             del weapon.db.original_damage
             weapon.db.flameblade_active = False
