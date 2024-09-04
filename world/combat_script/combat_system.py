@@ -359,9 +359,12 @@ class CombatScript(DefaultScript):
                     return
                 combat_ended = self.perform_double_attack(character, target_character, character.db.wielded_weapon)
             elif action in ["pommel", "pommelstrike"]:
+                if not target:
+                    character.msg("Specify a target for your pommel strike!")
+                    return
                 target_character = character.search(target)
                 if not target_character or target_character not in self.db.participants:
-                    character.msg(f"Invalid target: {target}")
+                    character.msg(f"Invalid target: {target_character}")
                     return
                 if target_character == character:
                     character.msg("You can't attack yourself.")
@@ -381,7 +384,7 @@ class CombatScript(DefaultScript):
 
             if combat_ended:
                 self.end_combat()
-            elif action_successful or action == "attack" or action in ["double-attack", "doubleattack"]:  # We always want to finish the turn after an attack
+            elif action_successful or action == "attack" or action in ["double-attack", "doubleattack"] or action in ["pommel", "pommelstrike"]:  # We always want to finish the turn after an attack
                 self.finish_turn()
             else:
                 self.offer_action(character)  # Allow the character to choose another action if the previous one failed
