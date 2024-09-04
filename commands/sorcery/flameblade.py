@@ -2,7 +2,7 @@ from evennia import Command
 from evennia import create_script
 from evennia import search_script
 from django.db import transaction
-
+from evennia.utils.utils import inherits_from
 class CmdFlameblade(Command):
     """
     Activate the Flameblade sorcery effect on your weapon.
@@ -67,13 +67,13 @@ class CmdFlameblade(Command):
 
 class CmdExtinguishFlameblade(Command):
     """
-    Deactivate the Flameblade sorcery effect on your weapon.
+    Deactivate all Flameblade sorcery effects on your weapons and character.
 
     Usage:
       extinguish_flameblade
 
-    This will remove the Flameblade effect from your currently wielded weapon,
-    returning it to its normal state and stopping the associated Flameblade script.
+    This will remove all Flameblade effects, stopping associated scripts and
+    resetting weapons to their normal state.
     """
     key = "extinguish_flameblade"
     aliases = ["extinguish"]
@@ -83,36 +83,42 @@ class CmdExtinguishFlameblade(Command):
     def func(self):
         caller = self.caller
 
-        if not caller.db.wielded_weapon:
-            caller.msg("You're not wielding any weapon.")
-            return
-
-        weapon = caller.db.wielded_weapon
-
-        if not weapon.db.flameblade_active:
-            caller.msg("Your weapon doesn't have an active Flameblade effect.")
-            return
-
-        # Search for the FlamebladeEffect script on the wielded weapon
-        flameblade_scripts = search_script("flameblade_effect", obj=weapon)
+        # Search for all FlamebladeEffect scripts on the caller and their inventory
+        flameblade_scripts = search_script("flameblade_effect", obj=caller) + \
+                             [script for item in caller.contents 
+                              for script in search_script("flameblade_effect", obj=item)]
 
         if not flameblade_scripts:
-            caller.msg("Error: Flameblade effect is active but no script found. Please inform an admin.")
+            caller.msg("You don't have any active Flameblade effects.")
             return
 
-        # Remove 'flameblade' from special_effects
-        sheet = caller.character_sheet
-        special_effects = sheet.special_effects or []
-        if 'flameblade' in special_effects:
-            special_effects.remove('flameblade')
-            sheet.special_effects = special_effects
-            sheet.save(update_fields=['special_effects'])
-
-        # Stop all FlamebladeEffect scripts on the weapon
+        # Stop all found FlamebladeEffect scripts
         for script in flameblade_scripts:
             script.stop()
 
-        # The script's at_stop method will handle resetting the weapon stats
+        # Clean up any lingering effects on weapons
+        for item in caller.contents:
+            if inherits_from(item, "typeclasses.weapons.Weapon"):
+                if hasattr(item.db, 'flameblade_active'):
+                    item.db.flameblade_active = False
+                if hasattr(item.db, 'damage_bonus'):
+                    item.db.damage_bonus = 0
+                if hasattr(item.db, 'original_damage'):
+                    item.db.damage = item.db.original_damage
+                    del item.db.original_damage
+                if hasattr(item, 'weapon_model'):
+                    item.weapon_model.damage_bonus = 0
+                    item.weapon_model.flameblade_active = False
+                    item.weapon_model.save(update_fields=['damage_bonus', 'flameblade_active'])
 
-        caller.msg("The magical flames on your weapon flicker and die out.")
-        caller.location.msg_contents(f"The magical flames on {caller.name}'s weapon flicker and die out.", exclude=caller)
+        # Remove 'flameblade' from special_effects on the character sheet
+        if hasattr(caller, 'character_sheet'):
+            sheet = caller.character_sheet
+            special_effects = sheet.special_effects or []
+            if 'flameblade' in special_effects:
+                special_effects.remove('flameblade')
+                sheet.special_effects = special_effects
+                sheet.save(update_fields=['special_effects'])
+
+        caller.msg("All Flameblade effects have been extinguished.")
+        caller.location.msg_contents(f"The magical flames on {caller.name}'s weapons flicker and die out.", exclude=caller)
