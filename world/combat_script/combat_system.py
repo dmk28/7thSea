@@ -1037,7 +1037,6 @@ class CombatScript(DefaultScript):
         passive_defense = self.calculate_passive_defense(target, defender_weapon_type)
 
         # Check if target is actively defending
-        self.msg_all(f"{target.ndb.special_effects}")
         is_active_defense = target.ndb.full_defense or target.ndb.riposte or target.ndb.stop_thrust or "defending" in target.ndb.special_effects
 
         if is_active_defense:
