@@ -137,7 +137,7 @@ class CmdEndRepartee(Command):
             self.caller.msg("You are not in repartee.")
             return
 
-        repartee.force_end_repartee()
+        repartee.end_repartee()
         self.caller.msg("You have ended the repartee.")
 
 def get_repartee(caller):
