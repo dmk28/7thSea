@@ -1340,9 +1340,7 @@ class CombatScript(DefaultScript):
                 defender.db.special_effects.remove('stopthrusted')
             return False  # Stop-Thrust failed
     
-    def perform_pommel_strike(self, attacker, target, weapon):
-        self.msg_all(f"Debug: Performing Pommel Strike for {attacker.name} against {target.name}")
-        
+    def perform_pommel_strike(self, attacker, target, weapon):        
         if not weapon:
             self.msg_all(f"{attacker.name} needs to wield a weapon to perform a Pommel Strike.")
             return False
