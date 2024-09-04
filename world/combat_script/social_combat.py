@@ -3,7 +3,7 @@ from evennia.utils.utils import inherits_from
 from evennia import ScriptDB
 from random import randint
 from world.character_sheet.models import CharacterSheet
-from commands.mycmdset import ReparteeCmdSet
+from world.combat_script.social_combat import ReparteeCmdSet
 
 class SocialCombat(DefaultScript):
     """
