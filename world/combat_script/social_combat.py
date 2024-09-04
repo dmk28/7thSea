@@ -251,7 +251,7 @@ class SocialCombat(DefaultScript):
         if len(self.db.participants) < 2:
             self.end_repartee()
     def debug_info(self):
-     return f"SocialCombat Script ID: {self.id}, Key: {self.key}, DB fields: {self.db.all()}"
+     return f"SocialCombat Script ID: {self.id}, Key: {self.key}, DB fields: {self.db}"
 
 
 # Add other necessary methods
