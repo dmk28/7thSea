@@ -184,6 +184,8 @@ def trait_input(caller, raw_string):
         caller.msg("Traits cannot be less than 1.")
     elif value > 3 and trait != national_trait:
         caller.msg(f"Traits other than your national trait cannot be higher than 3.")
+    elif value > 4:
+        caller.msg(f"No traits can be above 4.")
     else:
         setattr(sheet, trait, value)
         sheet.save()
