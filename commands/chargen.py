@@ -245,6 +245,7 @@ def get_potential_sorcery(nationality, gender):
         return {
             "Castille": "El Fuego Adentro", "Avalon": "Glamour",
             "Montaigne": "Porte", "Vodacce": "Sorte" if gender == "Female" else None, 
+            "Vesten": "Laerdom",
         }.get(nationality)
 
 def sorcery_blooded(caller):
