@@ -77,7 +77,7 @@ class CmdExtinguishFlameblade(Command):
     resetting weapons to their normal state.
     """
     key = "extinguish_flameblade"
-    aliases = ["extinguish"]
+    aliases = ["flamekill"]
     locks = "cmd:all()"
     help_category = "Sorcery"
 
