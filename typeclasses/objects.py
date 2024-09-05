@@ -9,7 +9,7 @@ with a location in the game world (like Characters, Rooms, Exits).
 """
 
 from evennia.objects.objects import DefaultObject
-from world.crafts.models import WeaponModel
+from world.crafts.models import WeaponModel, ArmorModel
 class ObjectParent:
     """
     This is a mixin that can be used to override *all* entities inheriting at
