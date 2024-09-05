@@ -27,6 +27,7 @@ class CmdCharGen(Command):
                    auto_quit=True,
                    auto_look=True,
                    auto_help=False,
+                   cmdset_mergetype='Union',
                    cmd_on_exit=None,
                    persistent=False)
         else:
@@ -176,11 +177,13 @@ def trait_input(caller, raw_string):
     if trait == national_trait and value < 2:
         caller.msg(f"{trait.capitalize()} is your national trait and cannot be less than 2.")
         return assign_traits(caller)
-
+    
     if points_to_add > points_remaining:
         caller.msg(f"Not enough points. You have {points_remaining} points available.")
     elif value < 1:
         caller.msg("Traits cannot be less than 1.")
+    elif value > 3 and trait != national_trait:
+        caller.msg(f"Traits other than your national trait cannot be higher than 3.")
     else:
         setattr(sheet, trait, value)
         sheet.save()
