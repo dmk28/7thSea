@@ -230,6 +230,8 @@ class CombatScript(DefaultScript):
             self.msg_all(f"{character.name}'s Corps-a-Corps adds 2 to the damage!")
         if action_type == "initiative" and "facestruck" in character.ndb.special_effects:
             bonus -= 10
+        if action_type == "defense" and "prone" in character.ndb.special_effects:
+            bonus -= 5
 
 
 
@@ -1162,13 +1164,10 @@ class CombatScript(DefaultScript):
         target_weapon = target.db.wielded_weapon if hasattr(target.db, 'wielded_weapon') else None
         
         attacker_weapon_type = attacker_weapon.db.weapon_type if attacker_weapon else "Unarmed"
-        self.msg_all(f"Attacker weapon type: {attacker_weapon_type}")
         
         target_weapon_type = target_weapon.db.weapon_type if target_weapon else "Unarmed"
-        self.msg_all(f"Target weapon type: {target_weapon_type}")
         
         attacker_knack = attacker.character_sheet.get_knack_value("Feint (Fencing)")
-        self.msg_all(f"Attacker Feint knack: {attacker_knack}")
         
         feint_skill = attacker_knack
         
@@ -1176,8 +1175,7 @@ class CombatScript(DefaultScript):
             self.msg_all(f"{attacker.name} doesn't know how to perform a Feint with the current weapon type.")
             return False
         
-        target_defense = target.character_sheet.get_knack_value(f"Parry ({target_weapon_type})")
-        self.msg_all(f"Target defense skill: {target_defense}")
+        target_defense = target.character_sheet.get_knack_value(f"Parry ({target_weapon_type})") if target_weapon else target.character_sheet.get_knack_value(f"Footwork")
         
         feint_roll = self.roll_keep((attacker.db.traits['wits'] + feint_skill), attacker.db.traits['wits'])
         defense_roll = self.roll_keep((target.db.traits['wits'] + target_defense), target.db.traits['wits'])
@@ -1204,16 +1202,12 @@ class CombatScript(DefaultScript):
         offense_weapon = attacker.db.wielded_weapon if hasattr(attacker.db, 'wielded_weapon') else None
         
         offense_weapon_type = offense_weapon.db.weapon_type if offense_weapon else "Unarmed"
-        self.msg_all(f"Attacker weapon type: {offense_weapon_type}")
         
         defense_weapon_type = defense_weapon.db.weapon_type if defense_weapon else "Unarmed"
-        self.msg_all(f"Defender weapon type: {defense_weapon_type}")
         
         offense_weapon_attack = offense_weapon.db.attack_skill if offense_weapon else "Attack (Unarmed)"
-        self.msg_all(f"Offense weapon attack: {offense_weapon_attack}")
         
         defender_knack = defender.character_sheet.get_knack_value("Riposte (Fencing)")
-        self.msg_all(f"Defender Riposte knack: {defender_knack}")
         
         riposte_skill = defender_knack
         
@@ -1222,7 +1216,6 @@ class CombatScript(DefaultScript):
             return False
         
         attack_skill = attacker.character_sheet.get_knack_value(f"{offense_weapon_attack}")
-        self.msg_all(f"Attacker skill: {attack_skill}")
         
         defense_roll = self.roll_keep((defender.db.traits['finesse'] + riposte_skill), defender.db.traits['finesse'])
 
@@ -1294,14 +1287,10 @@ class CombatScript(DefaultScript):
         defense_weapon = defender.db.wielded_weapon if hasattr(attacker.db, 'wielded_weapon') else None
         offense_weapon = attacker.db.wielded_weapon if hasattr(defender.db, 'wielded_weapon' ) else None
         offense_weapon_type = offense_weapon.db.weapon_type if offense_weapon else "Unarmed"
-        self.msg_all(f"{offense_weapon.db.weapon_type}")
         defense_weapon_type = defense_weapon.db.weapon_type if defense_weapon else "Unarmed"
-        self.msg_all(f"{defense_weapon.db.weapon_type}")
         offense_weapon_attack = offense_weapon.db.attack_skill if offense_weapon else 0
-        self.msg_all(f"{offense_weapon_attack}")
 
         defender_knack = defender.character_sheet.get_knack_value("Stop-Thrust (Fencing)")
-        self.msg_all(f"{defender_knack}")
         stop_thrust_skill = 0
         if defender_knack > stop_thrust_skill:
             stop_thrust_skill = defender_knack
