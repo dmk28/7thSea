@@ -21,7 +21,7 @@ class CmdCharGen(Command):
                 del self.caller.ndb._evmenu
 
             self.caller.ndb.chargen = None
-
+            #set to persistent=True for future tests
             EvMenu(self.caller, "commands.chargen", 
                    startnode="start_chargen",
                    auto_quit=True,
@@ -29,7 +29,7 @@ class CmdCharGen(Command):
                    auto_help=False,
                    cmdset_mergetype='Union',
                    cmd_on_exit=None,
-                   persistent=False)
+                   persistent=True)
         else:
             self.caller.msg("Your character has already been approved. You cannot run chargen again.")
 
