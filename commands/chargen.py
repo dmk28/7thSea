@@ -221,7 +221,9 @@ def confirm_traits(caller):
     
     options = [
         {"key": "yes", "goto": "check_sorcery"},
-        {"key": "no", "goto": "assign_traits"}
+        {"key": "y", "goto": "check_sorcery"},
+        {"key": "no", "goto": "assign_traits"},
+        {"key": "n", "goto": "assign_traits"}
     ]
     return text, options
 
