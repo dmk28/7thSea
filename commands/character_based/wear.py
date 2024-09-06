@@ -128,7 +128,7 @@ class CmdRemove(MuxCommand):
             if item.name.lower() == item_name:
                 if item.remove():
                     del caller.db.equipped_armor[location_key]
-                    caller.calc_total_armor()
+                    caller.calculate_total_armor()
                     
                     # Convert the location_key back to a more readable format
                     location_display = location_key.split(',') if ',' in location_key else location_key
