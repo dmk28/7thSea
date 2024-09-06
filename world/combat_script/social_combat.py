@@ -196,6 +196,12 @@ class SocialCombat(DefaultScript):
 
         
     def perform_social_action(self, attacker, action, target_name):
+        if 'sex_appeal' in attacker.ndb.special_effects:
+            bonus = 2
+        if 'attractive' in attacker.ndb.special_effects:
+            bonus = 4
+        if 'beautiful' in attacker.ndb.special_effects:
+            bonus = 6
 
         try:
             target = attacker.search(target_name)
@@ -204,21 +210,23 @@ class SocialCombat(DefaultScript):
                 return
 
             if action in ["taunt", "charm", "intimidate"]:
-                self.perform_basic_action(attacker, target, action)
+                self.perform_basic_action(attacker, target, action, bonus)
             elif action in ["gossip", "ridicule", "blackmail"]:
                 self.perform_advanced_action(attacker, target, action)
         except Exception as e:
             self.msg_all(f"An error occurred during social action: {str(e)}")
             self.force_end_repartee()
 
-    def perform_basic_action(self, attacker, target, action):
+    def perform_basic_action(self, attacker, target, action, bonus=0):
+        
         action_index = {"taunt": 0, "charm": 2, "intimidate": 1}
         index = action_index[action]
         
         attack_trait = attacker.ndb.attack_trait[index]
         defense_trait = target.ndb.defense_trait[index]
         
-        attack_roll = self.roll_keep(attack_trait, attack_trait)
+        attack_roll = self.roll_keep(attack_trait, attack_trait) + bonus
+
         defense_difficulty = defense_trait * 5
 
         if attack_roll > defense_difficulty:
