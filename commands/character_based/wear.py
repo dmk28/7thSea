@@ -94,7 +94,7 @@ class CmdWear(MuxCommand):
 
         if item.wear(caller):
             caller.db.equipped_armor[location_key] = item
-            caller.calc_total_armor()
+            caller.calculate_total_armor()
             caller.msg(f"You wear {item.name} on your {location}.")
             caller.location.msg_contents(f"{caller.name} wears {item.name} on their {location}.", exclude=caller)
         else:
