@@ -265,7 +265,9 @@ class CombatScript(DefaultScript):
         initiative_rolls.sort(key=lambda x: x[1], reverse=True)
         
         self.db.initiative_order = [char for char, _ in initiative_rolls]
-        self.msg_all(f"Initiative order: {[char.name for char in self.db.initiative_order]}")
+        initiative_names = ", ".join(char.name for char in self.db.initiative_order)
+        self.msg_all(f"Initiative order: |555{initiative_names}|n")
+        
         for char, roll in initiative_rolls:
             char.msg(f"Your initiative roll: {roll}")
 
@@ -580,7 +582,6 @@ class CombatScript(DefaultScript):
     
 
     def calculate_passive_defense(self, character, weapon_type):
-        self.msg_all(f"Calculating passive defense for weapon type: {weapon_type}")
 
         base_defense = 5  # Base defense value
 
@@ -588,12 +589,10 @@ class CombatScript(DefaultScript):
             # For unarmed or no weapon, use Footwork
             footwork = character.character_sheet.get_knack_value("Footwork") or 0
             defense = base_defense + (footwork * 5)
-            self.msg_all(f"Unarmed defense: base {base_defense} + (Footwork {footwork} * 5) = {defense}")
         else:
             # For armed combat, use the appropriate Parry skill
             parry_skill = character.character_sheet.get_knack_value(f"Parry ({weapon_type})") or 0
             defense = base_defense + (parry_skill * 5)
-            self.msg_all(f"Armed defense: base {base_defense} + (Parry {parry_skill} * 5) = {defense}")
 
         return defense
     def roll_keep(self, num_dice, keep):
