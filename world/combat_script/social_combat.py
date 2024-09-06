@@ -76,12 +76,6 @@ class SocialCombat(DefaultScript):
             return script
         return None
 
-    def at_start(self):
-        self.msg_all(f"Debug: Repartee script {self.id} started.")
-
-    def at_stop(self):
-        self.msg_all(f"Debug: Repartee script {self.id} stopped.")
-
     def start_repartee(self):
         for participant in self.db.participants:
             self.initialize_repartee_stats(participant)
