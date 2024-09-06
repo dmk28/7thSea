@@ -127,6 +127,15 @@ class CombatScript(DefaultScript):
         return True 
 
     def end_combat(self):
+        winner, message = self.determine_combat_winner()
+
+        self.msg_all("Combat has ended.")
+        if winner:
+            self.msg_all(message)
+        else:
+            self.msg_all("The combat ends without a clear victor.")
+
+
         for char in self.db.participants:
             if hasattr(char.db, 'combat_id'):
                 del char.db.combat_id
@@ -264,7 +273,6 @@ class CombatScript(DefaultScript):
         self.db.action_state = "processing_round"
         self.db.round += 1
         if self.db.round > 20:  # Arbitrary high number
-            self.msg_all("|500This combat has ended inconclusively|n.")
             self.end_combat()
             return
 
@@ -727,7 +735,7 @@ class CombatScript(DefaultScript):
         
         # Prepare the messages
         combat_msg = f"|r[Combat]|n {message}"
-        observer_msg = f"|w[Combat Obs]|n {message}"
+        observer_msg = f"|r[Combat]|n {message}"
         
         # Ensure exclude is a list
         if exclude and not isinstance(exclude, list):
@@ -1136,6 +1144,26 @@ class CombatScript(DefaultScript):
         if 'facestruck' in character.ndb.special_effects:
             character.ndb.special_effects.remove('facestruck')
 
+    def determine_combat_winner(self):
+        if not self.db.participants:
+            return None, "No participants left in combat."
+
+        # Sort participants by their remaining health (dramatic wounds in reverse order)
+        sorted_participants = sorted(
+            self.db.participants,
+            key=lambda x: (-x.db.dramatic_wounds, x.db.flesh_wounds),
+            reverse=True
+        )
+
+        winner = sorted_participants[0]
+        
+        # Check if there's a clear winner (lowest dramatic wounds, then highest flesh wounds)
+        if len(sorted_participants) > 1:
+            runner_up = sorted_participants[1]
+            if winner.db.dramatic_wounds == runner_up.db.dramatic_wounds and winner.db.flesh_wounds == runner_up.db.flesh_wounds:
+                return None, "The combat ends in a stalemate."
+        
+        return winner, f"{winner.name} is the clear winner of the conflict."
 
 
     def force_end_combat(self):
