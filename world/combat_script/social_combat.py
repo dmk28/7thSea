@@ -190,6 +190,7 @@ class SocialCombat(DefaultScript):
 
         
     def perform_social_action(self, attacker, action, target_name):
+        bonus = 0
         if 'sex_appeal' in attacker.ndb.special_effects:
             bonus = 2
         if 'attractive' in attacker.ndb.special_effects:
