@@ -1,10 +1,10 @@
 from evennia import Command, CmdSet
 from evennia.utils.utils import inherits_from
 from typeclasses.armor.armor_and_clothes import Armor, DracheneisenArmor
-from evennia import Command
+from evennia.commands.default.muxcommand import MuxCommand
 from typeclasses.objects import Armor
 
-class CmdWear(Command):
+class CmdWear(MuxCommand):
     """
     Wear a piece of armor or clothing.
 
