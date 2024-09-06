@@ -46,7 +46,14 @@ class CmdWear(MuxCommand):
             self.caller.msg(f"|cDetails:|n {item.db.details}")
         self.caller.msg(f"|cArmor Value:|n {item.db.armor}")
         self.caller.msg(f"|cSoak Keep:|n {item.db.soak_keep}")
-        self.caller.msg(f"|cWear Location(s):|n {', '.join(item.db.wear_location)}")
+        wear_locations = item.db.wear_location
+        if wear_locations:
+            if isinstance(wear_locations, list):
+                self.caller.msg(f"|cWear Location(s):|n {', '.join(wear_locations)}")
+            else:
+                self.caller.msg(f"|cWear Location:|n {wear_locations}")
+        else:
+            self.caller.msg("|cWear Location:|n Not specified")
 
     def wear_item(self):
         item = self.caller.search(self.args, location=self.caller)
@@ -58,13 +65,19 @@ class CmdWear(MuxCommand):
             return
 
         wear_locations = item.db.wear_location
-        if len(wear_locations) > 1:
+        if not wear_locations:
+            self.caller.msg(f"Error: {item.name} doesn't have a valid wear location.")
+            return
+
+        if isinstance(wear_locations, list) and len(wear_locations) > 1:
             # If the item can be worn in multiple locations, start a menu to choose
             self.caller.ndb._wear_choice = item
             EvMenu(self.caller, "commands.wear", "wear_location_menu",
                    item=item, wear_locations=wear_locations)
         else:
-            self.do_wear(item, wear_locations[0])
+            # If it's a single location (either a string or a list with one item), wear it there
+            location = wear_locations[0] if isinstance(wear_locations, list) else wear_locations
+            self.do_wear(item, location)
 
     def do_wear(self, item, location):
         caller = self.caller
@@ -82,7 +95,6 @@ class CmdWear(MuxCommand):
             caller.location.msg_contents(f"{caller.name} wears {item.name} on their {location}.", exclude=caller)
         else:
             caller.msg(f"You can't wear {item.name}.")
-
 class CmdRemove(Command):
     """
     Remove a worn piece of armor or clothing.
