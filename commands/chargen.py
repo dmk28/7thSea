@@ -275,7 +275,7 @@ def set_sorcery_blooded(caller, raw_string):
         else:
             caller.msg("You do not have enough points for full-blooded sorcery.")
             return sorcery_blooded(caller)
-    elif raw_string.lower() == "half":
+    elif raw_string.lower().strip() == "half":
         if sheet.hero_points >= 20:
             sheet.hero_points -= 20
             sheet.is_sorcerer = True
