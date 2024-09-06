@@ -75,6 +75,7 @@ class CmdHeal(Command):
                 caller.msg(f"{target.name} doesn't have any Flesh Wounds to heal.")
                 return
             healed = min(amount, current_wounds)
+            target.db.flesh_wounds -= healed
             sheet.heal_character(healed, "flesh")
             caller.msg(f"Healed {healed} Flesh Wounds for {target.name}.")
             target.msg(f"You have been healed for {healed} Flesh Wounds.")
@@ -84,6 +85,7 @@ class CmdHeal(Command):
                 caller.msg(f"{target.name} doesn't have any Dramatic Wounds to heal.")
                 return
             healed = min(amount, current_wounds)
+            target.db.dramatic_wounds -= healed
             sheet.heal_character(healed, "dramatic")
             caller.msg(f"Healed {healed} Dramatic Wounds for {target.name}.")
             target.msg(f"You have been healed for {healed} Dramatic Wounds.")
