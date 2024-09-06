@@ -7,6 +7,8 @@ class Commodity(SharedMemoryModel):
     name = models.CharField(max_length=50, unique=True)
     base_price = models.IntegerField()
     description = models.TextField(blank=True)
+    class Meta:
+        verbose_name_plural = "Companies"
 
     def __str__(self):
         return self.name
@@ -18,9 +20,12 @@ class Company(SharedMemoryModel):
     current_price = models.IntegerField()
     last_updated = models.DateTimeField(auto_now=True)
     description = models.TextField(blank=True)
+    class Meta:
+        verbose_name_plural = "Companies"
 
     def __str__(self):
         return f"{self.name} ({self.nation.name})"
+    
 
 class Investment(SharedMemoryModel):
     character = models.ForeignKey('objects.ObjectDB', on_delete=models.CASCADE)
