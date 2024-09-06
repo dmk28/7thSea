@@ -3,6 +3,7 @@ from evennia.utils.utils import inherits_from
 from evennia.commands.default.muxcommand import MuxCommand
 from typeclasses.objects import Armor
 from evennia.utils.evmenu import EvMenu
+from evennia.utils.dbserialize import _SaverList
 
 class CmdWear(MuxCommand):
     """
@@ -48,8 +49,8 @@ class CmdWear(MuxCommand):
         self.caller.msg(f"|cSoak Keep:|n {item.db.soak_keep}")
         wear_locations = item.db.wear_location
         if wear_locations:
-            if isinstance(wear_locations, list):
-                self.caller.msg(f"|cWear Location(s):|n {', '.join(wear_locations)}")
+            if isinstance(wear_locations, (list, _SaverList)):
+                self.caller.msg(f"|cWear Location(s):|n {', '.join(map(str, wear_locations))}")
             else:
                 self.caller.msg(f"|cWear Location:|n {wear_locations}")
         else:
@@ -69,32 +70,41 @@ class CmdWear(MuxCommand):
             self.caller.msg(f"Error: {item.name} doesn't have a valid wear location.")
             return
 
-        if isinstance(wear_locations, list) and len(wear_locations) > 1:
+        if isinstance(wear_locations, (list, _SaverList)) and len(wear_locations) > 1:
             # If the item can be worn in multiple locations, start a menu to choose
             self.caller.ndb._wear_choice = item
             EvMenu(self.caller, "commands.wear", "wear_location_menu",
                    item=item, wear_locations=wear_locations)
         else:
             # If it's a single location (either a string or a list with one item), wear it there
-            location = wear_locations[0] if isinstance(wear_locations, list) else wear_locations
+            location = wear_locations[0] if isinstance(wear_locations, (list, _SaverList)) else wear_locations
             self.do_wear(item, location)
 
     def do_wear(self, item, location):
         caller = self.caller
-        if not hasattr(caller.db, 'worn_items'):
-            caller.db.worn_items = {}
+        if not hasattr(caller.db, 'equipped_armor'):
+            caller.db.equipped_armor = {}
 
-        if location in caller.db.equipped_armor:
+        # Convert location to a string representation if it's a list or _SaverList
+        location_key = ','.join(map(str, location)) if isinstance(location, (list, _SaverList)) else str(location)
+
+        if location_key in caller.db.equipped_armor:
             caller.msg(f"You are already wearing something on your {location}.")
             return
 
         if item.wear(caller):
-            caller.db.equipped_armor[location] = item
+            caller.db.equipped_armor[location_key] = item
             caller.calc_total_armor()
             caller.msg(f"You wear {item.name} on your {location}.")
             caller.location.msg_contents(f"{caller.name} wears {item.name} on their {location}.", exclude=caller)
         else:
             caller.msg(f"You can't wear {item.name}.")
+
+
+
+
+
+
 class CmdRemove(Command):
     """
     Remove a worn piece of armor or clothing.
