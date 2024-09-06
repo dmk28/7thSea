@@ -84,12 +84,12 @@ class CmdWear(MuxCommand):
         if not hasattr(caller.db, 'worn_items'):
             caller.db.worn_items = {}
 
-        if location in caller.db.worn_items:
+        if location in caller.db.equipped_armor:
             caller.msg(f"You are already wearing something on your {location}.")
             return
 
         if item.wear(caller):
-            caller.db.worn_items[location] = item
+            caller.db.equipped_armor[location] = item
             caller.calc_total_armor()
             caller.msg(f"You wear {item.name} on your {location}.")
             caller.location.msg_contents(f"{caller.name} wears {item.name} on their {location}.", exclude=caller)
@@ -114,10 +114,10 @@ class CmdRemove(Command):
             return
 
         item_name = self.args.strip().lower()
-        for location, item in caller.db.worn_items.items():
+        for location, item in caller.db.equipped_armor.items():
             if item.name.lower() == item_name:
                 if item.remove():
-                    del caller.db.worn_items[location]
+                    del caller.db.equipped_armor[location]
                     caller.calc_total_armor()
                     caller.msg(f"You remove {item.name} from your {location}.")
                     caller.location.msg_contents(f"{caller.name} removes {item.name} from their {location}.", exclude=caller)
