@@ -187,11 +187,8 @@ class ReparteeCmdSet(CmdSet):
         self.add(CmdEndRepartee())
 
     def at_cmdset_add(self, obj):
-        logger.debug(f"ReparteeCmdSet added to {obj}")
         # Remove any existing ReparteeCmdSet before adding this one
         existing = obj.cmdset.get("repartee_cmdset")
         if existing:
             obj.cmdset.remove(existing)
 
-    def at_cmdset_remove(self, obj):
-        logger.debug(f"ReparteeCmdSet removed from {obj}")
