@@ -1151,7 +1151,7 @@ class CombatScript(DefaultScript):
         # Sort participants by their remaining health (dramatic wounds in reverse order)
         sorted_participants = sorted(
             self.db.participants,
-            key=lambda x: (-x.db.dramatic_wounds, x.db.flesh_wounds),
+            key=lambda x: (-x.character_sheet.dramatic_wounds, x.character_sheet.flesh_wounds),
             reverse=True
         )
 
