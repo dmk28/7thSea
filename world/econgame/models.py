@@ -8,7 +8,7 @@ class Commodity(SharedMemoryModel):
     base_price = models.IntegerField()
     description = models.TextField(blank=True)
     class Meta:
-        verbose_name_plural = "Companies"
+        verbose_name_plural = "Commodities"
 
     def __str__(self):
         return self.name
