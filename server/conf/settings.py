@@ -48,7 +48,8 @@ DEFAULT_CMDSETS = [
     'commands.mycmdset.MyCmdset'
 
 ]
-INSTALLED_APPS += ['world.character_sheet', 'world.adventuring_guilds', 'world.ships', 'world.banking', 'world.crafts', 'world.nations']
+INSTALLED_APPS += ['world.character_sheet', 'world.adventuring_guilds', 'world.ships', 'world.banking', 'world.crafts', 'world.nations',
+'world.econgame']
 GAME_SLOGAN = "Adventures in the High Seas"
 
 ######################################################################
