@@ -63,7 +63,7 @@ class CmdCharacterSheet(Command):
             sheet_display.append(create_section(f"{category.upper()} SKILLS", skills))
 
         # Advantages
-        advantages = [f"|c{adv.advantage.name}|n (Level {adv.level})" for adv in sheet.character_advantages.all()]
+        advantages = [f"|c{adv.advantage.name}|n" for adv in sheet.character_advantages.all()]
         sheet_display.append(create_section("ADVANTAGES", advantages))
 
         # Sorcery
