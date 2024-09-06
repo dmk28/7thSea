@@ -283,7 +283,8 @@ class CombatScript(DefaultScript):
         self.process_next_character()
 
     def process_next_character(self):
-        self.msg_all(f"Initiative order: {[char.name for char in self.db.initiative_order]}")
+        initiative_names = ", ".join(char.name for char in self.db.initiative_order)
+        self.msg_all(f"Initiative order: |555{initiative_names}|n")
         if not self.db.initiative_order:
             self.next_round()
             return
