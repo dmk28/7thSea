@@ -455,16 +455,18 @@ class Armor(DefaultObject):
 
 
 class Clothing(Armor):
-    def at_object_creation():
+    def at_object_creation(self):
         super().at_object_creation()
         self.db.armor = 0
         self.db.soak_keep = 1
-        self.db.description= "Standard clothing"
+        self.db.description = "Standard clothing"
         self.db.armor_type = "Clothing"
-        self.db.wear_location = "torso"
+        self.db.wear_location = ["torso"]  # Changed to a list to match the ArmorModel
         self.db.traits = {}
         self.db.sorte_active = False
         self.db.pyeryem_effect = False
         self.db.cost = 0
+        # Create the corresponding ArmorModel
+        self.create_or_update_armor_model()
 
 

@@ -307,19 +307,23 @@ class ArmorModel(SharedMemoryModel):
             self.armor = getattr(armor.db, 'armor', 0)
             self.soak_keep = getattr(armor.db, 'soak_keep', 1)
             self.armor_type = getattr(armor.db, 'armor_type', '')
-            self.wear_location = getattr(armor.db, 'wear_location', [])
-            self.traits = getattr(armor.db, 'traits', {})
+            self.wear_location = list(getattr(armor.db, 'wear_location', []))  # Ensure it's a list
+            self.traits = dict(getattr(armor.db, 'traits', {}))  # Ensure it's a dict
             self.cost = getattr(armor.db, 'cost', 0)
-            self.description = armor.db.desc or ""
-            self.details = armor.db.details or ""  # Sync the new details field 
+            self.details = getattr(armor.db, 'details', "")  # Sync the new details field 
+            
             # Convert _SaverDict to regular dict for JSON fields
             requirements = getattr(armor.db, 'requirements', {})
-            self.requirements = dbserialize.to_pickle(requirements)
+            self.requirements = dict(dbserialize.from_pickle(requirements))
 
     def save(self, *args, **kwargs):
         try:
             if self.evennia_object:
                 self.sync_from_typeclass()
+            # Ensure all JSONFields contain serializable data
+            self.wear_location = list(self.wear_location)
+            self.traits = dict(self.traits)
+            self.requirements = dict(self.requirements)
             super().save(*args, **kwargs)
         except ObjectDoesNotExist:
             # Handle the case where the Evennia object no longer exists
