@@ -51,7 +51,6 @@ class SocialCombat(DefaultScript):
             participant.db.repartee_id = self.id
             self.add_repartee_cmdset(participant)
             self.check_repartee_advantages(participant)
-            participant.msg(f"Debug: Repartee started. Script info: {self.debug_info()}")
         
         self.roll_initiative()
         self.next_round()
@@ -91,9 +90,12 @@ class SocialCombat(DefaultScript):
 
     def next_round(self):
         self.db.round += 1
-        self.msg_all(f"Round {self.db.round} of repartee begins.")
-        self.db.initiative_order = self.db.participants.copy()  # Reset initiative order
-        self.process_next_character()
+        if self.db.round > 10:
+            self.msg_all(f"Round {self.db.round} of repartee begins.")
+            self.db.initiative_order = self.db.participants.copy()  # Reset initiative order
+            self.process_next_character()
+        else:
+            self.end_repartee()
 
     def process_next_character(self):
         if not self.db.initiative_order:
@@ -250,8 +252,6 @@ class SocialCombat(DefaultScript):
         
         if len(self.db.participants) < 2:
             self.end_repartee()
-    def debug_info(self):
-     return f"SocialCombat Script ID: {self.id}, Key: {self.key}, DB fields: {self.db}"
 
 
 # Add other necessary methods
