@@ -161,7 +161,7 @@ class ChargenRoom(Room):
 class SalonRoom(Room):
     def at_object_creation(self):
         super().at_object_creation()
-        self.cmdset.update(ReparteeCmdSet, persistent=True, unique=True)
+        self.cmdset.add(ReparteeCmdSet, persistent=True)
                 
 class ShipyardRoom(Room):
     def at_object_creation(self):
