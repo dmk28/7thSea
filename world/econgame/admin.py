@@ -1,5 +1,5 @@
 from django.contrib import admin
-from world.commodity_market.models import Commodity, Company, Investment, GuildInvestment, Market
+from world.econgame.models import Commodity, Company, Investment, GuildInvestment, Market
 
 @admin.register(Commodity)
 class CommodityAdmin(admin.ModelAdmin):
