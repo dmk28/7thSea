@@ -105,7 +105,7 @@ class CmdWear(MuxCommand):
 
 
 
-class CmdRemove(Command):
+class CmdRemove(MuxCommand):
     """
     Remove a worn piece of armor or clothing.
 
@@ -124,13 +124,19 @@ class CmdRemove(Command):
             return
 
         item_name = self.args.strip().lower()
-        for location, item in caller.db.equipped_armor.items():
+        for location_key, item in caller.db.equipped_armor.items():
             if item.name.lower() == item_name:
                 if item.remove():
-                    del caller.db.equipped_armor[location]
+                    del caller.db.equipped_armor[location_key]
                     caller.calc_total_armor()
-                    caller.msg(f"You remove {item.name} from your {location}.")
-                    caller.location.msg_contents(f"{caller.name} removes {item.name} from their {location}.", exclude=caller)
+                    
+                    # Convert the location_key back to a more readable format
+                    location_display = location_key.split(',') if ',' in location_key else location_key
+                    if isinstance(location_display, list) and len(location_display) == 1:
+                        location_display = location_display[0]
+                    
+                    caller.msg(f"You remove {item.name} from your {location_display}.")
+                    caller.location.msg_contents(f"{caller.name} removes {item.name} from their {location_display}.", exclude=caller)
                 else:
                     caller.msg(f"You can't remove {item.name}.")
                 return
@@ -168,6 +174,7 @@ def do_wear_from_menu(caller, raw_string, **kwargs):
 
     CmdWear.do_wear(CmdWear(), item, location)
     return "exit"
+
 
 class WearCmdset(CmdSet):
     def at_cmdset_creation(self):
