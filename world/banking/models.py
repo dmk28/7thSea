@@ -11,6 +11,15 @@ class Bank(SharedMemoryModel):
     def __str__(self):
         return self.name
 
+    def get_account(self, account_holder):
+        return self.accounts.filter(account_holder=account_holder).first()
+
+    def create_account(self, account_holder):
+        return self.accounts.create(
+            account_holder=account_holder,
+            account_number=f"{self.id}-{account_holder.id}"
+        )
+
 class BankAccount(SharedMemoryModel):
     bank = models.ForeignKey(Bank, on_delete=models.CASCADE, related_name='accounts')
     account_holder = models.ForeignKey('objects.ObjectDB', on_delete=models.CASCADE, related_name='bank_accounts')

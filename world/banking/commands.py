@@ -1,28 +1,68 @@
 from evennia import Command
-from evennia.utils.search import search_object
 from world.banking.models import Bank, BankAccount
+from evennia.commands.default.muxcommand import MuxCommand
 
-class CmdOpenAccount(Command):
+
+class CmdBank(MuxCommand):
     """
-    Open a new bank account.
+    Perform banking operations.
 
     Usage:
-      openaccount <bank>
+      bank/open
+      bank/deposit <amount> <currency>
+      bank/withdraw <amount> <currency>
+      bank/balance
+      bank/transfer <amount> <currency> to <account_number>
+
+    Switches:
+      open - Open a new bank account
+      deposit - Deposit money into your account
+      withdraw - Withdraw money from your account
+      balance - Check your account balance
+      transfer - Transfer money to another account
+
+    Examples:
+      bank/open
+      bank/deposit 100 guilders
+      bank/withdraw 50 doubloons
+      bank/balance
+      bank/transfer 75 guilders to 1234-5678
     """
-    key = "openaccount"
+
+    key = "bank"
+    aliases = ["banking"]
+    switches = ["open", "deposit", "withdraw", "balance", "transfer"]
     locks = "cmd:all()"
 
+    def get_bank(self):
+        if hasattr(self.caller.location, 'get_bank'):
+            return self.caller.location.get_bank()
+        return None
+
     def func(self):
-        if not self.args:
-            self.caller.msg("Usage: openaccount <bank>")
+        if not self.switches:
+            self.caller.msg("You must use a switch with the bank command. See 'help bank' for usage.")
             return
-        
-        banks = Bank.objects.filter(name__iexact=self.args)
-        if not banks:
-            self.caller.msg(f"No bank named '{self.args}' found.")
+
+        bank = self.get_bank()
+        if not bank:
+            self.caller.msg("You need to be in a bank to perform banking operations.")
             return
-        
-        bank = banks[0]
+
+        switch = self.switches[0]
+
+        if switch == "open":
+            self.open_account(bank)
+        elif switch in ["deposit", "withdraw"]:
+            self.handle_transaction(bank, switch)
+        elif switch == "balance":
+            self.check_balance(bank)
+        elif switch == "transfer":
+            self.transfer_money(bank)
+        else:
+            self.caller.msg("Invalid bank command. See 'help bank' for usage.")
+
+    def open_account(self, bank):
         account, created = BankAccount.objects.get_or_create(
             bank=bank,
             account_holder=self.caller,
@@ -34,22 +74,12 @@ class CmdOpenAccount(Command):
         else:
             self.caller.msg(f"You already have an account at {bank.name}.")
 
-class CmdDeposit(Command):
-    """
-    Deposit money into your bank account.
-
-    Usage:
-      deposit <amount> <currency> <bank>
-    """
-    key = "deposit"
-    locks = "cmd:all()"
-
-    def func(self):
-        if not self.args or len(self.args.split()) != 3:
-            self.caller.msg("Usage: deposit <amount> <currency> <bank>")
+    def handle_transaction(self, bank, transaction_type):
+        if not self.args or len(self.args.split()) != 2:
+            self.caller.msg(f"Usage: bank/{transaction_type} <amount> <currency>")
             return
         
-        amount, currency, bank_name = self.args.split()
+        amount, currency = self.args.split()
         try:
             amount = int(amount)
         except ValueError:
@@ -60,131 +90,48 @@ class CmdDeposit(Command):
             self.caller.msg("Currency must be either 'guilders' or 'doubloons'.")
             return
         
-        banks = Bank.objects.filter(name__iexact=bank_name)
-        if not banks:
-            self.caller.msg(f"No bank named '{bank_name}' found.")
-            return
-        
-        bank = banks[0]
         try:
             account = BankAccount.objects.get(bank=bank, account_holder=self.caller)
         except BankAccount.DoesNotExist:
-            self.caller.msg(f"You don't have an account at {bank.name}.")
+            self.caller.msg(f"You don't have an account at this bank.")
             return
         
-        if self.caller.character_sheet.money.get(currency, 0) < amount:
-            self.caller.msg(f"You don't have enough {currency}.")
-            return
+        if transaction_type == "deposit":
+            if self.caller.character_sheet.money.get(currency, 0) < amount:
+                self.caller.msg(f"You don't have enough {currency}.")
+                return
+            self.caller.character_sheet.money[currency] -= amount
+            setattr(account, f"{currency}_balance", getattr(account, f"{currency}_balance") + amount)
+            message = f"Deposited {amount} {currency} into your account at {bank.name}."
+        else:  # withdraw
+            if getattr(account, f"{currency}_balance") < amount:
+                self.caller.msg(f"You don't have enough {currency} in your account.")
+                return
+            setattr(account, f"{currency}_balance", getattr(account, f"{currency}_balance") - amount)
+            self.caller.character_sheet.money[currency] = self.caller.character_sheet.money.get(currency, 0) + amount
+            message = f"Withdrew {amount} {currency} from your account at {bank.name}."
         
-        self.caller.character_sheet.money[currency] -= amount
-        setattr(account, f"{currency}_balance", getattr(account, f"{currency}_balance") + amount)
         account.save()
         self.caller.character_sheet.save(update_fields=['money'])
-        
-        self.caller.msg(f"Deposited {amount} {currency} into your account at {bank.name}.")
+        self.caller.msg(message)
 
-class CmdWithdraw(Command):
-    """
-    Withdraw money from your bank account.
-
-    Usage:
-      withdraw <amount> <currency> <bank>
-    """
-    key = "withdraw"
-    locks = "cmd:all()"
-
-    def func(self):
-        if not self.args or len(self.args.split()) != 3:
-            self.caller.msg("Usage: withdraw <amount> <currency> <bank>")
-            return
-        
-        amount, currency, bank_name = self.args.split()
-        try:
-            amount = int(amount)
-        except ValueError:
-            self.caller.msg("Amount must be a number.")
-            return
-        
-        if currency not in ['guilders', 'doubloons']:
-            self.caller.msg("Currency must be either 'guilders' or 'doubloons'.")
-            return
-        
-        banks = Bank.objects.filter(name__iexact=bank_name)
-        if not banks:
-            self.caller.msg(f"No bank named '{bank_name}' found.")
-            return
-        
-        bank = banks[0]
+    def check_balance(self, bank):
         try:
             account = BankAccount.objects.get(bank=bank, account_holder=self.caller)
         except BankAccount.DoesNotExist:
-            self.caller.msg(f"You don't have an account at {bank.name}.")
-            return
-        
-        if getattr(account, f"{currency}_balance") < amount:
-            self.caller.msg(f"You don't have enough {currency} in your account.")
-            return
-        
-        setattr(account, f"{currency}_balance", getattr(account, f"{currency}_balance") - amount)
-        account.save()
-        self.caller.character_sheet.money[currency] = self.caller.character_sheet.money.get(currency, 0) + amount
-        self.caller.character_sheet.save(update_fields=['money'])
-        
-        self.caller.msg(f"Withdrew {amount} {currency} from your account at {bank.name}.")
-
-class CmdBalance(Command):
-    """
-    Check your bank account balance.
-
-    Usage:
-      balance <bank>
-
-    Shows your account balance at the specified bank.
-    """
-    key = "balance"
-    locks = "cmd:all()"
-
-    def func(self):
-        if not self.args:
-            self.caller.msg("Usage: balance <bank>")
-            return
-        
-        banks = Bank.objects.filter(name__iexact=self.args)
-        if not banks:
-            self.caller.msg(f"No bank named '{self.args}' found.")
-            return
-        
-        bank = banks[0]
-        try:
-            account = BankAccount.objects.get(bank=bank, account_holder=self.caller)
-        except BankAccount.DoesNotExist:
-            self.caller.msg(f"You don't have an account at {bank.name}.")
+            self.caller.msg(f"You don't have an account at this bank.")
             return
         
         self.caller.msg(f"Your balance at {bank.name}:")
         self.caller.msg(f"Guilders: {account.guilders_balance}")
         self.caller.msg(f"Doubloons: {account.doubloons_balance}")
 
-class CmdTransfer(Command):
-    """
-    Transfer money between bank accounts.
-
-    Usage:
-      transfer <amount> <currency> <from_bank> to <to_account> at <to_bank>
-
-    Transfers the specified amount of the specified currency from your account at from_bank to the specified account at to_bank.
-    """
-    key = "transfer"
-    locks = "cmd:all()"
-
-    def func(self):
-        if not self.args or len(self.args.split()) != 7 or "to" not in self.args or "at" not in self.args:
-            self.caller.msg("Usage: transfer <amount> <currency> <from_bank> to <to_account> at <to_bank>")
+    def transfer_money(self, bank):
+        if not self.args or len(self.args.split()) != 4 or "to" not in self.args:
+            self.caller.msg("Usage: bank/transfer <amount> <currency> to <account_number>")
             return
         
-        args = self.args.split()
-        amount, currency, from_bank = args[:3]
-        to_account, to_bank = args[4], args[6]
+        amount, currency, _, to_account = self.args.split()
         
         try:
             amount = int(amount)
@@ -196,29 +143,20 @@ class CmdTransfer(Command):
             self.caller.msg("Currency must be either 'guilders' or 'doubloons'.")
             return
         
-        from_banks = Bank.objects.filter(name__iexact=from_bank)
-        to_banks = Bank.objects.filter(name__iexact=to_bank)
-        
-        if not from_banks or not to_banks:
-            self.caller.msg("One or both banks not found.")
-            return
-        
-        from_bank, to_bank = from_banks[0], to_banks[0]
-        
         try:
-            from_account = BankAccount.objects.get(bank=from_bank, account_holder=self.caller)
+            from_account = BankAccount.objects.get(bank=bank, account_holder=self.caller)
         except BankAccount.DoesNotExist:
-            self.caller.msg(f"You don't have an account at {from_bank.name}.")
+            self.caller.msg(f"You don't have an account at this bank.")
             return
         
         try:
-            to_account = BankAccount.objects.get(bank=to_bank, account_number=to_account)
+            to_account = BankAccount.objects.get(bank=bank, account_number=to_account)
         except BankAccount.DoesNotExist:
-            self.caller.msg(f"Account {to_account} not found at {to_bank.name}.")
+            self.caller.msg(f"Account {to_account} not found at this bank.")
             return
         
         if getattr(from_account, f"{currency}_balance") < amount:
-            self.caller.msg(f"You don't have enough {currency} in your account at {from_bank.name}.")
+            self.caller.msg(f"You don't have enough {currency} in your account.")
             return
         
         # Perform the transfer
@@ -227,4 +165,4 @@ class CmdTransfer(Command):
         from_account.save()
         to_account.save()
         
-        self.caller.msg(f"Transferred {amount} {currency} from your account at {from_bank.name} to account {to_account.account_number} at {to_bank.name}.")
+        self.caller.msg(f"Transferred {amount} {currency} to account {to_account.account_number}.")
