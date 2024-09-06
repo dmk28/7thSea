@@ -143,10 +143,6 @@ class CmdEndRepartee(Command):
             self.caller.msg(f"Error: Could not find the repartee script with ID {repartee_id}.")
             return
 
-        self.caller.msg(f"Debug: Repartee object: {repartee}")
-        self.caller.msg(f"Debug: Repartee type: {type(repartee)}")
-        self.caller.msg(f"Debug: Repartee typeclass path: {repartee.typeclass_path}")
-        self.caller.msg(f"Debug: Repartee attributes: {dir(repartee)}")
 
         if hasattr(repartee, 'end_repartee'):
             repartee.end_repartee()
@@ -162,8 +158,7 @@ def get_repartee(caller):
         repartee_id = caller.db.repartee_id
         repartee = ScriptDB.objects.filter(id=repartee_id, db_typeclass_path__endswith='SocialCombat').first()
         if repartee:
-            caller.msg(f"Debug: Repartee script found. Type: {type(repartee)}")
-            caller.msg(f"Debug: Script typeclass path: {repartee.typeclass_path}")
+        
             return repartee
         else:
             caller.msg(f"Debug: No repartee script found for ID {repartee_id}")

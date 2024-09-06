@@ -21,6 +21,10 @@ class SocialCombat(DefaultScript):
     
     def end_repartee(self):
         self.msg_all("The repartee has ended.")
+        
+        # Determine the winner
+        winner = self.determine_winner()
+        
         for char in self.db.participants:
             if hasattr(char.db, 'repartee_id'):
                 del char.db.repartee_id
@@ -30,7 +34,40 @@ class SocialCombat(DefaultScript):
                 if hasattr(char.ndb, attr):
                     delattr(char.ndb, attr)
 
+        # Announce the winner
+        if winner:
+            self.msg_all(f"{winner.name} has won the repartee!")
+        else:
+            self.msg_all("The repartee ends in a draw.")
+
         self.stop()
+
+    def determine_winner(self):
+        if not self.db.participants:
+            return None
+        
+        # Sort participants by their social_health, in descending order
+        sorted_participants = sorted(
+            self.db.participants, 
+            key=lambda x: getattr(x.ndb, 'social_health', 0), 
+            reverse=True
+        )
+        
+        # Check if there's a clear winner (highest social_health)
+        if len(sorted_participants) > 1 and sorted_participants[0].ndb.social_health > sorted_participants[1].ndb.social_health:
+            return sorted_participants[0]
+        else:
+            # It's a draw if the top two (or more) have the same social_health
+            return None
+
+    def next_round(self):
+        self.db.round += 1
+        if self.db.round < 10:
+            self.msg_all(f"Round {self.db.round} of repartee begins.")
+            self.db.initiative_order = self.db.participants.copy()  # Reset initiative order
+            self.process_next_character()
+        else:
+            self.end_repartee()
 
     @classmethod
     def get_or_create(cls, id):
