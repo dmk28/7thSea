@@ -175,10 +175,11 @@ def get_repartee(caller):
 
 class ReparteeCmdSet(CmdSet):
     key = "repartee"
-    mergetype = 'Intersect'
+    mergetype = 'Union'
     duplicates = False
     priority = 1
-    
+    key_mergetype = {"ReparteeCmdSet": "Replace"}
+
     def at_cmdset_creation(self):
         self.add(CmdStartRepartee())
         self.add(CmdTaunt())
