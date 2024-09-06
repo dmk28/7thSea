@@ -17,7 +17,7 @@ class CmdWear(Command):
     """
     key = "wear"
     locks = "cmd:all()"
-
+    switches = ["examine"]
     def func(self):
         caller = self.caller
         if not self.args:
