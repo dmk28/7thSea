@@ -161,19 +161,7 @@ class ChargenRoom(Room):
 class SalonRoom(Room):
     def at_object_creation(self):
         super().at_object_creation()
-        self.db.repartee_cmdset_added = False
-
-    def at_object_receive(self, moved_obj, source_location, **kwargs):
-        super().at_object_receive(moved_obj, source_location, **kwargs)
-        if moved_obj.has_account and not self.db.repartee_cmdset_added:
-            self.cmdset.add(ReparteeCmdSet, persistent=True)
-            self.db.repartee_cmdset_added = True
-
-    def at_object_leave(self, moved_obj, target_location, **kwargs):
-        super().at_object_leave(moved_obj, target_location, **kwargs)
-        if moved_obj.has_account and self.db.repartee_cmdset_added:
-            self.cmdset.delete(ReparteeCmdSet)
-            self.db.repartee_cmdset_added = False
+        self.cmdset.update(ReparteeCmdSet, persistent=True, unique=True)
                 
 class ShipyardRoom(Room):
     def at_object_creation(self):
