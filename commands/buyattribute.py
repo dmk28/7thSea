@@ -95,24 +95,20 @@ class CmdBuyAttribute(Command):
 
         caller.msg(f"Debug: Attempting to buy knack '{knack_name}' for skill '{skill_name}' in category '{category}'")
 
-        # Check if the skill exists
-        try:
-            skill = Skill.objects.get(name=skill_name, category=category)
-        except Skill.DoesNotExist:
-            caller.msg(f"Error: The skill '{skill_name}' in category '{category}' does not exist.")
+        # Get the skills for the specified category
+        category_skills = sheet.get_skills_by_category().get(category, {})
+        
+        if skill_name not in category_skills:
+            caller.msg(f"Error: The skill '{skill_name}' in category '{category}' does not exist for your character.")
             return
 
-        # Get or create the Knack
-        knack, knack_created = Knack.objects.get_or_create(name=knack_name, skill=skill)
+        skill_knacks = category_skills[skill_name]
+        
+        if knack_name not in skill_knacks:
+            caller.msg(f"Error: The knack '{knack_name}' does not exist for the skill '{skill_name}'.")
+            return
 
-        # Get the current KnackValue or create a new one
-        knack_value, value_created = KnackValue.objects.get_or_create(
-            character_sheet=sheet,
-            knack=knack,
-            defaults={'value': 0}
-        )
-
-        current_value = knack_value.value
+        current_value = skill_knacks[knack_name]
         new_value = current_value + 1 if value is None else value
         max_value = 5
 
@@ -124,13 +120,12 @@ class CmdBuyAttribute(Command):
         xp_cost = hp_cost * 2
 
         if self.convert_xp_to_hp(xp_cost):
-            knack_value.value = new_value
-            knack_value.save()
+            # Update the knack value
+            sheet.set_knack_value(knack_name, new_value)
             sheet.save()
             caller.msg(f"You have increased {knack_name} to {new_value}. You have {sheet.hero_points} hero points and {sheet.xp} XP remaining.")
         else:
             caller.msg(f"You don't have enough XP for this knack. You need {xp_cost} XP.")
-
 
     def buy_advantage(self, name):
         caller = self.caller
