@@ -1,110 +1,81 @@
+
 from evennia import Command
+from evennia.commands.default.muxcommand import MuxCommand
 from world.combat_script.combat_system import get_combat
 from evennia import create_script
 
-
-
-class CmdAttack(Command):
+class CombatCommand(MuxCommand):
     """
-    Attack another character in combat.
+    Handle all combat-related actions.
 
     Usage:
-      attack <target>
+      combat/attack <target>
+      combat/defend
+      combat/hold
+      combat/pass
+      combat/feint <target>
+      combat/stopthrust
+      combat/riposte
+      combat/doubleparry
+      combat/lunge <target>
+      combat/tag <target>
+      combat/doubleattack <target>
+      combat/pommelstrike <target>
+      combat/start <target>
+      combat/end
 
-
-    This command lets you attack another character or perform special moves during combat.
+    This command handles all combat actions, including starting and ending combat.
     """
-    key = "attack"
+    key = "combat"
+    aliases = ["attack", "defend", "hold", "pass", "feint", "stopthrust", "riposte", 
+               "doubleparry", "lunge", "tag", "doubleattack", "pommelstrike"]
     locks = "cmd:all()"
     help_category = "Combat"
+    switches = ["attack", "defend", "hold", "pass", "feint", "stopthrust", "riposte", 
+                      "doubleparry", "lunge", "tag", "doubleattack", "pommelstrike", "start", "end"]
 
     def func(self):
         combat = get_combat(self.caller)
-        if not combat:
-            self.caller.msg("You are not in combat.")
-            return
-
-        cmd = self.cmdstring.lower()
-
-        if cmd == "attack":
-            if not self.args:
-                self.caller.msg("You must specify a target to attack.")
-                return
-            combat.handle_action_input(self.caller, f"attack {self.args}")
-       
-
-class CmdFullDefense(Command):
-    '''When in combat, use 'defend' to trigger a full defense'''
-    key = "defend"
-    locks = "cmd:all()"
-    help_category = "Combat"
-
-    def func(self):
-        combat = get_combat(self.caller)
-        if not combat:
-            self.caller.msg("You are not in combat.")
-            return
-        if combat.db.current_actor != self.caller:
-            self.caller.msg("It's not your turn to act.")
-            return
-        if combat.db.action_state == "choosing_action":
-            combat.handle_action_input(self.caller, "defend")  # Changed from "2" to "defend"
-        else:
-            self.caller.msg("You can't defend right now.")
-
-class CmdHoldAction(Command):
-    '''When in combat, use 'hold' to hold a full action'''
-    key = "hold"
-    locks = "cmd:all()"
-    help_category = "Combat"
-
-    def func(self):
-        combat = get_combat(self.caller)
-        if not combat:
-            self.caller.msg("You are not in combat.")
-            return
-        if combat.db.current_actor != self.caller:
-            self.caller.msg("It's not your turn to act.")
-            return
-        if combat.db.action_state == "choosing_action":
-            combat.handle_action_input(self.caller, "hold")  # Changed from "3" to "hold"
-        else:
-            self.caller.msg("You can't hold your action right now.")
-
-class CmdPassTurn(Command):
-    '''Pass the turn with pass, when in combat.'''
-    key = "pass"
-    locks = "cmd:all()"
-    help_category = "Combat"
-
-    def func(self):
-        combat = get_combat(self.caller)
-        if not combat:
-            self.caller.msg("You are not in combat.")
-            return
-        if combat.db.current_actor != self.caller:
-            self.caller.msg("It's not your turn to act.")
-            return
-        if combat.db.action_state == "choosing_action":
-            combat.handle_action_input(self.caller, "pass")  # Changed from "4" to "pass"
-        else:
-            self.caller.msg("You can't pass your turn right now.")
-
-class CmdStartCombat(Command):
-    key = "startcombat"
-    locks = "cmd:all()"
-    help_category = "Combat"
-
-    def func(self):
-        self.caller.msg("Debug: StartCombat command initiated.")
         
+        if "start" in self.switches:
+            self.start_combat()
+            return
+        
+        if "end" in self.switches:
+            self.end_combat(combat)
+            return
+
+        if not combat:
+            self.caller.msg("You are not in combat.")
+            return
+
+        if combat.db.current_actor != self.caller and self.cmdstring != "combat":
+            self.caller.msg("It's not your turn to act.")
+            return
+
+        action = self.cmdstring if self.cmdstring != "combat" else (self.switches[0] if self.switches else None)
+
+        if not action:
+            self.caller.msg("You must specify a combat action.")
+            return
+
+        if action in ["attack", "feint", "lunge", "tag", "doubleattack", "pommelstrike"]:
+            if not self.args:
+                self.caller.msg(f"You must specify a target for {action}.")
+                return
+            combat.handle_action_input(self.caller, f"{action} {self.args}")
+        elif action in ["defend", "hold", "pass", "stopthrust", "riposte", "doubleparry"]:
+            combat.handle_action_input(self.caller, action)
+        else:
+            self.caller.msg(f"Unknown combat action: {action}")
+
+    def start_combat(self):
         if not self.args:
-            self.caller.msg("You must specify a target.")
+            self.caller.msg("You must specify a target to start combat with.")
             return
         
         target = self.caller.search(self.args)
         if not target:
-            self.caller.msg("Debug: Target not found.")
             return
         
         if self.caller == target:
@@ -116,147 +87,23 @@ class CmdStartCombat(Command):
             self.caller.msg("You are already in combat.")
             return
 
-        self.caller.msg("Debug: Creating new CombatScript.")
         combat = create_script("typeclasses.scripts.CombatScript")
-        
         if not combat:
-            self.caller.msg("Debug: Failed to create CombatScript.")
+            self.caller.msg("Failed to create combat.")
             return
 
-        self.caller.msg(f"Debug: CombatScript created with ID {combat.id}")
-        
         combat.db.participants = [self.caller, target]
         combat.start_combat()
         
-        self.caller.msg(f"Debug: Combat started. Your combat_id is set to {self.caller.db.combat_id}")
         self.caller.msg(f"You have initiated combat with {target.name}!")
         target.msg(f"{self.caller.name} has initiated combat with you!")
 
-
-class CmdEndCombat(Command):
-    key = "endcombat"
-    locks = "cmd:all()"
-    help_category = "Combat"
-
-    def func(self):
-        combat = get_combat(self.caller)
+    def end_combat(self, combat):
         if combat:
             combat.end_combat()
             self.caller.msg("You have ended the combat.")
         else:
             self.caller.msg("You are not in an active combat.")
-
-class CmdFeint(Command):
-    key = "feint"
-    help_category = "Swordsman"
-    def func(self):
-        combat = get_combat(self.caller)
-        if combat:
-            combat.handle_action_input(self.caller, f"feint {self.args}")
-        else:
-            self.caller.msg("You are not in combat.")
-class CmdStopThrust(Command):
-    help_category = "Swordsman"
-    key="stopthrust"
-    def func(self):
-        combat = get_combat(self.caller)
-        if combat:
-            combat.handle_action_input(self.caller, f"stopthrust {self.args}")
-        else:
-            self.caller.msg("You are not in combat.")
-class CmdRiposte(Command):
-    key="riposte"
-    help_category = "Swordsman"
-
-    def func(self):
-        combat = get_combat(self.caller)
-        if combat:
-            combat.handle_action_input(self.caller, f"riposte {self.args}")
-        else:
-            self.caller.msg("You are not in combat.")
-class CmdDoubleParry(Command):
-    key="doubleparry"
-    help_category = "Swordsman"
-    def func(self):
-        combat = get_combat(self.caller)
-        if combat:
-            combat.handle_action_input(self.caller, f"doubleparry {self.args}")
-        else:
-            self.caller.msg("You are not in combat.")
-class CmdLunge(Command):
-    key="lunge"
-    help_category = "Swordsman"
-    def func(self):
-        combat = get_combat(self.caller)
-        if combat:
-            combat.handle_action_input(self.caller, f"lunge {self.args}")
-        else:
-            self.caller.msg("You are not in combat.")
-
-class CmdTag(Command):
-    key="tag"
-    help_category = "Swordsman"
-    def func(self):
-        combat = get_combat(self.caller)
-        if combat:
-            combat.handle_action_input(self.caller, f"tag {self.args}")
-        else:
-            self.caller.msg("You are not in combat.")
-class CmdDoubleAttack(Command):
-    key = "double-attack"
-    aliases = ["doubleattack"]
-    locks = "cmd:all()"
-    help_category = "Combat"
-
-    def func(self):
-        combat = get_combat(self.caller)
-        if combat:
-            if not self.args:
-                self.caller.msg("You must specify a target for double-attack.")
-                return
-            if not self.caller.character_sheet.get_knack_value("Double-Attack (Fencing)"):
-                self.caller.msg("You don't know how to perform a Double-Attack.")
-                return
-            combat.handle_action_input(self.caller, f"double-attack {self.args}")
-        else:
-            self.caller.msg("You are not in combat.")
-
-class CmdPommelStrike(Command):
-    key = "pommelstrike"
-    aliases = ["pommel"]
-    locks = "cmd:all()"
-    help_category = "Combat"
-
-    def func(self):
-        combat = get_combat(self.caller)
-        if combat:
-            if not self.args:
-                self.caller.msg("You must specify a target for your pommel strike.")
-                return
-
-            weapon = self.caller.db.wielded_weapon
-            if not weapon:
-                self.caller.msg("You need a weapon to perform Pommel Strike!")
-                return
-
-            weapon_type = weapon.db.weapon_type
-            
-            # Check for both possible knack names
-            knack_name1 = f"Pommel Strike ({weapon_type})"
-            knack_name2 = f"Pommel Strike"
-            
-            knack_value = max(
-                self.caller.character_sheet.get_knack_value(knack_name1),
-                self.caller.character_sheet.get_knack_value(knack_name2)
-            )
-
-            if knack_value == 0:
-                self.caller.msg(f"You don't know how to perform a Pommel Strike with a {weapon_type}.")
-                return
-
-            combat.handle_action_input(self.caller, f"pommelstrike {self.args}")
-        else:
-            self.caller.msg("You are not in combat.")
 # Similar classes for Riposte, Lunge, etc.
 
 # class CmdSpecial(Command):
