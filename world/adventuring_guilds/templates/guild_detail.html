@@ -1,4 +1,71 @@
 {% extends "website/base.html" %}
+{% block extra_css %}
+
+    <style>
+        .nation-profile {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .profile-container {
+            background-color: #dddbd8; /* Papyrus yellow */
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .section-buttons {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .section-button {
+            background-color: #8b4513; /* Saddle Brown */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .section-button:hover {
+            background-color: #a0522d; /* Sienna */
+        }
+        .section-button.active {
+            background-color: #a0522d; /* Sienna */
+        }
+        h1, h2 {
+            color: #8b4513; /* Saddle Brown */
+        }
+        .nation-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        .detail-item {
+            padding: 10px;
+        }
+        .detail-item.full-width {
+            grid-column: 1 / -1;
+        }
+        .detail-item strong {
+            display: block;
+            margin-bottom: 5px;
+            color: #8b4513;
+        }
+
+            .section-content {
+            display: none;
+            }
+            .section-content.active {
+                display: block;
+            }
+
+
+    </style>
+    {% endblock %}
+    
 {% block titleblock %}{{ guild.db_name }}{% endblock %}
 {% block content %}
 
