@@ -87,7 +87,12 @@ class CombatScript(DefaultScript):
         for advantage in advantages:
             adv_name = advantage.get('name', '')
             adv_level = advantage.get('level', 1)
-            
+            if adv_name == "Lost Arts" and "rose_cross" not in character.ndb.special_effects:
+                character.db.special_effects.append("rose_cross")
+                character.ndb.special_effects.append("rose_cross")
+            if adv_name == 'Man of Will' and "willful" not in character.ndb.special_effects:
+                character.db.special_effects.append("willful")
+                character.ndb.special_effects.append("willful")
             if adv_name == 'Combat Reflexes' and "combat_reflexes" not in character.ndb.special_effects:
                 character.ndb.special_effects.append("combat_reflexes")
                 character.db.special_effects.append("combat_reflexes")
@@ -241,6 +246,10 @@ class CombatScript(DefaultScript):
             bonus -= 10
         if action_type == "defense" and "prone" in character.ndb.special_effects:
             bonus -= 5
+        if action_type == "attack" or action_type == "defense" or action_type == "damage" or action_type == "soak"  or action_type == "initiative" and "willful" in character.ndb.special_effects:
+            bonus += 5
+        if action_type == "defense" or action_type == "initiative" and "rose_cross" in character.ndb.special_effects:
+            bonus += 5
 
 
 
@@ -252,7 +261,12 @@ class CombatScript(DefaultScript):
         for char in self.db.participants:
             panache = char.db.traits['panache']
             base_roll = randint(1, 10) + (panache * 3)
-            
+            if "rose_cross" in char.ndb.special_effects or "rose_cross" in char.db.special_effects:
+                base_roll += 5
+                char.msg("Your knowledge of the True Third Prophet's lessons gives you acuity in combat.")
+            if "willful" in char.ndb.special_effects or "willful" in char.db.special_effects:
+                base_roll += 5 
+                char.msg("Your determination makes you faster, granting you a bonus to initiative.")
             if "combat_reflexes" in char.ndb.special_effects or "combat_reflexes" in char.db.special_effects:
                 base_roll += 5
                 char.msg("Your Combat Reflexes give you a +5 bonus to initiative!")
