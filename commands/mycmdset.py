@@ -50,6 +50,7 @@ class CombatCmdSet(CmdSet):
     priority = 1
     def at_cmdset_creation(self):
         self.add(CombatCommand())
+        self.add(WeaponCommand())
        
 
    
