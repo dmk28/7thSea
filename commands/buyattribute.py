@@ -84,56 +84,50 @@ class CmdBuyAttribute(Command):
             return
 
         category = parts[0].title()
-        skill = parts[1].title()
+        skill_name = parts[1].title()
         
         if len(parts) > 3 and parts[-1].isdigit():
-            knack = " ".join(parts[2:-1]).title()
+            knack_name = " ".join(parts[2:-1]).title()
             value = int(parts[-1])
         else:
-            knack = " ".join(parts[2:]).title()
+            knack_name = " ".join(parts[2:]).title()
             value = None
 
-        caller.msg(f"Debug: Attempting to buy knack '{knack}' for skill '{skill}' in category '{category}'")
+        caller.msg(f"Debug: Attempting to buy knack '{knack_name}' for skill '{skill_name}' in category '{category}'")
 
-        if category not in caller.db.skills:
-            caller.msg(f"Unknown category: {category}")
-            caller.msg(f"Available categories: {', '.join(caller.db.skills.keys())}")
+        # Check if the skill exists
+        try:
+            skill = Skill.objects.get(name=skill_name, category=category)
+        except Skill.DoesNotExist:
+            caller.msg(f"Error: The skill '{skill_name}' in category '{category}' does not exist.")
             return
 
-        # Find the skill case-insensitively
-        matching_skill = next((s for s in caller.db.skills[category] if s.lower() == skill.lower()), None)
-        if not matching_skill:
-            caller.msg(f"Unknown skill '{skill}' in category '{category}'")
-            caller.msg(f"Available skills: {', '.join(caller.db.skills[category].keys())}")
-            return
+        # Get or create the Knack
+        knack, knack_created = Knack.objects.get_or_create(name=knack_name, skill=skill)
 
-        skill = matching_skill  # Use the correct casing from the character's skills
+        # Get the current KnackValue or create a new one
+        knack_value, value_created = KnackValue.objects.get_or_create(
+            character_sheet=sheet,
+            knack=knack,
+            defaults={'value': 0}
+        )
 
-        # Find the knack case-insensitively
-        matching_knack = next((k for k in caller.db.skills[category][skill] if k.lower() == knack.lower()), None)
-        if not matching_knack:
-            caller.msg(f"Unknown knack '{knack}' for skill '{skill}'")
-            caller.msg(f"Available knacks: {', '.join(caller.db.skills[category][skill].keys())}")
-            return
-
-        knack = matching_knack  # Use the correct casing from the character's skills
-
-        current_value = caller.db.skills[category][skill].get(knack, 0)
+        current_value = knack_value.value
         new_value = current_value + 1 if value is None else value
         max_value = 5
 
         if new_value > max_value:
-            caller.msg(f"You cannot increase {knack} beyond {max_value}.")
+            caller.msg(f"You cannot increase {knack_name} beyond {max_value}.")
             return
 
-        hp_cost = self.calculate_knack_cost(category, skill, knack)
+        hp_cost = self.calculate_knack_cost(category, skill_name, knack_name)
         xp_cost = hp_cost * 2
 
         if self.convert_xp_to_hp(xp_cost):
-            # Update the sheet instead of caller.db
-            sheet.skills[category][skill][knack] = new_value
+            knack_value.value = new_value
+            knack_value.save()
             sheet.save()
-            caller.msg(f"You have increased {knack} to {new_value}. You have {sheet.hero_points} hero points and {sheet.xp} XP remaining.")
+            caller.msg(f"You have increased {knack_name} to {new_value}. You have {sheet.hero_points} hero points and {sheet.xp} XP remaining.")
         else:
             caller.msg(f"You don't have enough XP for this knack. You need {xp_cost} XP.")
 
