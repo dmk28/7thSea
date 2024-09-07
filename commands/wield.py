@@ -18,7 +18,7 @@ class WeaponCommand(MuxCommand):
     key = "weapon"
     aliases = ["wield", "unwield"]
     locks = "cmd:all()"
-    help_category = "Combat"
+    help_category = "Combat Commands"
     switch_options = ("wield", "unwield")
 
     def func(self):
