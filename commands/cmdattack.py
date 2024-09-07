@@ -30,7 +30,7 @@ class CombatCommand(MuxCommand):
     aliases = ["attack", "defend", "hold", "pass", "feint", "stopthrust", "riposte", 
                "doubleparry", "lunge", "tag", "doubleattack", "pommelstrike"]
     locks = "cmd:all()"
-    help_category = "Combat"
+    help_category = "Combat Commands"
     switches = ["attack", "defend", "hold", "pass", "feint", "stopthrust", "riposte", 
                       "doubleparry", "lunge", "tag", "doubleattack", "pommelstrike", "start", "end"]
 
