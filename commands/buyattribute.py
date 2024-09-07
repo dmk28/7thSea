@@ -1,7 +1,7 @@
 from evennia import Command
 from typeclasses.chargen import SORCERIES, SWORDSMAN_SCHOOLS, ADVANTAGES, PACKAGES
 import shlex
-from world.character_sheet.models import CharacterSheet
+from world.character_sheet.models import CharacterSheet, Skill, Knack, SwordsmanSchool
 
 
 class CmdBuyAttribute(Command):
