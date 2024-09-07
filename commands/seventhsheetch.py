@@ -100,7 +100,7 @@ class CmdCombatSheet(Command):
     key = "sheet/combat"
     aliases = ["@combatsheet", "+combatsheet"]
     locks = "cmd:all()"
-    help_category = "Combat"
+    help_category = "Character"
 
     def func(self):
         try:
