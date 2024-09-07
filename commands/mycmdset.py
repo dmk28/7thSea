@@ -75,7 +75,6 @@ class MyCmdSet(CmdSet):
         self.add(CmdCharacterSheet())
         self.add(CharacterGenCmdSet())
         self.add(CmdCombatSheet())
-        self.add(CmdStartCombat())  # Add this line
         # Remove this line:
         self.add(CombatCmdSet())
         self.add(CmdEmit())
