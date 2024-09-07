@@ -75,7 +75,7 @@ class CmdBuyDracheneisen(Command):
             temp_armor.delete()  # Clean up the temporary object
 
         text += f"\nYou have {caller.ndb.dracheneisen_purchase['points_left']} points to spend."
-        text += "\nEnter the name of the armor piece you want to purchase or 'done' when finished."
+        text += "\nEnter the name of the armor piece you want to purchase or 'finished' when finished."
 
         caller.msg(text)
         caller.cmdset.add("commands.crafting.dracheneisen.DracheneisenPurchaseCmdSet")
@@ -95,7 +95,7 @@ class CmdPurchaseArmorPiece(Command):
 
     key = "purchasearmor"
     locks = "cmd:is_eisen()"    
-    aliases = ["done"]
+    aliases = ["finished"]
     help_category = "Eisen"
     def func(self):
         caller = self.caller
