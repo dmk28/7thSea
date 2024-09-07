@@ -10,7 +10,7 @@ from commands.cmdattack import CombatCommand
 # from commands.combatcmdset import MovesCmdSet
 from commands.request import CmdRequest, CmdReviewApprove, CmdReviewList, CmdReviewDeny, CmdReviewView
 from commands.approvechar import CmdApproveCharacter
-from commands.wield import CmdWield, CmdUnwield
+from commands.wield import WeaponCommand
 from commands.sorcery.sorcerycmdset import SorceryCmdSet
 from commands.admin.admincmdset import AdminCmdSet
 from commands.base.emit import CmdEmit
