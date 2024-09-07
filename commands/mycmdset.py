@@ -6,8 +6,8 @@ from commands.seventhsheetch import CmdCharacterSheet, CmdCombatSheet
 from commands.chargen import CmdCharGen
 from commands.xpaward import CmdAwardXP
 from commands.buyattribute import CmdBuyAttribute
-from commands.cmdattack import CmdAttack, CmdFullDefense, CmdHoldAction, CmdPassTurn, CmdStartCombat, CmdEndCombat
-from commands.combatcmdset import MovesCmdSet
+from commands.cmdattack import CombatCommand
+# from commands.combatcmdset import MovesCmdSet
 from commands.request import CmdRequest, CmdReviewApprove, CmdReviewList, CmdReviewDeny, CmdReviewView
 from commands.approvechar import CmdApproveCharacter
 from commands.wield import CmdWield, CmdUnwield
@@ -49,15 +49,8 @@ class CombatCmdSet(CmdSet):
     key = "CombatCmdSet"
     priority = 1
     def at_cmdset_creation(self):
-        self.add(CmdAttack())
-        self.add(CmdFullDefense())
-        self.add(CmdHoldAction())
-        self.add(CmdPassTurn())
-        self.add(CmdEndCombat())  # Add this line
-        self.add(CmdWield())
-        self.add(CmdUnwield())
-        self.add(SorceryCmdSet())
-        self.add(MovesCmdSet())
+        self.add(CombatCommand())
+       
 
    
 class RequestCmdSet(CmdSet):
