@@ -239,7 +239,7 @@ class CmdBuyAttribute(Command):
             return
 
         current_value = getattr(sheet, name.lower())
-        max_value = 6 if "Legendary Trait" in sheet.advantages else 5
+        max_value = 6 if sheet.advantages.filter(name="Legendary Trait").exists() else 5
         if value > max_value:
             caller.msg(f"You cannot increase {name} beyond {max_value}.")
             return
