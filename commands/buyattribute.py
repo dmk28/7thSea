@@ -10,7 +10,6 @@ class CmdBuyAttribute(MuxCommand):
     Usage:
     buy/skill <category> <skill>
     buy/knack <category> <skill> <knack> [<value>]
-    buy/advantage <advantage>
     buy/trait <trait> <value>
     buy/sorcery <sorcery_type> <knack> [<value>]
     buy/swordsman <knack> [<value>]
@@ -18,7 +17,6 @@ class CmdBuyAttribute(MuxCommand):
     Examples:
     buy/skill Martial Fencing
     buy/knack Martial Fencing "Attack (Fencing)" 3
-    buy/advantage Contact
     buy/trait Brawn 4
     buy/sorcery "El Fuego Adentro" Feed 2
     buy/swordsman "Valroux Feint" 3
@@ -27,7 +25,7 @@ class CmdBuyAttribute(MuxCommand):
     key = "buy"
     locks = "cmd:all()"
     help_category = "Character Generation"
-    switches = ["skill", "knack", "advantage", "trait", "sorcery", "swordsman"]
+    switches = ["skill", "knack", "trait", "sorcery", "swordsman"]
 
     def func(self):
         if not self.switches:
