@@ -72,6 +72,7 @@ class CmdBuyAttribute(Command):
     def buy_knack(self, name, value=None):
         caller = self.caller
         sheet = CharacterSheet.objects.get(db_object=caller)
+
         try:
             parts = shlex.split(name)  # This handles quoted strings correctly
         except ValueError:
@@ -95,20 +96,26 @@ class CmdBuyAttribute(Command):
 
         caller.msg(f"Debug: Attempting to buy knack '{knack_name}' for skill '{skill_name}' in category '{category}'")
 
-        # Get the skills for the specified category
-        category_skills = sheet.get_skills_by_category().get(category, {})
-        
-        if skill_name not in category_skills:
-            caller.msg(f"Error: The skill '{skill_name}' in category '{category}' does not exist for your character.")
+        # Get the skill
+        try:
+            skill = Skill.objects.get(name=skill_name, category=category)
+        except Skill.DoesNotExist:
+            caller.msg(f"Error: The skill '{skill_name}' in category '{category}' does not exist.")
             return
 
-        skill_knacks = category_skills[skill_name]
-        
-        if knack_name not in skill_knacks:
+        # Get the knack, handling the case of multiple knacks
+        knacks = Knack.objects.filter(name=knack_name, skill=skill)
+        if not knacks.exists():
             caller.msg(f"Error: The knack '{knack_name}' does not exist for the skill '{skill_name}'.")
             return
+        elif knacks.count() > 1:
+            caller.msg(f"Warning: Multiple knacks found with the name '{knack_name}'. Using the first one.")
+        knack = knacks.first()
 
-        current_value = skill_knacks[knack_name]
+        # Get or create the KnackValue
+        knack_value, created = sheet.knack_values.get_or_create(knack=knack, defaults={'value': 0})
+
+        current_value = knack_value.value
         new_value = current_value + 1 if value is None else value
         max_value = 5
 
@@ -120,8 +127,8 @@ class CmdBuyAttribute(Command):
         xp_cost = hp_cost * 2
 
         if self.convert_xp_to_hp(xp_cost):
-            # Update the knack value
-            sheet.set_knack_value(knack_name, new_value)
+            knack_value.value = new_value
+            knack_value.save()
             sheet.save()
             caller.msg(f"You have increased {knack_name} to {new_value}. You have {sheet.hero_points} hero points and {sheet.xp} XP remaining.")
         else:
