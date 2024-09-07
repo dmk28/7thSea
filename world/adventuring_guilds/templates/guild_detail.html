@@ -18,7 +18,7 @@
             <div class="guild-details">
                 <div class="detail-item"><strong>Founder:</strong> {{ guild.db_founder.db_key }}</div>
                 <div class="detail-item"><strong>Founding Date:</strong> {{ guild.db_founding_date }}</div>
-                <div class="detail-item full-width"><strong>Description:</strong> {{ guild.db_description }}</div>
+                <div class="detail-item full-width"><strong>Description:</strong> {{ guild.db_description|linebreaks }}</div>
             </div>
         </div>
 
