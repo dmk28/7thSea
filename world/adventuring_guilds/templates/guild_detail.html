@@ -152,22 +152,23 @@
 {% endblock %}
 
 {% block extra_js %}
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const sectionButtons = document.querySelectorAll('.section-button');
-        const sectionContents = document.querySelectorAll('.section-content');
 
-        sectionButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const sectionName = this.getAttribute('data-section');
-                
-                sectionButtons.forEach(btn => btn.classList.remove('active'));
-                sectionContents.forEach(content => content.classList.remove('active'));
-                
-                this.classList.add('active');
-                document.getElementById(sectionName).classList.add('active');
-            });
+<script>
+
+    // Add event listeners to section buttons
+
+    var buttons = document.getElementsByClassName('section-button');
+
+    for (var i = 0; i < buttons.length; i++) {
+
+        buttons[i].addEventListener('click', function() {
+
+            showSection(this.getAttribute('data-section'));
+
         });
-    });
+
+    }
+
 </script>
 {% endblock %}
+
