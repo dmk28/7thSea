@@ -1,19 +1,37 @@
-from evennia import Command
+from evennia.commands.default.muxcommand import MuxCommand
 from typeclasses.objects import Weapon, Sword, Firearm
 
-class CmdWield(Command):
+class WeaponCommand(MuxCommand):
     """
-    Wield a weapon.
+    Handle wielding and unwielding weapons.
 
     Usage:
-      wield <weapon>
+      weapon/wield <weapon>
+      weapon/unwield
 
-    This will wield the specified weapon, updating your combat stats.
+    Switches:
+      wield - Wield the specified weapon
+      unwield - Unwield your current weapon
+
+    This command allows you to wield or unwield weapons, updating your combat stats accordingly.
     """
-    key = "wield"
+    key = "weapon"
+    aliases = ["wield", "unwield"]
     locks = "cmd:all()"
+    help_category = "Combat"
+    switch_options = ("wield", "unwield")
 
     def func(self):
+        caller = self.caller
+
+        if "wield" in self.switches:
+            self.do_wield()
+        elif "unwield" in self.switches:
+            self.do_unwield()
+        else:
+            caller.msg("You must specify either /wield or /unwield.")
+
+    def do_wield(self):
         caller = self.caller
         if not self.args:
             caller.msg("Wield what?")
@@ -21,7 +39,6 @@ class CmdWield(Command):
 
         weapon_name = self.args.strip()
         weapon = caller.search(weapon_name, location=caller)
-
         if not weapon:
             return  # caller.search() already sends an appropriate error message
 
@@ -29,7 +46,6 @@ class CmdWield(Command):
             caller.msg("That's not a weapon.")
             return
 
-        # Unwield currently wielded weapon
         current_weapon = caller.db.wielded_weapon
         if current_weapon:
             if current_weapon.location != caller:
@@ -42,7 +58,6 @@ class CmdWield(Command):
                 caller.msg(f"You stop wielding {current_weapon.name}.")
                 caller.db.wielded_weapon = None
 
-        # Wield new weapon
         caller.db.wielded_weapon = weapon
         caller.msg(f"You wield {weapon.name}.")
 
@@ -57,24 +72,12 @@ class CmdWield(Command):
         else:
             caller.msg(f"Warning: {weapon.name} has no parry skill defined.")
 
-
-class CmdUnwield(Command):
-    """
-    Unwield your current weapon.
-
-    Usage:
-      unwield
-
-    This will unwield your current weapon, reverting to unarmed combat stats.
-    """
-    key = "unwield"
-    locks = "cmd:all()"
-
-    def func(self):
+    def do_unwield(self):
         caller = self.caller
         if not caller.db.wielded_weapon:
             caller.msg("You are not wielding any weapon.")
             return
+
         weapon = caller.db.wielded_weapon
         caller.msg(f"You stop wielding {weapon.name}.")
         caller.db.wielded_weapon = None
