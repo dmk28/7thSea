@@ -1,7 +1,7 @@
 from evennia import Command
 from typeclasses.chargen import SORCERIES, SWORDSMAN_SCHOOLS, ADVANTAGES, PACKAGES
 import shlex
-from world.character_sheet.models import CharacterSheet, Skill, Knack, SwordsmanSchool
+from world.character_sheet.models import CharacterSheet, Skill, Knack, SwordsmanSchool, KnackValue
 
 
 class CmdBuyAttribute(Command):
@@ -160,6 +160,8 @@ class CmdBuyAttribute(Command):
         else:
             caller.msg(f"You don't have enough XP for this advantage. You need {xp_cost} XP.")
 
+
+
     def buy_skill(self, name):
         caller = self.caller
         sheet = CharacterSheet.objects.get(db_object=caller)
@@ -169,63 +171,65 @@ class CmdBuyAttribute(Command):
             return
 
         category = parts[0].capitalize()
-        skill = " ".join(parts[1:]).title()  # Use title() instead of capitalize()
-
+        skill_name = " ".join(parts[1:]).title()  # Use title() instead of capitalize()
 
         if category not in PACKAGES:
             caller.msg(f"Unknown category: {category}")
             return
 
         # Find the skill case-insensitively
-        matching_skill = next((s for s in PACKAGES[category] if s.lower() == skill.lower()), None)
-        
+        matching_skill = next((s for s in PACKAGES[category] if s.lower() == skill_name.lower()), None)
         if not matching_skill:
-            caller.msg(f"Unknown skill '{skill}' in category '{category}'")
+            caller.msg(f"Unknown skill '{skill_name}' in category '{category}'")
             caller.msg(f"Available skills: {', '.join(PACKAGES[category].keys())}")
             return
 
-        skill = matching_skill  # Use the correct casing from PACKAGES
-
-        package = PACKAGES[category][skill]
+        skill_name = matching_skill  # Use the correct casing from PACKAGES
+        package = PACKAGES[category][skill_name]
         cost = package.get("cost", 0)
         xp_cost = cost * 2
 
-
         if self.convert_xp_to_hp(xp_cost):
-            caller.msg(f"Purchasing {skill} package from {category} category:")
-            if skill.lower() == "dirty fighting":
-                skill = "Dirty Fighting"
-            if category not in sheet.skills:
-                sheet.skills[category] = {}
-            
-            if skill not in sheet.skills[category]:
-                sheet.skills[category][skill] = {}
+            caller.msg(f"Purchasing {skill_name} package from {category} category:")
 
-            for knack, value in package.get("knacks", {}).items():
-                current_value = sheet.skills[category][skill].get(knack, 0)
+            # Get or create the Skill object
+            skill, _ = Skill.objects.get_or_create(name=skill_name, category=category)
+
+            for knack_name, value in package.get("knacks", {}).items():
+                knack, _ = Knack.objects.get_or_create(name=knack_name, skill=skill)
+                knack_value, _ = KnackValue.objects.get_or_create(character_sheet=sheet, knack=knack)
+
+                current_value = knack_value.value
                 new_value = max(current_value, value)
                 max_value = 5
-                
+
                 if new_value > max_value:
-                    caller.msg(f"Cannot increase {knack} beyond {max_value}. Capping at {max_value}.")
+                    caller.msg(f"Cannot increase {knack_name} beyond {max_value}. Capping at {max_value}.")
                     new_value = max_value
-                
-                sheet.skills[category][skill][knack] = new_value
-                caller.msg(f" - Set {knack} to {new_value}")
+
+                knack_value.value = new_value
+                knack_value.save()
+                caller.msg(f" - Set {knack_name} to {new_value}")
 
             advanced = package.get("advanced")
             if advanced and isinstance(advanced, dict):
-                for adv_knack, adv_value in advanced.items():
-                    if adv_knack not in sheet.skills[category][skill]:
-                        sheet.skills[category][skill][adv_knack] = min(adv_value, max_value)
-                        caller.msg(f" - Added advanced knack {adv_knack} at {sheet.skills[category][skill][adv_knack]}")
+                for adv_knack_name, adv_value in advanced.items():
+                    adv_knack, _ = Knack.objects.get_or_create(name=adv_knack_name, skill=skill)
+                    adv_knack_value, created = KnackValue.objects.get_or_create(character_sheet=sheet, knack=adv_knack)
+
+                    if created:
+                        adv_knack_value.value = min(adv_value, max_value)
+                        adv_knack_value.save()
+                        caller.msg(f" - Added advanced knack {adv_knack_name} at {adv_knack_value.value}")
                     else:
-                        caller.msg(f" - Advanced knack {adv_knack} already known")
+                        caller.msg(f" - Advanced knack {adv_knack_name} already known")
+
+            sheet.skills.add(skill)
             sheet.save()
-            caller.msg(f"You have purchased the {skill} skill package. You have {sheet.hero_points} hero points and {sheet.xp} XP remaining.")
+            caller.msg(f"You have purchased the {skill_name} skill package. You have {sheet.hero_points} hero points and {sheet.xp} XP remaining.")
         else:
             caller.msg(f"You don't have enough XP for this skill package. You need {xp_cost} XP.")
-
+            
     def buy_trait(self, name, value):
         caller = self.caller
         sheet = CharacterSheet.objects.get(db_object=caller)
