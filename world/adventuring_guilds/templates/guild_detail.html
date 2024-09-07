@@ -100,7 +100,7 @@
             <ul>
                 {% for holding in guild.holdings.all %}
                     <li>
-                        <strong>{{ holding.get_display_name }}</strong> ({{ holding.holding_type }})
+                        <strong>{{ holding.get_display_name }}</strong>
                         <br>Level: {{ holding.level }}
                     </li>
                 {% empty %}
