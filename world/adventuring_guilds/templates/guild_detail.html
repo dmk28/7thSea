@@ -124,6 +124,31 @@
     </div>
 </div>
 
+
+<script>
+    function showSection(sectionId) {
+            // Hide all sections
+            var sections = document.getElementsByClassName('section-content');
+            for (var i = 0; i < sections.length; i++) {
+                sections[i].classList.remove('active');
+            }
+            // Show the selected section
+            document.getElementById(sectionId).classList.add('active');
+
+            // Update button styles
+            var buttons = document.getElementsByClassName('section-button');
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].classList.remove('active');
+            }
+            event.target.classList.add('active');
+            };
+
+            // Show the details section by default
+            showSection('details');
+            document.querySelector('.section-button').classList.add('active');
+</script>
+
+
 {% endblock %}
 
 {% block extra_js %}
