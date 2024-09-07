@@ -1,61 +1,74 @@
 from evennia import Command
+from evennia.commands.default.muxcommand import MuxCommand
 from typeclasses.chargen import SORCERIES, SWORDSMAN_SCHOOLS, ADVANTAGES, PACKAGES
 import shlex
 from world.character_sheet.models import CharacterSheet, Skill, Knack, SwordsmanSchool, KnackValue
-
-
-class CmdBuyAttribute(Command):
+class CmdBuyAttribute(MuxCommand):
     """
     Buy or improve character attributes using Experience Points (XP).
 
     Usage:
-    buy <category> <name> [<value>]
-
-    Categories: knack, advantage, skill, trait, sorcery, swordsman
+    buy/skill <category> <skill>
+    buy/knack <category> <skill> <knack> [<value>]
+    buy/advantage <advantage>
+    buy/trait <trait> <value>
+    buy/sorcery <sorcery_type> <knack> [<value>]
+    buy/swordsman <knack> [<value>]
 
     Examples:
-    buy knack Martial Fencing "Attack (Fencing)" 3
-    buy advantage Contact
-    buy skill Martial Fencing
-    buy trait Brawn 4
-    buy sorcery "El Fuego Adentro" Feed 2
-    buy swordsman "Valroux Feint" 3
+    buy/skill Martial Fencing
+    buy/knack Martial Fencing "Attack (Fencing)" 3
+    buy/advantage Contact
+    buy/trait Brawn 4
+    buy/sorcery "El Fuego Adentro" Feed 2
+    buy/swordsman "Valroux Feint" 3
     """
 
     key = "buy"
     locks = "cmd:all()"
+    help_category = "Character Generation"
+    switches = ["skill", "knack", "advantage", "trait", "sorcery", "swordsman"]
 
     def func(self):
-        if not self.args:
-            self.caller.msg("Usage: buy <category> <name> [<value>]")
+        if not self.switches:
+            self.caller.msg("You must specify a switch. Use 'help buy' for more information.")
             return
 
-        parts = self.args.split()
-        if len(parts) < 2:
-            self.caller.msg("Usage: buy <category> <name> [<value>]")
-            return
+        switch = self.switches[0]
 
-        category = parts[0].lower()
-        value = parts[-1] if parts[-1].isdigit() else None
-        name = " ".join(parts[1:-1] if value else parts[1:])
-
-        methods = {
-            "trait": self.buy_trait,
-            "skill": self.buy_skill,
-            "knack": self.buy_knack,
-            "advantage": self.buy_advantage,
-            "sorcery": self.buy_sorcery,
-            "swordsman": self.buy_swordsman
-        }
-
-        method = methods.get(category)
-        if method:
-            if value:
-                method(name, int(value))
-            else:
-                method(name)
-        else:
-            self.caller.msg(f"Unknown category: {category}")
+        if switch == "skill":
+            self.buy_skill(self.args)
+        elif switch == "knack":
+            parts = shlex.split(self.args)
+            if len(parts) < 3:
+                self.caller.msg("Usage: buy/knack <category> <skill> <knack> [<value>]")
+                return
+            category, skill, knack = parts[:3]
+            value = int(parts[3]) if len(parts) > 3 else None
+            self.buy_knack(f"{category} {skill} {knack}", value)
+        elif switch == "advantage":
+            self.buy_advantage(self.args)
+        elif switch == "trait":
+            parts = self.args.split()
+            if len(parts) != 2:
+                self.caller.msg("Usage: buy/trait <trait> <value>")
+                return
+            trait, value = parts
+            self.buy_trait(trait, int(value))
+        elif switch == "sorcery":
+            parts = shlex.split(self.args)
+            if len(parts) < 2:
+                self.caller.msg("Usage: buy/sorcery <sorcery_type> <knack> [<value>]")
+                return
+            sorcery_type = " ".join(parts[:-1])
+            knack = parts[-1]
+            value = int(parts[-1]) if len(parts) > 2 and parts[-1].isdigit() else None
+            self.buy_sorcery(f"{sorcery_type} {knack}", value)
+        elif switch == "swordsman":
+            parts = self.args.split()
+            knack = " ".join(parts[:-1]) if len(parts) > 1 else parts[0]
+            value = int(parts[-1]) if len(parts) > 1 and parts[-1].isdigit() else None
+            self.buy_swordsman(knack, value)
 
     def convert_xp_to_hp(self, xp_cost):
         caller = self.caller
@@ -257,7 +270,7 @@ class CmdBuyAttribute(Command):
 
 # to do - URGENTLY CHANGE BUY_KNACK, BUY_SWORDSMAN, BUY_SKILL
 
-    def buy_sorcery(self, name, value=None):
+    def buy_sorcery(self, args):
         caller = self.caller
         sheet = CharacterSheet.objects.get(db_object=caller)
 
@@ -265,23 +278,24 @@ class CmdBuyAttribute(Command):
             caller.msg("You are not a sorcerer and cannot buy sorcery knacks.")
             return
 
-        parts = name.split()
+        parts = args.split()
         if len(parts) < 2:
-            caller.msg("Usage: buy sorcery <sorcery_type> <knack> [value]")
+            caller.msg("Usage: buy/sorcery <knack> [value]")
             return
 
-        sorcery_type = " ".join(parts[:-1])
-        knack = parts[-1]
+        knack = parts[0]
+        value = int(parts[1]) if len(parts) > 1 and parts[1].isdigit() else None
 
-        if sorcery_type != caller.db.sorcery.get('name'):
-            caller.msg(f"You are not a {sorcery_type} sorcerer.")
+        sorcery_type = sheet.sorceries.first().name if sheet.sorceries.exists() else None
+        if not sorcery_type:
+            caller.msg("You don't have a sorcery type assigned.")
             return
 
         if sorcery_type not in SORCERIES or knack not in SORCERIES[sorcery_type]['knacks']:
             caller.msg(f"Unknown sorcery knack: {knack}")
             return
 
-        current_value = sheet.sorcery_knacks.get(knack, 0)
+        current_value = sheet.get_sorcery_knack_value(knack)
         new_value = current_value + 1 if value is None else value
 
         if new_value > 5:
@@ -292,44 +306,57 @@ class CmdBuyAttribute(Command):
         xp_cost = hp_cost * 2
 
         if self.convert_xp_to_hp(xp_cost):
-            sheet.sorcery_knacks[knack] = new_value
+            sheet.set_knack_value(knack, new_value)
             sheet.save()
             caller.msg(f"You have increased {knack} to {new_value}. You have {sheet.hero_points} hero points and {sheet.xp} XP remaining.")
         else:
             caller.msg(f"You don't have enough XP to increase this sorcery knack. You need {xp_cost} XP.")
 
-    def buy_swordsman(self, name, value=None):
+    def buy_swordsman(self, args):
         caller = self.caller
-        school = caller.db.duelist_style
+        sheet = CharacterSheet.objects.get(db_object=caller)
+        school = sheet.duelist_style
+
         if not school or school not in SWORDSMAN_SCHOOLS:
             caller.msg("You are not a member of any swordsman school.")
             return
 
-        if 'Martial' in caller.db.skills and school in caller.db.skills['Martial']:
-            school_knacks = caller.db.skills['Martial'][school]
-            matching_knack = next((k for k in school_knacks if name.lower() in k.lower()), None)
-            
-            if matching_knack:
-                current_value = school_knacks[matching_knack]
-                new_value = current_value + 1 if value is None else value
+        parts = args.split()
+        if len(parts) < 1:
+            caller.msg("Usage: buy/swordsman <knack> [value]")
+            return
 
-                max_value = 5
-                if new_value > max_value:
-                    caller.msg(f"You cannot increase {matching_knack} beyond {max_value}.")
-                    return
+        knack_name = " ".join(parts[:-1]) if len(parts) > 1 else parts[0]
+        value = int(parts[-1]) if len(parts) > 1 and parts[-1].isdigit() else None
 
-                hp_cost = (new_value - current_value) * 4
-                xp_cost = hp_cost * 2
+        swordsman_school = SwordsmanSchool.objects.get(name=school)
+        matching_knack = swordsman_school.knacks.filter(name__icontains=knack_name).first()
 
-                if self.convert_xp_to_hp(xp_cost):
-                    caller.db.skills['Martial'][school][matching_knack] = new_value
-                    caller.msg(f"You have increased {matching_knack} to {new_value}. You have {caller.db.hero_points} hero points and {caller.db.xp} XP remaining.")
-                else:
-                    caller.msg(f"You don't have enough XP for this swordsman knack. You need {xp_cost} XP.")
+        if matching_knack:
+            knack_value, created = KnackValue.objects.get_or_create(
+                character_sheet=sheet,
+                knack=matching_knack,
+                defaults={'value': 0}
+            )
+            current_value = knack_value.value
+            new_value = current_value + 1 if value is None else value
+
+            max_value = 5
+            if new_value > max_value:
+                caller.msg(f"You cannot increase {matching_knack.name} beyond {max_value}.")
+                return
+
+            hp_cost = (new_value - current_value) * 4
+            xp_cost = hp_cost * 2
+
+            if self.convert_xp_to_hp(xp_cost):
+                knack_value.value = new_value
+                knack_value.save()
+                caller.msg(f"You have increased {matching_knack.name} to {new_value}. You have {sheet.hero_points} hero points and {sheet.xp} XP remaining.")
             else:
-                caller.msg(f"Unknown swordsman knack: {name}")
+                caller.msg(f"You don't have enough XP for this swordsman knack. You need {xp_cost} XP.")
         else:
-            caller.msg(f"You don't have any knacks for the {school} school.")
+            caller.msg(f"Unknown swordsman knack: {knack_name}")
     
     def calculate_knack_cost(self, category, skill, knack):
         if category == "Martial":
