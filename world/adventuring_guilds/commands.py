@@ -4,6 +4,7 @@ from evennia.utils.create import create_object
 from .models import AdventuringGuild, Holding
 from typeclasses.holdings import Holding as HoldingTypeClass
 from world.banking.models import Bank
+from evennia.commands.default.muxcommand import MuxCommand
 
 class CmdCreateGuild(Command):
     """
@@ -359,3 +360,104 @@ class CmdCreateGuildAccount(Command):
             self.caller.msg(f"Guild account created at {bank.name}. The account number is {account.account_number}.")
         else:
             self.caller.msg("Failed to create a guild account.")
+
+
+
+class CmdGuildInvite(MuxCommand):
+    """
+    Manage guild invitations
+
+    Usage:
+      invite <player>
+      invite/accept
+      invite/reject
+      invite/kick <player>
+
+    Switches:
+      /accept - Accept a pending guild invitation
+      /reject - Silently reject a pending guild invitation
+      /kick - Remove a player from the guild (requires rank 1-3)
+
+    Without switches, invites the specified player to join your guild.
+    """
+    key = "invite"
+    aliases = ["accept_invite", "reject_invite"]
+    locks = "cmd:all()"
+    switch_options = ("accept", "reject", "kick")
+
+    def func(self):
+        if "accept" in self.switches:
+            self.accept_invite()
+        elif "reject" in self.switches:
+            self.reject_invite()
+        elif "kick" in self.switches:
+            self.kick_member()
+        else:
+            self.send_invite()
+
+    def send_invite(self):
+        if not self.args:
+            self.caller.msg("Usage: invite <player>")
+            return
+
+        target = self.caller.search(self.args)
+        if not target:
+            return
+
+        guild = AdventuringGuild.objects.filter(db_members=self.caller).first()
+        if not guild:
+            self.caller.msg("You are not a member of any guild.")
+            return
+
+        if not guild.access(self.caller, 'invite'):
+            self.caller.msg("You don't have permission to invite members.")
+            return
+
+        success, message = guild.invite_member(self.caller, target)
+        self.caller.msg(message)
+        if success:
+            target.msg(f"{self.caller.name} has invited you to join {guild.db_name}. Use 'invite/accept' or 'invite/reject' to respond.")
+
+    def kick_member(self):
+        if not self.args:
+            self.caller.msg("Usage: invite/kick <player>")
+            return
+
+        target = self.caller.search(self.args)
+        if not target:
+            return
+
+        guild = AdventuringGuild.objects.filter(db_members=self.caller).first()
+        if not guild:
+            self.caller.msg("You are not a member of any guild.")
+            return
+
+        if not guild.access(self.caller, 'kick'):
+            self.caller.msg("You don't have permission to kick members.")
+            return
+
+        if guild.remove_member(target):
+            self.caller.msg(f"{target.name} has been removed from the guild.")
+            target.msg(f"You have been removed from {guild.db_name}.")
+        else:
+            self.caller.msg(f"{target.name} is not a member of your guild.")
+    def accept_invite(self):
+        guild = self.caller.ndb.guild_invitation
+        if not guild:
+            self.caller.msg("You don't have any pending guild invitations.")
+            return
+
+        success, message = guild.accept_invitation(self.caller)
+        self.caller.msg(message)
+
+    def reject_invite(self):
+        guild = self.caller.ndb.guild_invitation
+        if not guild:
+            self.caller.msg("You don't have any pending guild invitations.")
+            return
+
+        success, message = guild.reject_invitation(self.caller)
+        if success:
+            self.caller.msg("You have rejected the guild invitation.")
+        else:
+            self.caller.msg(message)

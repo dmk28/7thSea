@@ -29,7 +29,19 @@ lock functions from evennia.locks.lockfuncs.
 #    print "%s tried to access %s. Access denied." % (accessing_obj, accessed_obj)
 #    return False
 
-
+def has_nationality(accessing_obj, accessed_obj, *args, **kwargs):
+    if hasattr(accessing_obj, 'character_sheet'):
+        return accessing_obj.character_sheet.nationality == args[0]
+    elif hasattr(accessing_obj.db, 'nationality'):
+        return accessing_obj.db.nationality == args[0]
+    return False
+def has_guild_rank(accessing_obj, accessed_obj, *args, **kwargs):
+    guild = accessed_obj
+    if not isinstance(guild, AdventuringGuild):
+        return False
+    min_rank, max_rank = map(int, args[0].split('-'))
+    member_rank = guild.get_member_rank_level(accessing_obj)
+    return min_rank <= member_rank <= max_rank
 def is_castillian(accessing_obj, accessed_obj, *args, **kwargs):
     return (hasattr(accessing_obj, 'character') and 
             accessing_obj.character and 

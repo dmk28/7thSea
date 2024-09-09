@@ -132,7 +132,26 @@ class Holding(SharedMemoryModel):
 #     def __str__(self):
 #         return f"Holding Data {self.holding_id}"
 
+class GuildRank(SharedMemoryModel):
+    name = models.CharField(max_length=100)
+    level = models.IntegerField(default=0)
+    guild = models.ForeignKey('AdventuringGuild', related_name='ranks', on_delete=models.CASCADE)
 
+    class Meta:
+        unique_together = ('guild', 'level')
+        ordering = ['level']
+
+    def __str__(self):
+        return f"{self.guild.db_name} - {self.name} (Level {self.level})"
+
+class GuildMembership(SharedMemoryModel):
+    character = models.OneToOneField('objects.ObjectDB', related_name='guild_membership', on_delete=models.CASCADE)
+    guild = models.ForeignKey('AdventuringGuild', related_name='memberships', on_delete=models.CASCADE)
+    rank = models.ForeignKey(GuildRank, related_name='members', on_delete=models.SET_NULL, null=True)
+    join_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.character.db_key} - {self.guild.db_name} ({self.rank.name if self.rank else 'No Rank'})"
 
 
 class CharacterManager(models.Manager):
@@ -182,13 +201,80 @@ class AdventuringGuild(SharedMemoryModel):
     def members(self):
         return self.db_members.all()
 
-    def add_member(self):
+    def add_member(self, character, rank=None):
         self.db_members.add(character)
-    def remove_member(self):
-        self.db_members.remove(character)
+        if not rank:
+            rank = self.ranks.order_by('level').first()  # Get the lowest rank
+        GuildMembership.objects.get_or_create(
+            character=character,
+            guild=self,
+            defaults={'rank': rank}
+        )
+        if self.db_channel:
+            self.db_channel.connect(character)
 
-    def is_member(self):
+    def remove_member(self, character):
+        self.db_members.remove(character)
+        GuildMembership.objects.filter(character=character, guild=self).delete()
+        if self.db_channel:
+            self.db_channel.disconnect(character)
+
+    def is_member(self, character):
         return self.db_members.filter(id=character.id).exists()
+
+    def set_member_rank(self, character, rank):
+        membership, created = GuildMembership.objects.get_or_create(
+            character=character,
+            guild=self,
+            defaults={'rank': rank}
+        )
+        if not created:
+            membership.rank = rank
+            membership.save()
+
+    def get_member_rank(self, character):
+        membership = GuildMembership.objects.filter(character=character, guild=self).first()
+        return membership.rank if membership else None
+
+    def get_member_rank_level(self, character):
+        membership = GuildMembership.objects.filter(character=character, guild=self).first()
+        return membership.rank.level if membership and membership.rank else 0
+
+    def invite_member(self, inviter, invitee):
+        if not self.is_member(inviter):
+            return False, "You are not a member of this guild."
+        
+        if self.is_member(invitee):
+            return False, "This character is already a member of the guild."
+        
+        # Set a temporary attribute on the invitee
+        invitee.ndb.guild_invitation = self
+        
+        # Notify the invitee
+        invitee.msg(f"{inviter.name} has invited you to join {self.db_name}. Use 'accept_invite' or 'reject_invite' to respond.")
+        
+        return True, f"Invitation sent to {invitee.name}."
+
+    def accept_invitation(self, invitee):
+        if invitee.ndb.guild_invitation != self:
+            return False, "You don't have a pending invitation from this guild."
+        
+        membership = self.add_member(invitee)
+        if membership:
+            del invitee.ndb.guild_invitation
+            if not self.db_channel:
+                self.create_guild_channel()
+            self.db_channel.connect(invitee)
+            return True, f"Welcome to {self.db_name}! You've been added to the guild channel."
+        else:
+            return False, "Failed to add you to the guild."
+
+    def reject_invitation(self, invitee):
+        if invitee.ndb.guild_invitation != self:
+            return False, "You don't have a pending invitation from this guild."
+        
+        del invitee.ndb.guild_invitation
+        return True, "Invitation rejected."
 
     def add_holding(self, holding_data):
         holding = Holding.objects.create(owning_guild=self, **holding_data)
