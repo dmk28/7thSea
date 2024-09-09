@@ -1,15 +1,34 @@
 from django.contrib import admin
-from .models import AdventuringGuild, Holding
+from .models import AdventuringGuild, Holding, GuildRank, GuildMembership
+
+class GuildRankInline(admin.TabularInline):
+    model = GuildRank
+    extra = 1
+
+class GuildMembershipInline(admin.TabularInline):
+    model = GuildMembership
+    extra = 1
+    raw_id_fields = ('character',)
 
 @admin.register(AdventuringGuild)
 class AdventuringGuildAdmin(admin.ModelAdmin):
-    list_display = ('name', 'founder', 'founding_date')
-    search_fields = ('name', 'founder')
+    list_display = ('db_name', 'founder', 'founding_date', 'member_count', 'get_holdings')
+    search_fields = ('db_name', 'db_founder__db_key')
+    inlines = [GuildRankInline, GuildMembershipInline]
+
+    def founder(self, obj):
+        return obj.db_founder.db_key if obj.db_founder else 'N/A'
+
+    def founding_date(self, obj):
+        return obj.db_founding_date
+
+    def member_count(self, obj):
+        return obj.db_members.count()
 
     def get_holdings(self, obj):
         return ", ".join([holding.name for holding in obj.holdings.all()])
-    get_holdings.short_description = 'Holdings'
 
+    get_holdings.short_description = 'Holdings'
 
 @admin.register(Holding)
 class HoldingAdmin(admin.ModelAdmin):
@@ -44,3 +63,16 @@ class HoldingAdmin(admin.ModelAdmin):
         if db_field.name == "holding_type":
             kwargs['choices'] = Holding.HOLDING_TYPE_CHOICES
         return super().formfield_for_choice_field(db_field, request, **kwargs)
+
+@admin.register(GuildRank)
+class GuildRankAdmin(admin.ModelAdmin):
+    list_display = ('name', 'level', 'guild')
+    list_filter = ('guild',)
+    search_fields = ('name', 'guild__db_name')
+
+@admin.register(GuildMembership)
+class GuildMembershipAdmin(admin.ModelAdmin):
+    list_display = ('character', 'guild', 'rank', 'join_date')
+    list_filter = ('guild', 'rank')
+    search_fields = ('character__db_key', 'guild__db_name', 'rank__name')
+    raw_id_fields = ('character',)
