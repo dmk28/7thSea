@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 from django.core.exceptions import PermissionDenied
 from evennia.accounts.models import AccountDB
-from adventuring_guilds.models import AdventuringGuild, GuildMembership, GuildRank
+from .models import AdventuringGuild, GuildMembership, GuildRank
 
 class Command(BaseCommand):
     help = 'Initialize GuildMembership for existing guild members'
