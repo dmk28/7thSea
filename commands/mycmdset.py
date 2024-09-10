@@ -82,6 +82,7 @@ class MyCmdSet(CmdSet):
         self.add(CombatCmdSet())
         self.add(CmdEmit())
         self.add(CmdLook())
+        self.add(CommsCmdSet())
         self.add(CmdRequest())
         self.add(RequestCmdSet())
         self.add(CmdApproveCharacter())

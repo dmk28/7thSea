@@ -52,7 +52,6 @@ class AccountCmdSet(default_cmds.AccountCmdSet):
         Populates the cmdset
         """
         super().at_cmdset_creation()
-        self.add(CommsCmdSet())
         #
         # any commands you add below will overload the default ones.
         #
