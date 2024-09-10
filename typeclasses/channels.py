@@ -122,7 +122,8 @@ class NewChannel(Channel, WorldExtendedChannel):
     """
     This is the base channel typeclass for the game. It imports from Channel and the custom ExtendedChannel.
     """
-
+    set_log_filename(f'{channelname}.log')
+    channel_prefix_string = f"[{channelname}]"
     def at_channel_creation(self):
         """Called when the channel is created."""
         super().at_channel_creation()
