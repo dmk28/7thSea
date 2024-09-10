@@ -42,6 +42,7 @@ class CmdOOC(Command):
         else:
             # Regular OOC message
             ooc_string = f'|w<|rOOC|n|w>|n {self.caller.name} says, "{message}"|n'
+            self_string = f'|w<|rOOC>|n You say, "{message}"'
 
         # Send the message to the room
         location.msg_contents(ooc_string, exclude=self.caller)
