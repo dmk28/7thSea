@@ -2,7 +2,7 @@ from evennia import Command, CmdSet
 
 from evennia.commands.default.muxcommand import MuxCommand
 from .models import ChannelMetadata
-
+from .channels import ExtendedChannel
 
 class CmdCreateChannel(Command):
     key = "createchannel"
