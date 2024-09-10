@@ -23,6 +23,7 @@ from world.adventuring_guilds.commands import CmdCreateHolding, CmdListHoldings
 from world.banking.cmdset import BankingCmdSet
 from world.boards.bboard_commands import BBoardCmdSet
 from commands.base.cmdlook import CmdLook
+from commands.base.cmdooc import CmdOOC
 class GuildCmdSet(CmdSet):
   def at_cmdset_creation(self):
     self.add(CmdCreateGuild())
@@ -77,6 +78,7 @@ class MyCmdSet(CmdSet):
         self.add(CharacterGenCmdSet())
         self.add(CmdCombatSheet())
         # Remove this line:
+        self.add(CmdOOC())
         self.add(CombatCmdSet())
         self.add(CmdEmit())
         self.add(CmdLook())
