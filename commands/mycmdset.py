@@ -16,7 +16,6 @@ from commands.admin.admincmdset import AdminCmdSet
 from commands.base.emit import CmdEmit
 from commands.crafting.crafting_cmdset import CraftingCmdSet
 from commands.healing.healingcmdset import PlayerHealCmdSet
-from commands.base.channels import MyCustomChannelCmd
 from commands.character_based.wear import WearCmdset
 from world.adventuring_guilds.commands import CmdCreateGuild, CmdJoinGuild, CmdLeaveGuild, CmdListGuilds, CmdMyGuilds
 from world.adventuring_guilds.commands import CmdCreateHolding, CmdListHoldings
@@ -90,7 +89,6 @@ class MyCmdSet(CmdSet):
         self.add(AdminCmdSet())
         self.add(CraftingCmdSet())
         self.add(PlayerHealCmdSet())
-        # self.add(MyCustomChannelCmd())
         self.add(WearCmdset())
         self.add(GuildCmdSet())
         self.add(BankingCmdSet())
