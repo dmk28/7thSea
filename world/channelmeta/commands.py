@@ -47,7 +47,6 @@ class CmdCreateChannel(Command):
         else:
             self.caller.msg(f"Failed to create channel '{name}'.")
 
-
 class CmdSetChannelColor(Command):
     key = "setchannelcolor"
     locks = "cmd:perm(Admin)"
@@ -59,14 +58,19 @@ class CmdSetChannelColor(Command):
             return
 
         channel_name, color_code = self.args.split()
-        channel = ExtendedChannel.objects.filter(db_key__iexact=channel_name).first()
+        channel = ChannelDB.objects.channel_search(channel_name).first()
         if not channel:
             self.caller.msg(f"Channel '{channel_name}' not found.")
             return
 
-        channel.set_channel_color(color_code)
-        self.caller.msg(f"Color for channel '{channel_name}' set to {color_code}.")
+        metadata = ChannelMetadata.objects.get_or_create(channel=channel)[0]
+        metadata.custom_color = color_code
+        metadata.save()
 
+        # Also set the color on the channel object itself
+        channel.db.custom_color = color_code
+
+        self.caller.msg(f"Color for channel '{channel_name}' set to {color_code}.")
 class CommsCmdSet(CmdSet):
     def at_cmdset_creation(self):
         self.add(CmdCreateChannel())
