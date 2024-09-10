@@ -133,8 +133,8 @@ class Holding(SharedMemoryModel):
 #         return f"Holding Data {self.holding_id}"
 
 class GuildRank(SharedMemoryModel):
-    name = models.CharField(max_length=100)
-    level = models.IntegerField(default=0)
+    name = models.CharField(max_length=100, default="Member")
+    level = models.IntegerField(default=1)
     guild = models.ForeignKey('AdventuringGuild', related_name='ranks', on_delete=models.CASCADE)
 
     class Meta:
@@ -185,7 +185,7 @@ class AdventuringGuild(SharedMemoryModel):
 
     db_treasury_guilders = models.IntegerField(default=0)
     db_treasury_doubloons = models.IntegerField(default=0)
-
+    db_org_channel = models.OneToOneField("comms.ChannelDB", blank=True, null=True,related_name="adventuring_guild", on_delete=models.SET_NULL,)
 
     objects = models.Manager()
     character_members = CharacterManager()

@@ -1,306 +1,163 @@
-# commands/channel_commands.py
-from django.conf import settings
-from django.db.models import Q
-from evennia.commands.default.muxcommand import MuxCommand
-
-from evennia.commands.default.comms import CmdChannel as OldCmdChannel
-from evennia.utils import create, logger
-from evennia.accounts import bots
-from evennia.utils.utils import make_iter
+from evennia import Command
 from evennia.utils.evtable import EvTable
-from evennia.comms.models import ChannelDB, Msg
-from world.channelmeta.models import ChannelMetadata
-from typeclasses.channels import NewChannel
-from evennia.utils.evmenu import ask_yes_no
-from evennia.utils.logger import tail_log_file
-from evennia.utils.utils import class_from_module, strip_unsafe_input
-import os
-class CmdChannel(MuxCommand):
+from evennia.utils.utils import make_iter
+from typeclasses.channels import Channel
+
+class CmdChannel(Command):
     """
-    Overloaded channel command to work with NewChannel typeclass.
+    Channel commands
 
     Usage:
-      channel
-      channel <channel>
-      channel <channel> = <message>
-      channel/create <channel> [= description]
-      channel/delete <channel>
-      channel/desc <channel> = <description>
-      channel/lock <channel> = <lockstring>
-      channel/unlock <channel> = <lockstring>
-      channel/history <channel>
-      channel/ban <channel> = <account>
-      channel/unban <channel> = <account>
-      channel/mute <channel>
-      channel/unmute <channel>
-      channel/who <channel>
+      <channel> <message>
+      channel/create <name> [= description]
+      channel/delete <name>
       channel/list
-      channel/sub <channel>
-      channel/unsub <channel>
+      channel/who <name>
+      channel/join <name>
+      channel/leave <name>
+      channel/mute <name>
+      channel/unmute <name>
+      channel/history <name> [= <number of messages>]
 
-    Manage and use channels. The channel system also supports the use of
-    aliases to reduce confusion when chanels are similarly named. To use
-    channel aliases, add them after the channel name like this: 
-    channelname;alias;othealias
+    Manages communication channels and sends messages to them.
     """
 
+    key = "channel"
+    aliases = ["chan"]
+    locks = "cmd:all()"
+    help_category = "Communication"
+
     def func(self):
-      """Implement the command"""
-      caller = self.caller
-      args = self.args
-      switches = ["new", "delete", "create", "desc", "lock", "unlock", "ban", "unban",
-                  "mute", "unmute", "who", "list", "sub", "unsub", "history"]
+        caller = self.caller
 
-      if not args and not self.switches:
-         self.list_channels()
-         return
+        if not self.args and not self.switches:
+            caller.msg("Usage: <channel> <message> or channel/<switch>")
+            return
 
-      if self.switches:
-         switch = self.switches[0].lower()
-         if switch in switches:
-               if switch in ["create", "new"]:
-                  self.create_channel()
-               elif switch == "delete":
-                  self.delete_channel()
-               elif switch == "desc":
-                  self.set_channel_desc()
-               elif switch == "lock":
-                  self.set_channel_lock()
-               elif switch == "unlock":
-                  self.unset_channel_lock()
-               elif switch == "ban":
-                  self.ban_account()
-               elif switch == "unban":
-                  self.unban_account()
-               elif switch == "mute":
-                  self.mute_channel()
-               elif switch == "unmute":
-                  self.unmute_channel()
-               elif switch == "who":
-                  self.list_channel_users()
-               elif switch == "list":
-                  self.list_channels()
-               elif switch == "sub":
-                  self.join_channel()
-               elif switch == "unsub":
-                  self.leave_channel()
-               elif switch == "history":
-                  self.show_history()
-         else:
-               caller.msg(f"Unknown switch: {switch}")
-      elif '=' in args:
-         channel, message = [part.strip() for part in args.split('=', 1)]
-         self.msg_channel(channel, message)
-      else:
-         # If no switch and no '=', treat it as an attempt to send a message
-         self.msg_channel(args, "")
+        if self.switches:
+            switch = self.switches[0].lower()
+            if switch == "create":
+                self.create_channel()
+            elif switch == "delete":
+                self.delete_channel()
+            elif switch == "list":
+                self.list_channels()
+            elif switch == "who":
+                self.show_who()
+            elif switch == "join":
+                self.join_channel()
+            elif switch == "leave":
+                self.leave_channel()
+            elif switch == "mute":
+                self.mute_channel()
+            elif switch == "unmute":
+                self.unmute_channel()
+            elif switch == "history":
+                self.show_history()
+            else:
+                caller.msg(f"Unknown switch: {switch}")
+        else:
+            # No switch; treat as a message to a channel
+            self.send_message()
 
     def create_channel(self):
-      """Create a new channel"""
-      caller = self.caller
-      if not self.args:
-         caller.msg("Usage: channel/create <name> [= description]")
-         return
-
-      channel_name = self.lhs
-      description = self.rhs or ""
-
-      # Check if the channel already exists
-      existing_channel = ChannelDB.objects.channel_search(channel_name)
-      if existing_channel:
-         caller.msg(f"Channel '{channel_name}' already exists.")
-         return
-
-      # Create the new channel
-      new_channel = create.create_channel(channel_name, typeclass=NewChannel, desc=description)
-      
-      # Use get_or_create instead of create
-      metadata, created = ChannelMetadata.objects.get_or_create(
-         channel=new_channel,
-         defaults={'channel_type': 'OOC'}
-      )
-      
-      if not created:
-         # If the metadata already existed, update it
-         metadata.channel_type = 'OOC'
-         metadata.save()
-
-      new_channel.connect(caller)
-      caller.msg(f"Created new channel '{channel_name}'.")
-   
-    def show_history(self):
-      if not self.args:
-         self.caller.msg("Usage: channel/history <channel> [= <number of lines>]")
-         return
-
-      channel_name, _, lines = self.args.partition("=")
-      channel_name = channel_name.strip()
-      lines = lines.strip()
-
-      channel = self.search_channel(channel_name)
-      if not channel:
-         return
-
-      try:
-         num_lines = int(lines) if lines else 20
-      except ValueError:
-         self.caller.msg("Invalid number of lines. Using default of 20.")
-         num_lines = 20
-
-      log_file = channel.get_log_filename()
-      if not log_file or not os.path.exists(log_file):
-         self.caller.msg(f"No history found for channel '{channel.key}'.")
-         return
-
-      def send_msg(lines):
-         if not lines:
-               self.caller.msg(f"No messages in the history of channel '{channel.key}'.")
-         else:
-               self.caller.msg(f"Last {len(lines)} messages in {channel.key}:")
-               for line in lines:
-                  self.caller.msg(line.strip())  # Strip any extra whitespace
-
-      tail_log_file(log_file, 0, num_lines, callback=send_msg)
-
-      def send_msg(lines):
-         if not lines:
-               self.caller.msg(f"No messages in the history of channel '{channel.key}'.")
-         else:
-               self.caller.msg(f"Last {len(lines)} messages in {channel.key}:")
-               self.caller.msg("\n".join(lines))
-
-      tail_log_file(log_file, 0, num_lines, callback=send_msg)
-
-
-    def msg_channel(self, channelname, msg):
-        """Send a message to a channel"""
+        """Create a new channel"""
         caller = self.caller
-        channel = self.search_channel(channelname)
-        if not channel:
+        if not self.args:
+            caller.msg("Usage: channel/create <name> [= description]")
+            return
+        
+        channel_name, sep, description = self.args.partition("=")
+        channel_name = channel_name.strip()
+        description = description.strip()
+
+        if Channel.objects.filter(db_key__iexact=channel_name).exists():
+            caller.msg(f"A channel named '{channel_name}' already exists.")
             return
 
-        if not channel.access(caller, 'send'):
-            caller.msg("You don't have permission to send messages to this channel.")
-            return
-
-        channel.msg(msg, senders=caller)
+        new_channel = Channel.create(channel_name, description=description)
+        new_channel.connect(caller)
+        caller.msg(f"Channel '{channel_name}' created successfully.")
 
     def delete_channel(self):
-      """Delete a channel"""
-      caller = self.caller
-      if not self.args:
-         caller.msg("Usage: channel/delete <name>")
-         return
-
-      channel = self.search_channel(self.args)
-      if not channel:
-         return
-
-      if not channel.access(caller, 'control'):
-         caller.msg("You don't have permission to delete this channel.")
-         return
-
-      channel_name = channel.key
-      channel.delete()
-      caller.msg(f"Channel '{channel_name}' was destroyed.")
-
-    def set_channel_desc(self):
-        """Set a channel's description"""
+        """Delete an existing channel"""
         caller = self.caller
-        if not self.args or not self.rhs:
-            caller.msg("Usage: channel/desc <name> = <description>")
+        if not self.args:
+            caller.msg("Usage: channel/delete <name>")
             return
-
-        channel = self.search_channel(self.lhs)
+        
+        channel = caller.search(self.args, global_search=True, typeclass=Channel)
         if not channel:
             return
 
-        if not channel.access(caller, 'control'):
-            caller.msg("You don't have permission to change this channel's description.")
+        if not channel.access(caller, "control"):
+            caller.msg("You don't have permission to delete this channel.")
             return
 
-        channel.db.desc = self.rhs
-        caller.msg(f"Description of channel '{channel.key}' set to: {self.rhs}")
+        channel_name = channel.key
+        channel.delete()
+        caller.msg(f"Channel '{channel_name}' has been deleted.")
 
-    def set_channel_lock(self):
-        """Set a lock on the channel"""
+    def list_channels(self):
+        """List all available channels"""
         caller = self.caller
-        if not self.args or not self.rhs:
-            caller.msg("Usage: channel/lock <name> = <lockstring>")
+        channels = [chan for chan in Channel.objects.all() if chan.access(caller, "listen")]
+        
+        if not channels:
+            caller.msg("No channels available.")
             return
 
-        channel = self.search_channel(self.lhs)
+        table = EvTable("Channel", "Description", "Subscribed", border="cells")
+        for chan in channels:
+            subscribed = "Yes" if chan.has_connection(caller) else "No"
+            table.add_row(chan.key, chan.db.desc or "", subscribed)
+        
+        caller.msg(str(table))
+
+    def show_who(self):
+        """Show who is subscribed to a channel"""
+        caller = self.caller
+        if not self.args:
+            caller.msg("Usage: channel/who <name>")
+            return
+        
+        channel = caller.search(self.args, global_search=True, typeclass=Channel)
         if not channel:
             return
 
-        if not channel.access(caller, 'control'):
-            caller.msg("You don't have permission to change this channel's locks.")
-            return
+        caller.msg(f"Subscribers of {channel.key}: {channel.wholist}")
 
-        channel.locks.add(self.rhs)
-        caller.msg(f"Lock(s) applied to channel '{channel.key}': {self.rhs}")
-
-    def unset_channel_lock(self):
-        """Remove a lock from the channel"""
+    def join_channel(self):
+        """Join a channel"""
         caller = self.caller
-        if not self.args or not self.rhs:
-            caller.msg("Usage: channel/unlock <name> = <lockstring>")
+        if not self.args:
+            caller.msg("Usage: channel/join <name>")
             return
-
-        channel = self.search_channel(self.lhs)
+        
+        channel = caller.search(self.args, global_search=True, typeclass=Channel)
         if not channel:
             return
 
-        if not channel.access(caller, 'control'):
-            caller.msg("You don't have permission to change this channel's locks.")
-            return
+        if channel.connect(caller):
+            caller.msg(f"You have joined the channel {channel.key}.")
+        else:
+            caller.msg(f"You are already subscribed to {channel.key}.")
 
-        channel.locks.remove(self.rhs)
-        caller.msg(f"Lock(s) removed from channel '{channel.key}': {self.rhs}")
-
-    def ban_account(self):
-        """Ban an account from a channel"""
+    def leave_channel(self):
+        """Leave a channel"""
         caller = self.caller
-        if not self.args or not self.rhs:
-            caller.msg("Usage: channel/ban <name> = <account>")
+        if not self.args:
+            caller.msg("Usage: channel/leave <name>")
             return
-
-        channel = self.search_channel(self.lhs)
+        
+        channel = caller.search(self.args, global_search=True, typeclass=Channel)
         if not channel:
             return
 
-        if not channel.access(caller, 'control'):
-            caller.msg("You don't have permission to ban users from this channel.")
-            return
-
-        target = caller.search(self.rhs)
-        if not target:
-            return
-
-        channel.ban(target)
-        caller.msg(f"{target.key} was banned from channel '{channel.key}'.")
-
-    def unban_account(self):
-        """Unban an account from a channel"""
-        caller = self.caller
-        if not self.args or not self.rhs:
-            caller.msg("Usage: channel/unban <name> = <account>")
-            return
-
-        channel = self.search_channel(self.lhs)
-        if not channel:
-            return
-
-        if not channel.access(caller, 'control'):
-            caller.msg("You don't have permission to unban users from this channel.")
-            return
-
-        target = caller.search(self.rhs)
-        if not target:
-            return
-
-        channel.unban(target)
-        caller.msg(f"{target.key} was unbanned from channel '{channel.key}'.")
+        if channel.disconnect(caller):
+            caller.msg(f"You have left the channel {channel.key}.")
+        else:
+            caller.msg(f"You are not subscribed to {channel.key}.")
 
     def mute_channel(self):
         """Mute a channel"""
@@ -308,15 +165,15 @@ class CmdChannel(MuxCommand):
         if not self.args:
             caller.msg("Usage: channel/mute <name>")
             return
-
-        channel = self.search_channel(self.args)
+        
+        channel = caller.search(self.args, global_search=True, typeclass=Channel)
         if not channel:
             return
 
         if channel.mute(caller):
-            caller.msg(f"You have muted channel '{channel.key}'.")
+            caller.msg(f"You have muted {channel.key}.")
         else:
-            caller.msg(f"You were already muting channel '{channel.key}'.")
+            caller.msg(f"You were already muting {channel.key}.")
 
     def unmute_channel(self):
         """Unmute a channel"""
@@ -324,121 +181,56 @@ class CmdChannel(MuxCommand):
         if not self.args:
             caller.msg("Usage: channel/unmute <name>")
             return
-
-        channel = self.search_channel(self.args)
+        
+        channel = caller.search(self.args, global_search=True, typeclass=Channel)
         if not channel:
             return
 
         if channel.unmute(caller):
-            caller.msg(f"You have unmuted channel '{channel.key}'.")
+            caller.msg(f"You have unmuted {channel.key}.")
         else:
-            caller.msg(f"You were not muting channel '{channel.key}'.")
+            caller.msg(f"You were not muting {channel.key}.")
 
-    def list_channel_users(self):
-        """List users subscribed to a channel"""
+    def show_history(self):
+        """Show channel history"""
         caller = self.caller
         if not self.args:
-            caller.msg("Usage: channel/who <name>")
+            caller.msg("Usage: channel/history <name> [= <number of messages>]")
             return
+        
+        channel_name, sep, num_messages = self.args.partition("=")
+        channel_name = channel_name.strip()
+        num_messages = num_messages.strip()
 
-        channel = self.search_channel(self.args)
+        channel = caller.search(channel_name, global_search=True, typeclass=Channel)
         if not channel:
             return
 
-        if not channel.access(caller, 'listen'):
-            caller.msg("You don't have permission to see who's on this channel.")
+        try:
+            num_messages = int(num_messages) if num_messages else 20
+        except ValueError:
+            caller.msg("Invalid number of messages. Using default of 20.")
+            num_messages = 20
+
+        channel.get_history(caller, num_messages)
+
+    def send_message(self):
+        """Send a message to a Channel"""
+        caller = self.caller
+        channel_name, sep, message = self.args.partition(" ")
+        channel_name = channel_name.strip()
+        message = message.strip()
+
+        if not channel_name or not message:
+            caller.msg("Usage: <channel> <message>")
             return
 
-        subs = channel.subscriptions.all()
-        table = EvTable("Channel", "Subscribers", border="cells")
-        table.add_row(channel.key, ", ".join([sub.key for sub in subs]) or "None")
-        caller.msg(str(table))
-
-    def list_channels(self):
-        """List all available channels"""
-        caller = self.caller
-        channels = [chan for chan in ChannelDB.objects.get_all_channels()
-                    if chan.access(caller, 'listen')]
-        table = EvTable("Channel", "Description", border="cells")
-        for channel in channels:
-            table.add_row(channel.key, channel.db.desc or "")
-        caller.msg(str(table))
-      
-    def get_channel_history(self, channel, start_index=0):
-        """
-        View a channel's history.
-        """
-        from evennia.utils.utils import tail_log_file
-
-        log_file = channel.get_log_filename()
-
-        def send_msg(lines):
-            return self.msg(
-                "".join(line.split("[-]", 1)[1] if "[-]" in line else line for line in lines)
-            )
-
-        # asynchronously tail the log file
-        tail_log_file(log_file, start_index, 20, callback=send_msg)
-
-    def join_channel(self):
-        """Join a channel"""
-        caller = self.caller
-        if not self.args:
-            caller.msg("Usage: channel/sub <name>")
-            return
-
-        channel = self.search_channel(self.args)
+        channel = caller.search(channel_name, global_search=True, typeclass=Channel)
         if not channel:
             return
 
-        if not channel.access(caller, 'listen'):
-            caller.msg("You don't have permission to join this channel.")
+        if not channel.access(caller, "send"):
+            caller.msg("You don't have permission to send messages to this channel.")
             return
 
-        if channel.connect(caller):
-            caller.msg(f"You have joined channel '{channel.key}'.")
-        else:
-            caller.msg(f"You were already on channel '{channel.key}'.")
-
-    def leave_channel(self):
-        """Leave a channel"""
-        caller = self.caller
-        if not self.args:
-            caller.msg("Usage: channel/unsub <name>")
-            return
-
-        channel = self.search_channel(self.args)
-        if not channel:
-            return
-
-        if channel.disconnect(caller):
-            caller.msg(f"You have left channel '{channel.key}'.")
-        else:
-            caller.msg(f"You were not on channel '{channel.key}'.")
-
-    def msg_channel(self, channelname, msg):
-      """Send a message to a channel"""
-      caller = self.caller
-      channel = self.search_channel(channelname)
-      if not channel:
-         return
-
-      if not channel.access(caller, 'send'):
-         caller.msg("You don't have permission to send messages to this channel.")
-         return
-
-      channel.msg(msg, senders=caller)
-
-    def search_channel(self, channelname, exact=False):
-      caller = self.caller
-      channels = ChannelDB.objects.filter(db_key__iexact=channelname)
-      if not channels:
-         caller.msg(f"Channel '{channelname}' not found.")
-         return None
-      if len(channels) > 1:
-         matches = ", ".join(chan.key for chan in channels)
-         caller.msg(f"Multiple channels match '{channelname}': {matches}")
-         return None
-      return channels[0]
-
-# Remember to update your command set to use this new CmdChannel
+        channel.msg(message, senders=[caller])

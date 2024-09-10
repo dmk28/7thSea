@@ -13,157 +13,354 @@ to be modified.
 """
 
 from evennia.comms.comms import DefaultChannel
-from world.channelmeta.channels import ExtendedChannel as WorldExtendedChannel
+# from world.channelmeta.channels import ExtendedChannel as WorldExtendedChannel
 from evennia import settings
-from evennia.utils.utils import make_iter
+from world.adventuring_guilds.models import AdventuringGuild
+
+from evennia.utils.utils import make_iter, lazy_property
+from evennia.utils import logger
 from datetime import datetime
 import os 
+
+
+# class Channel(DefaultChannel):
+#     r"""
+#     This is the base class for all Channel Comms. Inherit from this to
+#     create different types of communication channels.
+
+#     Class-level variables:
+#     - `send_to_online_only` (bool, default True) - if set, will only try to
+#       send to subscribers that are actually active. This is a useful optimization.
+#     - `log_file` (str, default `"channel_{channelname}.log"`). This is the
+#       log file to which the channel history will be saved. The `{channelname}` tag
+#       will be replaced by the key of the Channel. If an Attribute 'log_file'
+#       is set, this will be used instead. If this is None and no Attribute is found,
+#       no history will be saved.
+#     - `channel_prefix_string` (str, default `"[{channelname} ]"`) - this is used
+#       as a simple template to get the channel prefix with `.channel_prefix()`. It is used
+#       in front of every channel message; use `{channelmessage}` token to insert the
+#       name of the current channel. Set to `None` if you want no prefix (or want to
+#       handle it in a hook during message generation instead.
+#     - `channel_msg_nick_pattern`(str, default `"{alias}\s*?|{alias}\s+?(?P<arg1>.+?)") -
+#       this is what used when a channel subscriber gets a channel nick assigned to this
+#       channel. The nickhandler uses the pattern to pick out this channel's name from user
+#       input. The `{alias}` token will get both the channel's key and any set/custom aliases
+#       per subscriber. You need to allow for an `<arg1>` regex group to catch any message
+#       that should be send to the  channel. You usually don't need to change this pattern
+#       unless you are changing channel command-style entirely.
+#     - `channel_msg_nick_replacement` (str, default `"channel {channelname} = $1"` - this
+#       is used by the nickhandler to generate a replacement string once the nickhandler (using
+#       the `channel_msg_nick_pattern`) identifies that the channel should be addressed
+#       to send a message to it. The `<arg1>` regex pattern match from `channel_msg_nick_pattern`
+#       will end up at the `$1` position in the replacement. Together, this allows you do e.g.
+#       'public Hello' and have that become a mapping to `channel public = Hello`. By default,
+#       the account-level `channel` command is used. If you were to rename that command you must
+#       tweak the output to something like `yourchannelcommandname {channelname} = $1`.
+
+#     * Properties:
+#         mutelist
+#         banlist
+#         wholist
+
+#     * Working methods:
+#         get_log_filename()
+#         set_log_filename(filename)
+#         has_connection(account) - check if the given account listens to this channel
+#         connect(account) - connect account to this channel
+#         disconnect(account) - disconnect account from channel
+#         access(access_obj, access_type='listen', default=False) - check the
+#                     access on this channel (default access_type is listen)
+#         create(key, creator=None, *args, **kwargs)
+#         delete() - delete this channel
+#         message_transform(msg, emit=False, prefix=True,
+#                           sender_strings=None, external=False) - called by
+#                           the comm system and triggers the hooks below
+#         msg(msgobj, header=None, senders=None, sender_strings=None,
+#             persistent=None, online=False, emit=False, external=False) - main
+#                 send method, builds and sends a new message to channel.
+#         tempmsg(msg, header=None, senders=None) - wrapper for sending non-persistent
+#                 messages.
+#         distribute_message(msg, online=False) - send a message to all
+#                 connected accounts on channel, optionally sending only
+#                 to accounts that are currently online (optimized for very large sends)
+#         mute(subscriber, **kwargs)
+#         unmute(subscriber, **kwargs)
+#         ban(target, **kwargs)
+#         unban(target, **kwargs)
+#         add_user_channel_alias(user, alias, **kwargs)
+#         remove_user_channel_alias(user, alias, **kwargs)
+
+
+#     Useful hooks:
+#         at_channel_creation() - called once, when the channel is created
+#         basetype_setup()
+#         at_init()
+#         at_first_save()
+#         channel_prefix() - how the channel should be
+#                   prefixed when returning to user. Returns a string
+#         format_senders(senders) - should return how to display multiple
+#                 senders to a channel
+#         pose_transform(msg, sender_string) - should detect if the
+#                 sender is posing, and if so, modify the string
+#         format_external(msg, senders, emit=False) - format messages sent
+#                 from outside the game, like from IRC
+#         format_message(msg, emit=False) - format the message body before
+#                 displaying it to the user. 'emit' generally means that the
+#                 message should not be displayed with the sender's name.
+#         channel_prefix()
+
+#         pre_join_channel(joiner) - if returning False, abort join
+#         post_join_channel(joiner) - called right after successful join
+#         pre_leave_channel(leaver) - if returning False, abort leave
+#         post_leave_channel(leaver) - called right after successful leave
+#         at_pre_msg(message, **kwargs)
+#         at_post_msg(message, **kwargs)
+#         web_get_admin_url()
+#         web_get_create_url()
+#         web_get_detail_url()
+#         web_get_update_url()
+#         web_get_delete_url()
+
+#     """
+
+#     pass
+
+# class NewChannel(Channel, WorldExtendedChannel):
+#     """
+#     This is the base channel typeclass for the game. It imports from Channel and the custom ExtendedChannel.
+#     """
+
+#     log_file = "channel_{channelname}.log"
+#     filename = "channel_{channelname}.log"
+#     def at_channel_creation(self):
+#         """Called when the channel is created."""
+#         super().at_channel_creation()
+#         self.db.log_file = self.get_log_filename()
+
+#     def get_log_filename(self):
+#         """
+#         Returns the filename for this channel's log file.
+#         This method overrides the one from the parent class to ensure
+#         we're using the correct path.
+#         """
+#         return self.attributes.get(
+#             "log_file",
+#             os.path.join(settings.LOG_DIR, f"channel_{self.key.lower()}.log")
+#         )
+
+#     def set_log_file(self, filename):
+#         """
+#         Set a custom log filename.
+
+#         Args:
+#             filename (str): The filename to set. This is a path starting from
+#                 inside the settings.LOG_DIR location.
+#         """
+#         return self.set_log_filename(filename)
+
+#     def at_post_msg(self, message, **kwargs):
+#         """Log the message after it has been sent."""
+#         super().at_post_msg(message, **kwargs)
+#         self.log_message(message, kwargs.get("senders"))
+
+#     def log_message(self, message, senders):
+#         """Log the message to the channel's log file."""
+#         log_file = self.get_log_filename()
+#         if log_file:
+#             timestamp = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+#             sender_names = ", ".join(sender.key for sender in make_iter(senders) if sender)
+#             log_entry = f"{timestamp} [{self.key}] {sender_names}: {message}\n"
+#             with open(log_file, 'a', encoding='utf-8') as log:
+#                 log.write(log_entry)
+
+
 class Channel(DefaultChannel):
-    r"""
-    This is the base class for all Channel Comms. Inherit from this to
-    create different types of communication channels.
-
-    Class-level variables:
-    - `send_to_online_only` (bool, default True) - if set, will only try to
-      send to subscribers that are actually active. This is a useful optimization.
-    - `log_file` (str, default `"channel_{channelname}.log"`). This is the
-      log file to which the channel history will be saved. The `{channelname}` tag
-      will be replaced by the key of the Channel. If an Attribute 'log_file'
-      is set, this will be used instead. If this is None and no Attribute is found,
-      no history will be saved.
-    - `channel_prefix_string` (str, default `"[{channelname} ]"`) - this is used
-      as a simple template to get the channel prefix with `.channel_prefix()`. It is used
-      in front of every channel message; use `{channelmessage}` token to insert the
-      name of the current channel. Set to `None` if you want no prefix (or want to
-      handle it in a hook during message generation instead.
-    - `channel_msg_nick_pattern`(str, default `"{alias}\s*?|{alias}\s+?(?P<arg1>.+?)") -
-      this is what used when a channel subscriber gets a channel nick assigned to this
-      channel. The nickhandler uses the pattern to pick out this channel's name from user
-      input. The `{alias}` token will get both the channel's key and any set/custom aliases
-      per subscriber. You need to allow for an `<arg1>` regex group to catch any message
-      that should be send to the  channel. You usually don't need to change this pattern
-      unless you are changing channel command-style entirely.
-    - `channel_msg_nick_replacement` (str, default `"channel {channelname} = $1"` - this
-      is used by the nickhandler to generate a replacement string once the nickhandler (using
-      the `channel_msg_nick_pattern`) identifies that the channel should be addressed
-      to send a message to it. The `<arg1>` regex pattern match from `channel_msg_nick_pattern`
-      will end up at the `$1` position in the replacement. Together, this allows you do e.g.
-      'public Hello' and have that become a mapping to `channel public = Hello`. By default,
-      the account-level `channel` command is used. If you were to rename that command you must
-      tweak the output to something like `yourchannelcommandname {channelname} = $1`.
-
-    * Properties:
-        mutelist
-        banlist
-        wholist
-
-    * Working methods:
-        get_log_filename()
-        set_log_filename(filename)
-        has_connection(account) - check if the given account listens to this channel
-        connect(account) - connect account to this channel
-        disconnect(account) - disconnect account from channel
-        access(access_obj, access_type='listen', default=False) - check the
-                    access on this channel (default access_type is listen)
-        create(key, creator=None, *args, **kwargs)
-        delete() - delete this channel
-        message_transform(msg, emit=False, prefix=True,
-                          sender_strings=None, external=False) - called by
-                          the comm system and triggers the hooks below
-        msg(msgobj, header=None, senders=None, sender_strings=None,
-            persistent=None, online=False, emit=False, external=False) - main
-                send method, builds and sends a new message to channel.
-        tempmsg(msg, header=None, senders=None) - wrapper for sending non-persistent
-                messages.
-        distribute_message(msg, online=False) - send a message to all
-                connected accounts on channel, optionally sending only
-                to accounts that are currently online (optimized for very large sends)
-        mute(subscriber, **kwargs)
-        unmute(subscriber, **kwargs)
-        ban(target, **kwargs)
-        unban(target, **kwargs)
-        add_user_channel_alias(user, alias, **kwargs)
-        remove_user_channel_alias(user, alias, **kwargs)
-
-
-    Useful hooks:
-        at_channel_creation() - called once, when the channel is created
-        basetype_setup()
-        at_init()
-        at_first_save()
-        channel_prefix() - how the channel should be
-                  prefixed when returning to user. Returns a string
-        format_senders(senders) - should return how to display multiple
-                senders to a channel
-        pose_transform(msg, sender_string) - should detect if the
-                sender is posing, and if so, modify the string
-        format_external(msg, senders, emit=False) - format messages sent
-                from outside the game, like from IRC
-        format_message(msg, emit=False) - format the message body before
-                displaying it to the user. 'emit' generally means that the
-                message should not be displayed with the sender's name.
-        channel_prefix()
-
-        pre_join_channel(joiner) - if returning False, abort join
-        post_join_channel(joiner) - called right after successful join
-        pre_leave_channel(leaver) - if returning False, abort leave
-        post_leave_channel(leaver) - called right after successful leave
-        at_pre_msg(message, **kwargs)
-        at_post_msg(message, **kwargs)
-        web_get_admin_url()
-        web_get_create_url()
-        web_get_detail_url()
-        web_get_update_url()
-        web_get_delete_url()
-
     """
-
-    pass
-
-class NewChannel(Channel, WorldExtendedChannel):
+    Custom Channel class with additional features.
+    Cribbed shamelessly from Arx-Game, altered for current-ver Evennia, so credit goes to Apostate and Tehom for this one.
+    Thanks, guys.
     """
-    This is the base channel typeclass for the game. It imports from Channel and the custom ExtendedChannel.
-    """
+    
+    mentions = ["Everyone", "All"]
 
-    log_file = "channel_{channelname}.log"
-    filename = "channel_{channelname}.log"
-    def at_channel_creation(self):
+    @lazy_property
+    def org_channel(self):
+        from world.adventuring_guilds.models import AdventuringGuild
+
+        """Return the associated adventuring guild, if any."""
+        try:
+            return AdventuringGuild.objects.get(db_org_channel=self)
+        except ObjectDoesNotExist:
+            return None
+
+    def at_channel_create(self):
         """Called when the channel is created."""
-        super().at_channel_creation()
-        self.db.log_file = self.get_log_filename()
+        super().at_channel_create()
+        self.db.is_org_channel = False
 
-    def get_log_filename(self):
+    def set_org(self, guild):
+        """Set this channel as an organization channel."""
+        self.db.is_org_channel = True
+        guild.db_org_channel = self
+        guild.save()
+        # Clear the cached property
+        if hasattr(self, '_org_channel'):
+            del self._org_channel
+
+    def remove_org(self):
+        """Remove this channel's association with an organization."""
+        org = self.org_channel
+        if org:
+            org.db_org_channel = None
+            org.save()
+        self.db.is_org_channel = False
+        # Clear the cached property
+        if hasattr(self, '_org_channel'):
+            del self._org_channel
+
+    def access(self, accessing_obj, access_type='listen', default=False):
+        """Check channel access."""
+        result = super().access(accessing_obj, access_type, default)
+        if result and self.db.is_org_channel:
+            org = self.org_channel
+            return org and org.is_member(accessing_obj)
+        return result
+        
+
+    @property
+    def mutelist(self):
+        """Cache mutelist to avoid expensive database operations"""
+        if not hasattr(self.ndb, 'mute_list'):
+            self.ndb.mute_list = list(self.db.mute_list or [])
+        return self.ndb.mute_list
+
+    @property
+    def non_muted_subs(self):
+        return [ob for ob in self.subscriptions.all() if ob.is_connected and ob not in self.mutelist]
+
+    @staticmethod
+    def format_wholist(listening):
+        if listening:
+            return ", ".join(sorted(player.key.capitalize() for player in listening))
+        return "<None>"
+
+    @property
+    def wholist(self):
+        return self.format_wholist(self.non_muted_subs)
+
+    def temp_mute(self, subscriber):
+        """Temporarily mute a channel for a subscriber"""
+        if not hasattr(subscriber.db, 'temp_mute_list'):
+            subscriber.db.temp_mute_list = []
+        if self not in subscriber.db.temp_mute_list:
+            subscriber.db.temp_mute_list.append(self)
+            self.mute(subscriber)
+        subscriber.msg(f"{self.key} will be muted until the end of this session.")
+
+    def mute(self, subscriber):
+        """Add subscriber to the mute list"""
+        if subscriber not in self.mutelist:
+            self.mutelist.append(subscriber)
+            self.db.mute_list = self.mutelist
+            return True
+        return False
+
+    def unmute(self, subscriber):
+        """Remove subscriber from the mute list"""
+        if subscriber in self.mutelist:
+            self.mutelist.remove(subscriber)
+            self.db.mute_list = self.mutelist
+            return True
+        return False
+
+    def clear_mute(self):
+        """Clear the entire mute list"""
+        self.db.mute_list = []
+        self.ndb.mute_list = None
+
+    def channel_prefix(self, msg=None, emit=False):
+        """Define how the channel name appears in messages"""
+        if self.db.colorstr:
+            return f"{self.db.colorstr}[{self.key}]{{n "
+        return f"{{w[{self.key}]{{n "
+
+    def pose_transform(self, msg, sender_string):
+        """Handle pose-style messages"""
+        message = msg.lstrip()
+        if message.startswith((":", ";")):
+            return f"{sender_string}{message[1:]}"
+        return f"{sender_string}: {message}"
+
+    def tempmsg(self, message, header=None, senders=None):
+        """Send a non-persistent message"""
+        self.msg(message, senders=senders, header=header, keep_log=False)
+
+    def format_mentions(self, message, names):
+        """Format @mentions in the message"""
+        if "@" not in message:
+            return message
+        words = message.split()
+        for i, word in enumerate(words):
+            if word.startswith("@"):
+                mention = word[1:].rstrip(string.punctuation)
+                if mention.lower() in [name.lower() for name in self.mentions + names]:
+                    words[i] = f"{{c[@{mention}]{{n"
+        return " ".join(words)
+
+    def msg(self, msgobj, header=None, senders=None, sender_strings=None,
+            persistent=None, online=False, emit=False, external=False):
         """
-        Returns the filename for this channel's log file.
-        This method overrides the one from the parent class to ensure
-        we're using the correct path.
+        Modify the msg method to handle formatting and sending messages
         """
-        return self.attributes.get(
-            "log_file",
-            os.path.join(settings.LOG_DIR, f"channel_{self.key.lower()}.log")
-        )
+        senders = make_iter(senders) if senders else []
+        
+        # Format the message
+        if emit:
+            msgobj = self.pose_transform(msgobj, sender_strings[0] if sender_strings else "")
+        message = self.format_mentions(msgobj, [sender.key for sender in senders])
+        
+        # Add channel prefix
+        prefixed_message = self.channel_prefix() + message
+        
+        # Send to subscribers
+        for subscriber in self.non_muted_subs:
+            subscriber.msg(prefixed_message, from_obj=senders, options={"from_channel": self.id})
+        
+        # Log the message
+        if persistent:
+            self.log_message(message, senders[0] if senders else None)
 
-    def set_log_file(self, filename):
-        """
-        Set a custom log filename.
+    def log_message(self, message, sender):
+        """Log the message to a file"""
+        log_file = f"channel_{self.key.lower()}.log"
+        sender_name = sender.key if sender else "Unknown"
+        logger.log_file(f"[{sender_name}] {message}", log_file)
 
-        Args:
-            filename (str): The filename to set. This is a path starting from
-                inside the settings.LOG_DIR location.
-        """
-        return self.set_log_filename(filename)
+    def get_history(self, caller, num_messages=20):
+        """Retrieve channel history"""
+        log_file = f"channel_{self.key.lower()}.log"
 
-    def at_post_msg(self, message, **kwargs):
-        """Log the message after it has been sent."""
-        super().at_post_msg(message, **kwargs)
-        self.log_message(message, kwargs.get("senders"))
+        def send_msg(lines):
+            messages = "".join(lines)
+            caller.msg(f"Last {len(lines)} messages in {self.key}:\n{messages}")
 
-    def log_message(self, message, senders):
-        """Log the message to the channel's log file."""
-        log_file = self.get_log_filename()
-        if log_file:
-            timestamp = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
-            sender_names = ", ".join(sender.key for sender in make_iter(senders) if sender)
-            log_entry = f"{timestamp} [{self.key}] {sender_names}: {message}\n"
-            with open(log_file, 'a', encoding='utf-8') as log:
-                log.write(log_entry)
+        from evennia.utils.utils import tail_log_file
+        tail_log_file(log_file, 0, num_messages, callback=send_msg)
+
+    def has_connection(self, subscriber):
+        """Check if a subscriber is connected to this channel"""
+        return self.subscriptions.filter(id=subscriber.id).exists()
+
+    def connect(self, subscriber):
+        """Connect a subscriber to this channel"""
+        if not self.has_connection(subscriber):
+            self.subscriptions.add(subscriber)
+            return True
+        return False
+
+    def disconnect(self, subscriber):
+        """Disconnect a subscriber from this channel"""
+        if self.has_connection(subscriber):
+            self.subscriptions.remove(subscriber)
+            return True
+        return False
