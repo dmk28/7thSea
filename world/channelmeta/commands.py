@@ -3,7 +3,7 @@ from evennia import Command, CmdSet
 from evennia.commands.default.muxcommand import MuxCommand
 from .models import ChannelMetadata
 from .channels import ExtendedChannel
-
+from evennia.channels.models import ChannelDB
 class CmdCreateChannel(Command):
     key = "createchannel"
     locks = "cmd:perm(Admin)"
