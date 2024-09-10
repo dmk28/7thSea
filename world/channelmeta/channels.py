@@ -55,17 +55,27 @@ class ExtendedChannel(DefaultChannel):
             return accessing_obj.db.nationality == self.metadata.nation_name
         return False
 
-    def msg(self, msgobj, header=None, senders=None, sender_strings=None,
-            persistent=None, online=False, emit=False, external=False):
-        result = super().msg(msgobj, header, senders, sender_strings,
-                             persistent, online, emit, external)
-        self.log_message(msgobj, header, senders)
+    def msg(self, msgobj, senders=None, **kwargs):
+        """
+        Send a message to the channel.
+
+        Args:
+            msgobj (str): The message to send.
+            senders (Object or list): The sender(s) of the message.
+            **kwargs: Additional keyword arguments.
+
+        Returns:
+            The result of the superclass msg method.
+        """
+        result = super().msg(msgobj, senders=senders, **kwargs)
+        self.log_message(msgobj, senders)
         return result
 
-    def log_message(self, msgobj, header, senders):
-        if self.metadata.log_file:
+    def log_message(self, msgobj, senders):
+        if hasattr(self, 'metadata') and self.metadata.log_file:
             with open(self.metadata.log_file, 'a') as log:
-                log.write(f"{header}: {msgobj}\n")
+                sender_names = ", ".join(sender.key for sender in make_iter(senders) if sender)
+                log.write(f"{sender_names}: {msgobj}\n")
 
     def set_channel_type(self, channel_type, **kwargs):
         self.metadata.channel_type = channel_type

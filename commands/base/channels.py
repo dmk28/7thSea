@@ -333,17 +333,17 @@ class CmdChannel(OldCmdChannel):
             caller.msg(f"You were not on channel '{channel.key}'.")
 
     def msg_channel(self, channelname, msg):
-        """Send a message to a channel"""
-        caller = self.caller
-        channel = self.search_channel(channelname)
-        if not channel:
-            return
+      """Send a message to a channel"""
+      caller = self.caller
+      channel = self.search_channel(channelname)
+      if not channel:
+         return
 
-        if not channel.access(caller, 'send'):
-            caller.msg("You don't have permission to send messages to this channel.")
-            return
+      if not channel.access(caller, 'send'):
+         caller.msg("You don't have permission to send messages to this channel.")
+         return
 
-        channel.msg(msg, senders=caller)
+      channel.msg(msg, senders=caller)
 
     def search_channel(self, channelname, exact=False):
         """
