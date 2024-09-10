@@ -2,7 +2,7 @@
 from django.db import models
 from evennia.utils.idmapper.models import SharedMemoryModel
 from evennia.comms.models import ChannelDB
-from .channels import ExtendedChannel
+
 
 NATION_COLORS = {
     'Castille': '|Y',  # Gold
