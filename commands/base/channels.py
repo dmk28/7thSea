@@ -26,7 +26,7 @@ class CmdChannel(Command):
     aliases = ["chan"]
     locks = "cmd:all()"
     help_category = "Communication"
-
+    switches = ["create", "delete", "list", "who", "join", "leave", "mute", "unmute", "history"]
     def func(self):
         caller = self.caller
 
