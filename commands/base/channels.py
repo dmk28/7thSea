@@ -45,56 +45,55 @@ class CmdChannel(MuxCommand):
     """
 
     def func(self):
-        """Implement the command"""
-        caller = self.caller
-        args = self.args
-        switches = ["new", "delete", "create", "desc", "lock", "unlock", "ban", "unban",
-        "unban", "mute", "unmute", "who", "list", "sub", "unsub", "history"]
-        if not args:
-            self.list_channels()
-            return
+      """Implement the command"""
+      caller = self.caller
+      args = self.args
+      switches = ["new", "delete", "create", "desc", "lock", "unlock", "ban", "unban",
+                  "mute", "unmute", "who", "list", "sub", "unsub", "history"]
 
-        if '=' in args:
-            channel, message = [part.strip() for part in args.split('=', 1)]
-            self.msg_channel(channel, message)
-        else:
-            switch = self.switches and self.switches[0] or None
-            if not switch:
-                # Check if this is an attempt to send a message
-                channel = args
-                self.msg_channel(channel, "")
-            else:
-                # Process switches
-                if switch in ("create", "new"):
-                    self.create_channel()
-                elif switch == "delete":
-                    self.delete_channel()
-                elif switch == "desc":
-                    self.set_channel_desc()
-                elif switch == "lock":
-                    self.set_channel_lock()
-                elif switch == "unlock":
-                    self.unset_channel_lock()
-                elif switch == "ban":
-                    self.ban_account()
-                elif switch == "unban":
-                    self.unban_account()
-                elif switch == "mute":
-                    self.mute_channel()
-                elif switch == "unmute":
-                    self.unmute_channel()
-                elif switch == "who":
-                    self.list_channel_users()
-                elif switch == "list":
-                    self.list_channels()
-                elif switch == "sub":
-                    self.join_channel()
-                elif switch == "unsub":
-                    self.leave_channel()
-                elif switch == "history":
-                     self.show_history()
-                else:
-                    caller.msg(f"Unknown switch: {switch}")
+      if not args and not self.switches:
+         self.list_channels()
+         return
+
+      if self.switches:
+         switch = self.switches[0].lower()
+         if switch in switches:
+               if switch in ["create", "new"]:
+                  self.create_channel()
+               elif switch == "delete":
+                  self.delete_channel()
+               elif switch == "desc":
+                  self.set_channel_desc()
+               elif switch == "lock":
+                  self.set_channel_lock()
+               elif switch == "unlock":
+                  self.unset_channel_lock()
+               elif switch == "ban":
+                  self.ban_account()
+               elif switch == "unban":
+                  self.unban_account()
+               elif switch == "mute":
+                  self.mute_channel()
+               elif switch == "unmute":
+                  self.unmute_channel()
+               elif switch == "who":
+                  self.list_channel_users()
+               elif switch == "list":
+                  self.list_channels()
+               elif switch == "sub":
+                  self.join_channel()
+               elif switch == "unsub":
+                  self.leave_channel()
+               elif switch == "history":
+                  self.show_history()
+         else:
+               caller.msg(f"Unknown switch: {switch}")
+      elif '=' in args:
+         channel, message = [part.strip() for part in args.split('=', 1)]
+         self.msg_channel(channel, message)
+      else:
+         # If no switch and no '=', treat it as an attempt to send a message
+         self.msg_channel(args, "")
 
     def create_channel(self):
       """Create a new channel"""
