@@ -47,6 +47,8 @@ class ExtendedChannel(DefaultChannel):
         custom_color = self.db.custom_color
         if custom_color:
             return f"{custom_color}[{self.key}]|n "
+        # If no custom color is set, return a default prefix
+        return f"|w[{self.key}]|n "
 
     def check_nation_access(self, accessing_obj):
         if hasattr(accessing_obj, 'character_sheet'):
@@ -60,13 +62,15 @@ class ExtendedChannel(DefaultChannel):
         Send a message to the channel.
 
         Args:
-            msgobj (str): The message to send.
+            msgobj (str or None): The message to send.
             senders (Object or list): The sender(s) of the message.
             **kwargs: Additional keyword arguments.
 
         Returns:
             The result of the superclass msg method.
         """
+        if msgobj is None:
+            msgobj = ""
         result = super().msg(msgobj, senders=senders, **kwargs)
         self.log_message(msgobj, senders)
         return result
