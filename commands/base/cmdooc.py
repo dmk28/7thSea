@@ -1,20 +1,37 @@
 from evennia import Command
-from world.channelmeta.channels import ExtendedChannel
+
 class CmdOOC(Command):
+    """
+    Send an out-of-character message to the room.
+
+    Usage:
+      ooc <message>
+      @ooc <message>
+
+    This command sends an OOC message to all characters in the same room.
+    """
     key = "ooc"
     aliases = ["@ooc"]
     locks = "cmd:all()"
     help_category = "Comms"
 
     def func(self):
-        ooc_channel = ExtendedChannel.objects.filter(db_key__iexact="OOC").first()
-        if not ooc_channel:
-            self.caller.msg("OOC channel not found.")
-            return
-
         if not self.args:
             self.caller.msg("Say what?")
             return
 
-        # Use the channel's msg method, which will use our custom formatting
-        ooc_channel.msg(self.args, senders=[self.caller])
+        # Get the caller's location (the room)
+        location = self.caller.location
+
+        if not location:
+            self.caller.msg("You have no location to speak in!")
+            return
+
+        # Format the OOC message
+        ooc_string = f"|w(OOC) {self.caller.name}: {self.args}|n"
+
+        # Send the message to the room
+        location.msg_contents(ooc_string, exclude=self.caller)
+
+        # Also send the message to the speaker
+        self.caller.msg(f"You say (OOC): {self.args}")
