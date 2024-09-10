@@ -46,14 +46,14 @@ class ChannelMetadata(SharedMemoryModel):
     def create_channel_and_metadata(cls, channel_key, channel_type, **kwargs):
         from evennia.utils import create
         from evennia.comms.models import ChannelDB
-        from typeclasses.channels import Channel  # Your custom Channel class
+        from typeclasses.channels import NewChannel  # Your custom Channel class
 
         # Separate channel creation args from metadata args
         channel_kwargs = {
             'key': channel_key,
             'aliases': kwargs.get('aliases', []),
             'locks': kwargs.get('locks', ''),
-            'typeclass': Channel
+            'typeclass': NewChannel
         }
         
         # Try to find an existing channel
@@ -61,9 +61,9 @@ class ChannelMetadata(SharedMemoryModel):
 
         if existing_channel:
             channel = existing_channel
-            if not isinstance(channel, Channel):
+            if not isinstance(channel, NewChannel):
                 # If the existing channel is not of the custom type, convert it
-                channel.convert_to(Channel)
+                channel.convert_to(NewChannel)
         else:
             # Create a new channel using your custom Channel class
             channel = create.create_channel(**channel_kwargs)
