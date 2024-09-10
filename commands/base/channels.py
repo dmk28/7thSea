@@ -23,7 +23,7 @@ class CmdChannel(Command):
     """
 
     key = "channel"
-    aliases = ["chan"]
+    aliases = ["chan", "@channel", "@chan", "+channel"]
     locks = "cmd:all()"
     help_category = "Communication"
     switches = ["create", "delete", "list", "who", "join", "leave", "mute", "unmute", "history"]
