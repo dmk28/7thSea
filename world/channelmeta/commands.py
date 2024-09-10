@@ -3,6 +3,7 @@ from evennia import Command, CmdSet
 from evennia.commands.default.muxcommand import MuxCommand
 
 
+
 class CmdCreateChannel(Command):
     key = "createchannel"
     locks = "cmd:perm(Admin)"
@@ -10,48 +11,38 @@ class CmdCreateChannel(Command):
 
     def func(self):
         if not self.args:
-            self.caller.msg("Usage: createchannel <name> <type> [faction/nation]")
+            self.caller.msg("Usage: createchannel <name> <type> [faction/nation] [color]")
             return
 
-        name, channel_type, *extra = self.args.split()
-        channel = ExtendedChannel.create(name)
-        
-        if channel_type.upper() == 'FACTION':
-            if not extra:
+        args = self.args.split()
+        if len(args) < 2:
+            self.caller.msg("You must specify at least a channel name and type.")
+            return
+
+        name, channel_type = args[0], args[1].upper()
+        kwargs = {}
+
+        if channel_type == 'FACTION':
+            if len(args) < 3:
                 self.caller.msg("You must specify a faction name for a faction channel.")
                 return
-            channel.set_channel_type('FACTION', faction_name=extra[0])
-        elif channel_type.upper() == 'NATION':
-            if not extra:
+            kwargs['faction_name'] = args[2]
+        elif channel_type == 'NATION':
+            if len(args) < 3:
                 self.caller.msg("You must specify a nation name for a nation channel.")
                 return
-            channel.set_channel_type('NATION', nation_name=extra[0])
-        elif channel_type.upper() == 'OOC':
-            channel.set_channel_type('OOC')
-        else:
+            kwargs['nation_name'] = args[2]
+        elif channel_type != 'OOC':
             self.caller.msg("Invalid channel type. Use FACTION, NATION, or OOC.")
             return
 
-        self.caller.msg(f"Channel '{name}' created successfully.")
+        if len(args) > 3:
+            kwargs['custom_color'] = args[3]
 
-class CmdOOC(Command):
-    key = "ooc"
-    aliases = ["@ooc"]
-    locks = "cmd:all()"
-    help_category = "Comms"
+        metadata = ChannelMetadata.create_channel_and_metadata(name, channel_type, **kwargs)
+        
+        self.caller.msg(f"Channel '{name}' created successfully with type {channel_type}.")
 
-    def func(self):
-        ooc_channel = ExtendedChannel.objects.filter(db_key__iexact="OOC").first()
-        if not ooc_channel:
-            self.caller.msg("OOC channel not found.")
-            return
-
-        if not self.args:
-            self.caller.msg("Say what?")
-            return
-
-        # Use the channel's msg method, which will use our custom formatting
-        ooc_channel.msg(self.args, senders=[self.caller])
 
 
 

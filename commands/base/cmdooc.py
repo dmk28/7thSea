@@ -1,5 +1,4 @@
-from typeclasses.command import Command
-
+from evennia import Command
 class CmdOOC(Command):
     key = "ooc"
     aliases = ["@ooc"]
