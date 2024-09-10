@@ -86,25 +86,37 @@ class CmdChannel(OldCmdChannel):
                     caller.msg(f"Unknown switch: {switch}")
 
     def create_channel(self):
-        """Create a new channel"""
-        caller = self.caller
-        if not self.args:
-            caller.msg("Usage: channel/create <name> [= description]")
-            return
+      """Create a new channel"""
+      caller = self.caller
+      if not self.args:
+         caller.msg("Usage: channel/create <name> [= description]")
+         return
 
-        channel_name = self.lhs
-        description = self.rhs or ""
+      channel_name = self.lhs
+      description = self.rhs or ""
 
-        # Check if the channel already exists
-        if ChannelDB.objects.channel_search(channel_name):
-            caller.msg(f"Channel '{channel_name}' already exists.")
-            return
+      # Check if the channel already exists
+      existing_channel = ChannelDB.objects.channel_search(channel_name)
+      if existing_channel:
+         caller.msg(f"Channel '{channel_name}' already exists.")
+         return
 
-        # Create the new channel
-        new_channel = create.create_channel(channel_name, typeclass=NewChannel, desc=description)
-        ChannelMetadata.objects.create(channel=new_channel, channel_type='OOC')
-        new_channel.connect(caller)
-        caller.msg(f"Created new channel '{channel_name}'.")
+      # Create the new channel
+      new_channel = create.create_channel(channel_name, typeclass=NewChannel, desc=description)
+      
+      # Use get_or_create instead of create
+      metadata, created = ChannelMetadata.objects.get_or_create(
+         channel=new_channel,
+         defaults={'channel_type': 'OOC'}
+      )
+      
+      if not created:
+         # If the metadata already existed, update it
+         metadata.channel_type = 'OOC'
+         metadata.save()
+
+      new_channel.connect(caller)
+      caller.msg(f"Created new channel '{channel_name}'.")
 
     def delete_channel(self):
         """Delete a channel"""
