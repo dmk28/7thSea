@@ -129,41 +129,37 @@ class CmdChannel(MuxCommand):
       caller.msg(f"Created new channel '{channel_name}'.")
    
     def show_history(self):
-      if not self.args:
-         self.caller.msg("Usage: channel/history <channel> [= <number of lines>]")
-         return
+        if not self.args:
+            self.caller.msg("Usage: channel/history <channel> [= <number of lines>]")
+            return
 
-      channel_name, _, lines = self.args.partition("=")
-      channel_name = channel_name.strip()
-      lines = lines.strip()
+        channel_name, _, lines = self.args.partition("=")
+        channel_name = channel_name.strip()
+        lines = lines.strip()
 
-      channel = self.search_channel(channel_name)
-      if not channel:
-         return
+        channel = self.search_channel(channel_name)
+        if not channel:
+            return
 
-      try:
-         num_lines = int(lines) if lines else 20
-      except ValueError:
-         self.caller.msg("Invalid number of lines. Using default of 20.")
-         num_lines = 20
+        try:
+            num_lines = int(lines) if lines else 20
+        except ValueError:
+            self.caller.msg("Invalid number of lines. Using default of 20.")
+            num_lines = 20
 
-      log_file = channel.log_file
-      if not log_file:
-         self.caller.msg(f"No history found for channel '{channel.key}'.")
-         return
+        log_file = channel.get_log_filename()
+        if not log_file or not os.path.exists(log_file):
+            self.caller.msg(f"No history found for channel '{channel.key}'.")
+            return
 
-      if not os.path.exists(log_file):
-         # Create an empty file if it doesn't exist
-         open(log_file, 'a').close()
+        def send_msg(lines):
+            if not lines:
+                self.caller.msg(f"No messages in the history of channel '{channel.key}'.")
+            else:
+                self.caller.msg(f"Last {len(lines)} messages in {channel.key}:")
+                self.caller.msg("\n".join(lines))
 
-      def send_msg(lines):
-         if not lines:
-               self.caller.msg(f"No messages in the history of channel '{channel.key}'.")
-         else:
-               self.caller.msg(f"Last {len(lines)} messages in {channel.key}:")
-               self.caller.msg("\n".join(lines))
-
-      tail_log_file(log_file, 0, num_lines, callback=send_msg)
+        tail_log_file(log_file, 0, num_lines, callback=send_msg)
 
 
     def msg_channel(self, channelname, msg):

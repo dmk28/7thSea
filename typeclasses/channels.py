@@ -16,6 +16,7 @@ from evennia.comms.comms import DefaultChannel
 from world.channelmeta.channels import ExtendedChannel as WorldExtendedChannel
 from evennia import settings
 from evennia.utils.utils import make_iter
+from datetime import datetime
 import os 
 class Channel(DefaultChannel):
     r"""
@@ -161,6 +162,8 @@ class NewChannel(Channel, WorldExtendedChannel):
         """Log the message to the channel's log file."""
         log_file = self.get_log_filename()
         if log_file:
+            timestamp = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+            sender_names = ", ".join(sender.key for sender in make_iter(senders) if sender)
+            log_entry = f"{timestamp} [{self.key}] {sender_names}: {message}\n"
             with open(log_file, 'a', encoding='utf-8') as log:
-                sender_names = ", ".join(sender.key for sender in make_iter(senders) if sender)
-                log.write(f"[{self.key}] {sender_names}: {message}\n")
+                log.write(log_entry)
