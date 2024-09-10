@@ -16,7 +16,7 @@ own cmdsets by inheriting from them or directly from `evennia.CmdSet`.
 
 from evennia import default_cmds
 from .mycmdset import MyCmdSet
-from world.channelmeta.commands import CommsCmdSet
+# from world.channelmeta.commands import CommsCmdSet
 from .base.channels import CmdChannel
 class CharacterCmdSet(default_cmds.CharacterCmdSet):
     """
