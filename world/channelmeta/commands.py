@@ -41,9 +41,11 @@ class CmdCreateChannel(Command):
 
         metadata = ChannelMetadata.create_channel_and_metadata(name, channel_type, **kwargs)
         
-        self.caller.msg(f"Channel '{name}' created successfully with type {channel_type}.")
-
-
+        if metadata:
+            color = metadata.custom_color if metadata.custom_color else "default"
+            self.caller.msg(f"Channel '{name}' created successfully with type {channel_type} and color {color}.")
+        else:
+            self.caller.msg(f"Failed to create channel '{name}'.")
 
 
 class CmdSetChannelColor(Command):

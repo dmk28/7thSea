@@ -2,6 +2,19 @@
 from django.db import models
 from evennia.utils.idmapper.models import SharedMemoryModel
 from evennia.comms.models import ChannelDB
+from .channels import ExtendedChannel
+
+NATION_COLORS = {
+    'Castille': '|Y',  # Gold
+    'Montaigne': '|B',  # Blue royal
+    'Vendel': '|520',  # Orange
+    'Avalon': '|R',  # Dark red
+    'Vodacce': '|=g',  # Mid-grey
+    'Vesten': '|G',  # Green
+    'Eisen': '|M'  # Light purple
+}
+
+
 
 class ChannelMetadata(SharedMemoryModel):
     channel = models.OneToOneField('comms.Channel', on_delete=models.CASCADE, related_name='metadata')
@@ -32,11 +45,11 @@ class ChannelMetadata(SharedMemoryModel):
     @classmethod
     def create_channel_and_metadata(cls, channel_key, channel_type, **kwargs):
         from evennia.utils import create  # Import here to avoid circular import
-
+        
         channel = ChannelDB.objects.channel_search(channel_key).first()
         if not channel:
             channel = create.create_channel(channel_key)
-
+        
         metadata, created = cls.objects.get_or_create(channel=channel)
         metadata.channel_type = channel_type
         
@@ -45,10 +58,20 @@ class ChannelMetadata(SharedMemoryModel):
         elif channel_type == 'NATION':
             metadata.nation_name = kwargs.get('nation_name')
         
-        metadata.custom_color = kwargs.get('custom_color')
+        # Explicitly set the custom color
+        custom_color = kwargs.get('custom_color')
+        if custom_color:
+            metadata.custom_color = custom_color
+        elif channel_type == 'NATION':
+            # Set default color for nation if not provided
+            metadata.custom_color = NATION_COLORS.get(metadata.nation_name, '|w')
+        
         metadata.log_file = kwargs.get('log_file')
         metadata.save()
-
+        
+        # Ensure the channel object also has the color information
+        channel.db.custom_color = metadata.custom_color
+        
         return metadata
 
     @classmethod
