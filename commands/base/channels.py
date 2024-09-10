@@ -15,7 +15,7 @@ from evennia.utils.evmenu import ask_yes_no
 from evennia.utils.logger import tail_log_file
 from evennia.utils.utils import class_from_module, strip_unsafe_input
 import os
-class CmdChannel(OldCmdChannel, MuxCommand):
+class CmdChannel(MuxCommand):
     """
     Overloaded channel command to work with NewChannel typeclass.
 
