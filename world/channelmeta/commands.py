@@ -3,7 +3,7 @@ from evennia import Command, CmdSet
 from evennia.commands.default.muxcommand import MuxCommand
 from .models import ChannelMetadata
 from .channels import ExtendedChannel
-from evennia.channels.models import ChannelDB
+from evennia.comms.models import Channel
 class CmdCreateChannel(Command):
     key = "createchannel"
     locks = "cmd:perm(Admin)"
@@ -58,7 +58,7 @@ class CmdSetChannelColor(Command):
             return
 
         channel_name, color_code = self.args.split()
-        channel = ChannelDB.objects.channel_search(channel_name).first()
+        channel = Channel.objects.channel_search(channel_name).first()
         if not channel:
             self.caller.msg(f"Channel '{channel_name}' not found.")
             return
