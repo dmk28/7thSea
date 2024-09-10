@@ -1,4 +1,5 @@
 from evennia import Command
+from world.channelmeta.channels import ExtendedChannel
 class CmdOOC(Command):
     key = "ooc"
     aliases = ["@ooc"]
