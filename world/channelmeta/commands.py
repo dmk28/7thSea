@@ -68,5 +68,4 @@ class CmdSetChannelColor(Command):
 class CommsCmdSet(CmdSet):
     def at_cmdset_creation(self):
         self.add(CmdCreateChannel())
-        self.add(CmdOOC())
         self.add(CmdSetChannelColor())
