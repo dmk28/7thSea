@@ -347,20 +347,3 @@ class Channel(DefaultChannel):
         from evennia.utils.utils import tail_log_file
         tail_log_file(log_file, 0, num_messages, callback=send_msg)
 
-    def has_connection(self, subscriber):
-        """Check if a subscriber is connected to this channel"""
-        return self.subscriptions.filter(id=subscriber.id).exists()
-
-    def connect(self, subscriber):
-        """Connect a subscriber to this channel"""
-        if not self.has_connection(subscriber):
-            self.subscriptions.add(subscriber)
-            return True
-        return False
-
-    def disconnect(self, subscriber):
-        """Disconnect a subscriber from this channel"""
-        if self.has_connection(subscriber):
-            self.subscriptions.remove(subscriber)
-            return True
-        return False
