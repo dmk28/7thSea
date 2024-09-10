@@ -15,6 +15,7 @@ to be modified.
 from evennia.comms.comms import DefaultChannel
 from world.channelmeta.channels import ExtendedChannel as WorldExtendedChannel
 from evennia import settings
+import os 
 class Channel(DefaultChannel):
     r"""
     This is the base class for all Channel Comms. Inherit from this to
