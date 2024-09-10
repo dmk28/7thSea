@@ -32,16 +32,16 @@ class CmdOOC(Command):
         if message.startswith(':'):
             # Emote
             emote = message[1:].strip()
-            ooc_string = f"|w<OOC> {self.caller.name} {emote}|n"
+            ooc_string = f"|w<|rOOC|n>|n {self.caller.name} {emote}"
             self_string = f"You emote (OOC): {self.caller.name} {emote}"
         elif message.startswith(';'):
             # Pose
             pose = message[1:].strip()
-            ooc_string = f"|w<OOC> {self.caller.name}{pose}|n"
+            ooc_string = f"|w<|rOOC|n>|n {self.caller.name}{pose}"
             self_string = f"You pose (OOC): {self.caller.name}{pose}"
         else:
             # Regular OOC message
-            ooc_string = f'|w<OOC>|n {self.caller.name} says, "{message}"|n'
+            ooc_string = f'|w<|rOOC|n|w>|n {self.caller.name} says, "{message}"|n'
             self_string = f'|w<OOC>|n You say, "{message}"'
 
         # Send the message to the room
