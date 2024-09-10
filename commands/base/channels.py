@@ -64,7 +64,7 @@ class CmdChannel(OldCmdChannel):
                 # Process switches
                 if switch in ("create", "new"):
                     self.create_channel()
-                elif switch in ("delete", "del", "destroy"):
+                elif switch == "delete":
                     self.delete_channel()
                 elif switch == "desc":
                     self.set_channel_desc()
