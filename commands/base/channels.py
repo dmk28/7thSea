@@ -2,7 +2,7 @@
 from django.conf import settings
 from django.db.models import Q
 from evennia.commands.default.comms import CmdChannel as OldCmdChannel
-from evennia.utils import create
+from evennia.utils import create, logger
 from evennia.accounts import bots
 from evennia.utils.utils import make_iter
 from evennia.utils.evtable import EvTable
@@ -12,7 +12,7 @@ from typeclasses.channels import NewChannel
 from evennia.utils.evmenu import ask_yes_no
 from evennia.utils.logger import tail_log_file
 from evennia.utils.utils import class_from_module, strip_unsafe_input
-
+import os
 class CmdChannel(OldCmdChannel):
     """
     Overloaded channel command to work with NewChannel typeclass.
@@ -26,6 +26,7 @@ class CmdChannel(OldCmdChannel):
       channel/desc <channel> = <description>
       channel/lock <channel> = <lockstring>
       channel/unlock <channel> = <lockstring>
+      channel/history <channel>
       channel/ban <channel> = <account>
       channel/unban <channel> = <account>
       channel/mute <channel>
@@ -156,7 +157,7 @@ class CmdChannel(OldCmdChannel):
 
         tail_log_file(log_file, 0, num_lines, callback=send_msg)
 
-        
+
     def msg_channel(self, channelname, msg):
         """Send a message to a channel"""
         caller = self.caller
