@@ -14,7 +14,7 @@ to be modified.
 
 from evennia.comms.comms import DefaultChannel
 from world.channelmeta.channels import ExtendedChannel as WorldExtendedChannel
-class OldChannel(DefaultChannel):
+class Channel(DefaultChannel):
     r"""
     This is the base class for all Channel Comms. Inherit from this to
     create different types of communication channels.
@@ -116,9 +116,9 @@ class OldChannel(DefaultChannel):
 
     pass
 
-class Channel(OldChannel, WorldExtendedChannel):
-        """
-        This is the base channel typeclass for the game. It imports from Channel and the custom ExtendedChannel.
-        """
-        pass
+# class Channel(OldChannel, WorldExtendedChannel):
+#         """
+#         This is the base channel typeclass for the game. It imports from Channel and the custom ExtendedChannel.
+#         """
+#         pass
 
