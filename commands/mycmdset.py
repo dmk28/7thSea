@@ -23,7 +23,7 @@ from world.banking.cmdset import BankingCmdSet
 from world.boards.bboard_commands import BBoardCmdSet
 from commands.base.cmdlook import CmdLook
 from commands.base.cmdooc import CmdOOC
-from world.channelmeta.commands import CommsCmdSet
+# from world.channelmeta.commands import CommsCmdSet
 class GuildCmdSet(CmdSet):
   def at_cmdset_creation(self):
     self.add(CmdCreateGuild())
@@ -82,7 +82,7 @@ class MyCmdSet(CmdSet):
         self.add(CombatCmdSet())
         self.add(CmdEmit())
         self.add(CmdLook())
-        self.add(CommsCmdSet())
+        #self.add(CommsCmdSet())
         self.add(CmdRequest())
         self.add(RequestCmdSet())
         self.add(CmdApproveCharacter())
