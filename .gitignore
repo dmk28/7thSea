@@ -17,3 +17,11 @@ server/logs/lockwarnings.log
 *.pyc
 *.log
 *.cypthon-*
+world/crafts/__pycache__/models.cpython-312.pyc
+world/adventuring_guilds/__pycache__/models.cpython-312.pyc
+world/banking/__pycache__/admin.cpython-312.pyc
+world/banking/__pycache__/models.cpython-312.pyc
+commands/__pycache__/combatcmdset.cpython-312.pyc
+commands/__pycache__/cmdattack.cpython-312.pyc
+.pyc
+.cpython
