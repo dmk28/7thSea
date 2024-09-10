@@ -117,21 +117,36 @@ class Channel(DefaultChannel):
 
     pass
 
-class NewChannel(DefaultChannel, WorldExtendedChannel):
+class NewChannel(Channel, WorldExtendedChannel):
     """
-    This is the base channel typeclass for the game. It imports from DefaultChannel and the custom ExtendedChannel.
+    This is the base channel typeclass for the game. It imports from Channel and the custom ExtendedChannel.
     """
-
-    # Class-level variables
-    send_to_online_only = True
-    log_file = "channel_{channelname}.log"
-    channel_prefix_string = "[{channelname}] "
-    channel_msg_nick_pattern = r"{alias}\s*?|{alias}\s+?(?P<arg1>.+?)"
-    channel_msg_nick_replacement = "channel {channelname} = $1"
 
     def at_channel_creation(self):
         """Called when the channel is created."""
         super().at_channel_creation()
+        self.db.log_file = self.get_log_filename()
+
+    def get_log_filename(self):
+        """
+        Returns the filename for this channel's log file.
+        This method overrides the one from the parent class to ensure
+        we're using the correct path.
+        """
+        return self.attributes.get(
+            "log_file",
+            os.path.join(settings.LOG_DIR, f"channel_{self.key.lower()}.log")
+        )
+
+    def set_log_filename(self, filename):
+        """
+        Set a custom log filename.
+
+        Args:
+            filename (str): The filename to set. This is a path starting from
+                inside the settings.LOG_DIR location.
+        """
+        self.attributes.add("log_file", filename)
 
     def at_post_msg(self, message, **kwargs):
         """Log the message after it has been sent."""
@@ -144,23 +159,4 @@ class NewChannel(DefaultChannel, WorldExtendedChannel):
         if log_file:
             with open(log_file, 'a', encoding='utf-8') as log:
                 sender_names = ", ".join(sender.key for sender in make_iter(senders) if sender)
-                log.write(f"{self.channel_prefix_string.format(channelname=self.key)} {sender_names}: {message}\n")
-
-    def get_log_filename(self):
-        """
-        Returns the filename for this channel's log file.
-        Uses the class-level log_file variable.
-        """
-        return self.attributes.get(
-            "log_file",
-            self.log_file.format(channelname=self.key.lower())
-        )
-
-    def set_log_filename(self, filename):
-        """
-        Set a custom log filename.
-
-        Args:
-            filename (str): The filename to set.
-        """
-        self.attributes.add("log_file", filename)
+                log.write(f"[{self.key}] {sender_names}: {message}\n")
