@@ -21,30 +21,37 @@ class CmdCreateChannel(Command):
             return
 
         name, channel_type = args[0], args[1].upper()
-        kwargs = {}
+        channel_kwargs = {
+            'aliases': [name.lower()],
+            'locks': "listen:all();send:all()"
+        }
+        metadata_kwargs = {}
 
         if channel_type == 'FACTION':
             if len(args) < 3:
                 self.caller.msg("You must specify a faction name for a faction channel.")
                 return
-            kwargs['faction_name'] = args[2]
+            metadata_kwargs['faction_name'] = args[2]
         elif channel_type == 'NATION':
             if len(args) < 3:
                 self.caller.msg("You must specify a nation name for a nation channel.")
                 return
-            kwargs['nation_name'] = args[2]
+            metadata_kwargs['nation_name'] = args[2]
         elif channel_type != 'OOC':
             self.caller.msg("Invalid channel type. Use FACTION, NATION, or OOC.")
             return
 
         if len(args) > 3:
-            kwargs['custom_color'] = args[3]
+            metadata_kwargs['custom_color'] = args[3]
 
-        metadata = ChannelMetadata.create_channel_and_metadata(name, channel_type, **kwargs)
+        metadata, channel = ChannelMetadata.create_channel_and_metadata(
+            name, channel_type, **channel_kwargs, **metadata_kwargs
+        )
         
-        if metadata:
-            color = metadata.custom_color if metadata.custom_color else "default"
-            self.caller.msg(f"Channel '{name}' created successfully with type {channel_type} and color {color}.")
+        if metadata and channel:
+            self.caller.msg(f"Channel '{name}' created successfully with type {channel_type}.")
+            # Automatically connect the creator to the channel
+            channel.connect(self.caller)
         else:
             self.caller.msg(f"Failed to create channel '{name}'.")
 
