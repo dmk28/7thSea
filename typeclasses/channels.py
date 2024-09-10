@@ -125,6 +125,7 @@ class NewChannel(Channel, WorldExtendedChannel):
     """
 
     log_file = "channel_{channelname}.log"
+    filename = "channel_{channelname}.log"
     def at_channel_creation(self):
         """Called when the channel is created."""
         super().at_channel_creation()

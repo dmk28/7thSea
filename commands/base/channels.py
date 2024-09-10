@@ -146,7 +146,7 @@ class CmdChannel(OldCmdChannel):
             self.caller.msg("Invalid number of lines. Using default of 20.")
             num_lines = 20
 
-        log_file = channel.db.log_file
+        log_file = channel.log_file
         if not log_file or not os.path.exists(log_file):
             self.caller.msg(f"No history found for channel '{channel.key}'.")
             return
