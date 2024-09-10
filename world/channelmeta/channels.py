@@ -1,4 +1,4 @@
-from typeclasses.channels import Channel
+from evennia.comms.comms import DefaultChannel
 from .models import ChannelMetadata
 
 
@@ -14,7 +14,7 @@ NATION_COLORS = {
 
 
 
-class ExtendedChannel(Channel):
+class ExtendedChannel(DefaultChannel):
     def at_channel_creation(self):
         super().at_channel_creation()
         ChannelMetadata.objects.create(channel=self)
