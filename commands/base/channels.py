@@ -5,7 +5,7 @@ from evennia.utils import create
 from evennia.utils.utils import make_iter
 from evennia.utils.evtable import EvTable
 from evennia.comms.models import ChannelDB
-from world.comms.models import ChannelMetadata
+from world.channelmeta.models import ChannelMetadata
 from typeclasses.channels import NewChannel
 
 class CmdChannel(OldCmdChannel):
