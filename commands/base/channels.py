@@ -1,6 +1,8 @@
 # commands/channel_commands.py
 from django.conf import settings
 from django.db.models import Q
+from evennia.commands.default.muxcommand import MuxCommand
+
 from evennia.commands.default.comms import CmdChannel as OldCmdChannel
 from evennia.utils import create, logger
 from evennia.accounts import bots
@@ -13,7 +15,7 @@ from evennia.utils.evmenu import ask_yes_no
 from evennia.utils.logger import tail_log_file
 from evennia.utils.utils import class_from_module, strip_unsafe_input
 import os
-class CmdChannel(OldCmdChannel):
+class CmdChannel(OldCmdChannel, MuxCommand):
     """
     Overloaded channel command to work with NewChannel typeclass.
 
@@ -46,7 +48,8 @@ class CmdChannel(OldCmdChannel):
         """Implement the command"""
         caller = self.caller
         args = self.args
-
+        switches = ["new", "delete", "create", "desc", "lock", "unlock", "ban", "unban",
+        "unban", "mute", "unmute", "who", "list", "sub", "unsub", "history"]
         if not args:
             self.list_channels()
             return
