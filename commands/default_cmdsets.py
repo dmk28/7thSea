@@ -16,7 +16,7 @@ own cmdsets by inheriting from them or directly from `evennia.CmdSet`.
 
 from evennia import default_cmds
 from .mycmdset import MyCmdSet
-
+from world.channelmeta.commands import CommsCmdSet
 class CharacterCmdSet(default_cmds.CharacterCmdSet):
     """
     The `CharacterCmdSet` contains general in-game commands like `look`,
@@ -52,6 +52,7 @@ class AccountCmdSet(default_cmds.AccountCmdSet):
         Populates the cmdset
         """
         super().at_cmdset_creation()
+        self.add(CommsCmdSet())
         #
         # any commands you add below will overload the default ones.
         #
