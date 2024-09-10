@@ -2,8 +2,9 @@ from evennia import Command, CmdSet
 
 from evennia.commands.default.muxcommand import MuxCommand
 from .models import ChannelMetadata
-from .channels import ExtendedChannel
+from typeclasses.channels import NewChannel
 from evennia.comms.models import ChannelDB
+from evennia.utils import create
 
 class CmdCreateChannel(Command):
     key = "createchannel"
@@ -26,7 +27,7 @@ class CmdCreateChannel(Command):
             'locks': "listen:all();send:all()"
         }
         metadata_kwargs = {}
-
+        
         if channel_type == 'FACTION':
             if len(args) < 3:
                 self.caller.msg("You must specify a faction name for a faction channel.")

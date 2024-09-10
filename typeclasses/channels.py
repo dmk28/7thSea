@@ -14,6 +14,7 @@ to be modified.
 
 from evennia.comms.comms import DefaultChannel
 from world.channelmeta.channels import ExtendedChannel as WorldExtendedChannel
+from evennia import settings
 class Channel(DefaultChannel):
     r"""
     This is the base class for all Channel Comms. Inherit from this to
@@ -120,5 +121,23 @@ class NewChannel(Channel, WorldExtendedChannel):
         """
         This is the base channel typeclass for the game. It imports from Channel and the custom ExtendedChannel.
         """
-        pass
+        def at_channel_creation(self):
+                super().at_channel_creation()
+                self.db.log_file = self.get_log_filename()
+
+        def get_log_filename(self):
+                """Returns the filename for this channel's log file."""
+                return os.path.join(settings.LOG_DIR, f"channel_{self.key.lower()}.log")
+
+        def at_post_msg(self, message, **kwargs):
+                """Log the message after it has been sent."""
+                super().at_post_msg(message, **kwargs)
+                self.log_message(message, kwargs.get("senders"))
+
+        def log_message(self, message, senders):
+                """Log the message to the channel's log file."""
+                if self.db.log_file:
+                        with open(self.db.log_file, 'a', encoding='utf-8') as log:
+                                sender_names = ", ".join(sender.key for sender in make_iter(senders) if sender)
+                                log.write(f"[{self.key}] {sender_names}: {message}\n")
 

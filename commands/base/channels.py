@@ -1,12 +1,17 @@
 # commands/channel_commands.py
-
+from django.conf import settings
+from django.db.models import Q
 from evennia.commands.default.comms import CmdChannel as OldCmdChannel
 from evennia.utils import create
+from evennia.accounts import bots
 from evennia.utils.utils import make_iter
 from evennia.utils.evtable import EvTable
-from evennia.comms.models import ChannelDB
+from evennia.comms.models import ChannelDB, Msg
 from world.channelmeta.models import ChannelMetadata
 from typeclasses.channels import NewChannel
+from evennia.utils.evmenu import ask_yes_no
+from evennia.utils.logger import tail_log_file
+from evennia.utils.utils import class_from_module, strip_unsafe_input
 
 class CmdChannel(OldCmdChannel):
     """
@@ -82,6 +87,8 @@ class CmdChannel(OldCmdChannel):
                     self.join_channel()
                 elif switch == "unsub":
                     self.leave_channel()
+                elif switch == "history":
+                     self.show_history()
                 else:
                     caller.msg(f"Unknown switch: {switch}")
 
@@ -117,6 +124,51 @@ class CmdChannel(OldCmdChannel):
 
       new_channel.connect(caller)
       caller.msg(f"Created new channel '{channel_name}'.")
+   
+    def show_history(self):
+        """Show the history of a channel."""
+        if not self.args:
+            self.caller.msg("Usage: channel/history <channel> [= <number of lines>]")
+            return
+
+        channel_name, _, lines = self.args.partition("=")
+        channel_name = channel_name.strip()
+        lines = lines.strip()
+
+        channel = self.search_channel(channel_name)
+        if not channel:
+            return
+
+        try:
+            num_lines = int(lines) if lines else 20
+        except ValueError:
+            self.caller.msg("Invalid number of lines. Using default of 20.")
+            num_lines = 20
+
+        log_file = channel.db.log_file
+        if not log_file or not os.path.exists(log_file):
+            self.caller.msg(f"No history found for channel '{channel.key}'.")
+            return
+
+        def send_msg(lines):
+            self.caller.msg(f"Last {len(lines)} messages in {channel.key}:")
+            self.caller.msg("\n".join(lines))
+
+        tail_log_file(log_file, 0, num_lines, callback=send_msg)
+
+        
+    def msg_channel(self, channelname, msg):
+        """Send a message to a channel"""
+        caller = self.caller
+        channel = self.search_channel(channelname)
+        if not channel:
+            return
+
+        if not channel.access(caller, 'send'):
+            caller.msg("You don't have permission to send messages to this channel.")
+            return
+
+        channel.msg(msg, senders=caller)
 
     def delete_channel(self):
         """Delete a channel"""
@@ -295,6 +347,22 @@ class CmdChannel(OldCmdChannel):
         for channel in channels:
             table.add_row(channel.key, channel.db.desc or "")
         caller.msg(str(table))
+      
+    def get_channel_history(self, channel, start_index=0):
+        """
+        View a channel's history.
+        """
+        from evennia.utils.utils import tail_log_file
+
+        log_file = channel.get_log_filename()
+
+        def send_msg(lines):
+            return self.msg(
+                "".join(line.split("[-]", 1)[1] if "[-]" in line else line for line in lines)
+            )
+
+        # asynchronously tail the log file
+        tail_log_file(log_file, start_index, 20, callback=send_msg)
 
     def join_channel(self):
         """Join a channel"""
