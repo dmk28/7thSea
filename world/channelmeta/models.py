@@ -48,8 +48,13 @@ class ChannelMetadata(SharedMemoryModel):
         from typeclasses.channels import NewChannel
 
 
-        channel = Channel.objects.channel_search(channel_key).first()
-        if not channel:
+        existing_channel = ChannelDB.objects.channel_search(channel_key).first()
+        if existing_channel:
+            channel = existing_channel
+            if not isinstance(channel, NewChannel):
+                channel.convert_to(NewChannel)
+        
+        else:
             channel = create.create_channel(channel_key, typeclass=NewChannel, **kwargs)
         
         metadata, created = cls.objects.get_or_create(channel=channel)
