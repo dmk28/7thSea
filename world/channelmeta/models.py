@@ -45,13 +45,15 @@ class ChannelMetadata(SharedMemoryModel):
     @classmethod
     def create_channel_and_metadata(cls, channel_key, channel_type, **kwargs):
         from evennia.utils import create  # Import here to avoid circular import
-        
+        from typeclasses.channels import NewChannel
+
+
         channel = ChannelDB.objects.channel_search(channel_key).first()
         if not channel:
-            channel = create.create_channel(channel_key)
+            channel = create.create_channel(channel_key, typeclass=NewChannel, **kwargs)
         
         metadata, created = cls.objects.get_or_create(channel=channel)
-        metadata.channel_type = channel_type
+        metadata.channel_type = channel_type.capitalize()
         
         if channel_type == 'FACTION':
             metadata.faction_name = kwargs.get('faction_name')
@@ -71,8 +73,10 @@ class ChannelMetadata(SharedMemoryModel):
         
         # Ensure the channel object also has the color information
         channel.db.custom_color = metadata.custom_color
+        channel.locks.add(kwargs.get('locks', ''))
+        channel.aliases.add(kwargets.get('aliases', []))
         
-        return metadata
+        return metadata, channel
 
     @classmethod
     def get_or_create_metadata(cls, channel_key):

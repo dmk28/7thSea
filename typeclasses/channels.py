@@ -116,9 +116,9 @@ class Channel(DefaultChannel):
 
     pass
 
-# class Channel(OldChannel, WorldExtendedChannel):
-#         """
-#         This is the base channel typeclass for the game. It imports from Channel and the custom ExtendedChannel.
-#         """
-#         pass
+class NewChannel(Channel, WorldExtendedChannel):
+        """
+        This is the base channel typeclass for the game. It imports from Channel and the custom ExtendedChannel.
+        """
+        pass
 
