@@ -27,7 +27,10 @@ class CmdChannel(MuxCommand):
     aliases = ["chan", "@channel", "@chan", "+channel"]
     locks = "cmd:all()"
     help_category = "Communication"
-    switches = ["create", "delete", "list", "who", "join", "leave", "mute", "unmute", "history"]
+    switches = [
+        "create", "delete", "list", "who", "join", "leave", "mute", "unmute", 
+        "history", "set_faction", "set_nation", "remove_lock"
+    ]
     def func(self):
         caller = self.caller
 
@@ -55,8 +58,14 @@ class CmdChannel(MuxCommand):
                 self.unmute_channel()
             elif switch == "history":
                 self.show_history()
+            elif switch == "set_faction":
+                  self.set_faction_lock()
+            elif switch == "set_nation":
+                  self.set_nation_lock()
+            elif switch == "remove_lock":
+                  self.remove_lock()
             else:
-                caller.msg(f"Unknown switch: {switch}")
+                caller.msg(f"Unknown switch: {switch}")  
         else:
             # No switch; treat as a message to a channel
             self.send_message()
@@ -240,3 +249,41 @@ class CmdChannel(MuxCommand):
          return
 
       channel.msg(message, senders=[caller])
+
+    def set_faction_lock(self):
+        if not self.args:
+            self.caller.msg("Usage: channel/set_faction <channel> = <faction_name>")
+            return
+        channel_name, faction_name = self.args.split('=')
+        channel = search_channel(channel_name.strip())
+        if not channel.exists():
+            self.caller.msg(f"No channel found with the name '{channel_name}'.")
+            return
+        channel = channel.first()
+        channel.set_faction_lock(faction_name.strip())
+        self.caller.msg(f"Channel '{channel.key}' is now locked to faction '{faction_name}'.")
+
+    def set_nation_lock(self):
+        if not self.args:
+            self.caller.msg("Usage: channel/set_nation <channel> = <nation_name>")
+            return
+        channel_name, nation_name = self.args.split('=')
+        channel = search_channel(channel_name.strip())
+        if not channel.exists():
+            self.caller.msg(f"No channel found with the name '{channel_name}'.")
+            return
+        channel = channel.first()
+        channel.set_nation_lock(nation_name.strip())
+        self.caller.msg(f"Channel '{channel.key}' is now locked to nation '{nation_name}'.")
+
+    def remove_lock(self):
+        if not self.args:
+            self.caller.msg("Usage: channel/remove_lock <channel>")
+            return
+        channel = search_channel(self.args.strip())
+        if not channel.exists():
+            self.caller.msg(f"No channel found with the name '{self.args}'.")
+            return
+        channel = channel.first()
+        channel.remove_lock()
+        self.caller.msg(f"Lock removed from channel '{channel.key}'.")

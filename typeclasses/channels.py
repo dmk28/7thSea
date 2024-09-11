@@ -193,10 +193,12 @@ class Channel(DefaultChannel):
         except ObjectDoesNotExist:
             return None
 
-    def at_channel_create(self):
-        """Called when the channel is created."""
-        super().at_channel_create()
+    def at_channel_creation(self):
+        super().at_channel_creation()
         self.db.is_org_channel = False
+        self.db.channel_type = 'OOC'  # Default type
+        self.db.faction_name = None
+        self.db.nation_name = None
 
     def set_org(self, guild):
         """Set this channel as an organization channel."""
@@ -219,12 +221,38 @@ class Channel(DefaultChannel):
             del self._org_channel
 
     def access(self, accessing_obj, access_type='listen', default=False):
-        """Check channel access."""
         result = super().access(accessing_obj, access_type, default)
-        if result and self.db.is_org_channel:
-            org = self.org_channel
-            return org and org.is_member(accessing_obj)
+        if result:
+            if self.db.channel_type == 'FACTION':
+                return self.check_faction_access(accessing_obj)
+            elif self.db.channel_type == 'NATION':
+                return self.check_nation_access(accessing_obj)
         return result
+
+    def check_faction_access(self, accessing_obj):
+        if hasattr(accessing_obj, 'character_sheet'):
+            return accessing_obj.character_sheet.faction == self.db.faction_name
+        return False
+
+    def check_nation_access(self, accessing_obj):
+        if hasattr(accessing_obj, 'character_sheet'):
+            return accessing_obj.character_sheet.nationality == self.db.nation_name
+        elif hasattr(accessing_obj.db, 'nationality'):
+            return accessing_obj.db.nationality == self.db.nation_name
+        return False
+
+    def set_faction_lock(self, faction_name):
+        self.db.channel_type = 'FACTION'
+        self.db.faction_name = faction_name
+
+    def set_nation_lock(self, nation_name):
+        self.db.channel_type = 'NATION'
+        self.db.nation_name = nation_name
+
+    def remove_lock(self):
+        self.db.channel_type = 'OOC'
+        self.db.faction_name = None
+        self.db.nation_name = None
         
 
     @property
@@ -326,6 +354,7 @@ class Channel(DefaultChannel):
         # Format the message with pose if emit, otherwise just the message
         if emit:
                 msgobj = self.pose_transform(msgobj, sender_string)
+                
         
         # Ensure the message is quoted and mentions are formatted
         message_content = self.format_mentions(f'"{msgobj}"', [sender.key for sender in senders])
