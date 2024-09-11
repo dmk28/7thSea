@@ -314,27 +314,34 @@ class Channel(DefaultChannel):
         return " ".join(words)
 
     def msg(self, msgobj, header=None, senders=None, sender_strings=None,
-            persistent=None, online=False, emit=False, external=False):
+        persistent=None, online=False, emit=False, external=False):
         """
-        Modify the msg method to handle formatting and sending messages
+        Modify the msg method to handle formatting and sending messages.
         """
         senders = make_iter(senders) if senders else []
         
-        # Format the message
+        # If sender_strings is not provided, fallback to sender's key.
+        sender_string = sender_strings[0] if sender_strings else (senders[0].key if senders else "Unknown")
+
+        # Format the message with pose if emit, otherwise just the message
         if emit:
-            msgobj = self.pose_transform(msgobj, sender_strings[0] if sender_strings else "")
-        message = self.format_mentions(msgobj, [sender.key for sender in senders])
+                msgobj = self.pose_transform(msgobj, sender_string)
         
-        # Add channel prefix
-        prefixed_message = self.channel_prefix() + f"{senders}" + message
-        
-        # Send to subscribers
+        # Ensure the message is quoted and mentions are formatted
+        message_content = self.format_mentions(f'"{msgobj}"', [sender.key for sender in senders])
+
+        # Add channel prefix and sender name
+        channel_name = self.channel_prefix()
+        formatted_message = f"{channel_name} {sender_string}: {message_content}"
+
+        # Send to all non-muted subscribers
         for subscriber in self.non_muted_subs:
-            subscriber.msg(prefixed_message, from_obj=senders, options={"from_channel": self.id})
+                subscriber.msg(formatted_message, from_obj=senders, options={"from_channel": self.id})
         
-        # Log the message
+        # Log the message if persistent
         if persistent:
-            self.log_message(message, senders[0] if senders else None)
+                self.log_message(message_content, senders[0] if senders else None)
+
 
     def log_message(self, message, sender):
         """Log the message to a file"""
