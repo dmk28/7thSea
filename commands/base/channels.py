@@ -105,7 +105,7 @@ class CmdChannel(MuxCommand):
             caller.msg("Usage: channel/delete <name>")
             return
         
-        channel = search_channel(self.args, global_search=True, typeclass=Channel)
+        channel = search_channel(self.args)
         if not channel:
             return
 
