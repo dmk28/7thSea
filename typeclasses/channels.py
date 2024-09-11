@@ -410,6 +410,6 @@ class Channel(DefaultChannel):
             messages = "".join(lines)
             caller.msg(f"Last {len(lines)} messages in {self.key}:\n{messages}")
 
-        from evennia.utils.utils import tail_log_file
+        from evennia.utils.logger import tail_log_file
         tail_log_file(log_file, 0, num_messages, callback=send_msg)
 
