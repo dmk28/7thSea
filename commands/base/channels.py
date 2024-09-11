@@ -216,24 +216,27 @@ class CmdChannel(MuxCommand):
         channel.get_history(caller, num_messages)
 
     def send_message(self):
-        """Send a message to a Channel"""
-        caller = self.caller
-        channel_name, sep, message = self.args.partition(" ")
-        channel_name = channel_name.strip()
-        message = message.strip()
+      """Send a message to a Channel"""
+      caller = self.caller
+      channel_name, sep, message = self.args.partition(" ")
+      channel_name = channel_name.strip()
+      message = message.strip()
 
-        if not channel_name or not message:
-            caller.msg("Usage: <channel> <message>")
-            return
+      # Debugging statement
+      caller.msg(f"DEBUG: channel_name='{channel_name}', message='{message}', sep='{sep}'")
 
-        channel = search_channel(channel_name)
-        if not channel.exists():
-            caller.msg(f"No channel found with the name '{self.args}'.")
-            return
-        channel = channel.first()
-         
-        if not channel.access(caller, "send"):
-            caller.msg("You don't have permission to send messages to this channel.")
-            return
+      if not channel_name or not message:
+         caller.msg("Usage: <channel> <message>")
+         return
+      
+      channel = search_channel(channel_name)
+      if not channel.exists():
+         caller.msg(f"No channel found with the name '{self.args}'.")
+         return
+      channel = channel.first()
+      
+      if not channel.access(caller, "send"):
+         caller.msg("You don't have permission to send messages to this channel.")
+         return
 
-        channel.msg(message, senders=[caller])
+      channel.msg(message, senders=[caller])
