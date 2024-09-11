@@ -420,7 +420,8 @@ class Channel(OldChannel):
             log_file = self.get_log_filename()
             sender_name = sender.key if sender else "Unknown"
             timestamp = logger.timeformat()
-            log_entry = f"[{sender_name}] {message}"
+            channel_name = self.key     
+            log_entry = f"[{channel_name}] {sender_name}: {message}"
             logger.log_file(log_entry, filename=log_file)
             print(f"DEBUG: Logged message to {log_file}")
         except Exception as e:
