@@ -174,7 +174,7 @@ class OldChannel(DefaultChannel):
 #                 log.write(log_entry)
 
 
-class Channel(DefaultChannel, OldChannel):
+class Channel(OldChannel):
     """
     Custom Channel class with additional features.
     Cribbed shamelessly from Arx-Game, altered for current-ver Evennia, so credit goes to Apostate and Tehom for this one.
