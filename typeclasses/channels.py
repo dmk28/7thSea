@@ -264,7 +264,7 @@ class Channel(DefaultChannel):
     def mutelist(self):
         """Cache mutelist to avoid expensive database operations"""
         if not hasattr(self.ndb, 'mute_list'):
-            self.ndb.mute_list = list(self.db.mute_list or [])
+                self.ndb.mute_list = list(self.db.mute_list or [])
         return self.ndb.mute_list
 
     @property
@@ -306,10 +306,13 @@ class Channel(DefaultChannel):
 
     def unmute(self, subscriber):
         """Remove subscriber from the mute list"""
+        if self.mutelist is None:
+                self.mutelist = []
+        
         if subscriber in self.mutelist:
-            self.mutelist.remove(subscriber)
-            self.db.mute_list = self.mutelist
-            return True
+                self.mutelist.remove(subscriber)
+                self.db.mute_list = self.mutelist
+                return True
         return False
 
     def clear_mute(self):
