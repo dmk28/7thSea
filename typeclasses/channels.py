@@ -367,6 +367,13 @@ class Channel(DefaultChannel):
                     words[i] = f"{{c[@{mention}]{{n"
         return " ".join(words)
 
+    def ensure_log_file_exists(self):
+        log_file = self.get_log_filename()
+        try:
+            with open(log_file, 'a') as f:
+                pass  # Just to create the file if it doesn't exist
+        except IOError as e:
+            print(f"ERROR: Unable to access log file at {log_file}. Error: {e}")
     def msg(self, msgobj, header=None, senders=None, sender_strings=None,
         persistent=None, online=False, emit=False, external=False):
         """
@@ -397,41 +404,29 @@ class Channel(DefaultChannel):
         if persistent:
                 self.log_message(message_content, senders[0] if senders else None)
     def get_log_filename(self):
-        """Returns the full path to the log file for this channel."""
         return os.path.join(settings.LOG_DIR, f"channel_{self.key.lower()}.log")
 
+
     def log_message(self, message, sender):
-        """Log the message to a file"""
         try:
-            log_file = self.db.log_file
-            if not log_file:
-                log_file = self.get_log_filename()
-                self.db.log_file = log_file
-            
+            log_file = self.get_log_filename()
+            self.ensure_log_file_exists()
             sender_name = sender.key if sender else "Unknown"
-            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            log_entry = f"[{timestamp}] [{sender_name}] {message}\n"
-            
-            logger.log_file(log_entry, log_file)
-            print(f"DEBUG: Logged message to {log_file}: {log_entry}")  # Debug print
+            timestamp = logger.timeformat()
+            log_entry = f"[{timestamp}] [{sender_name}] {message}"
+            logger.log_file(log_entry, filename=log_file)
         except Exception as e:
-            print(f"DEBUG: Error logging message: {str(e)}")  # Debug print for errors
+            print(f"ERROR: Failed to log message. Error: {e}")
+
 
     def get_history(self, caller, num_messages=20):
-        """Retrieve channel history"""
         try:
-            log_file = self.db.log_file
-            if not log_file:
-                log_file = self.get_log_filename()
-                self.db.log_file = log_file
-
-            def send_msg(lines):                
+            log_file = self.get_log_filename()
+            self.ensure_log_file_exists()
+            def send_msg(lines):
                 messages = "".join(lines)
                 caller.msg(f"Last {len(lines)} messages in {self.key}:\n{messages}")
-
-            from evennia.utils.logger import tail_log_file
-            tail_log_file(log_file, 0, num_messages, callback=send_msg)
+            logger.tail_log_file(log_file, 0, num_messages, callback=send_msg)
         except Exception as e:
             caller.msg(f"Error retrieving channel history: {str(e)}")
-            print(f"DEBUG: Error in get_history: {str(e)}")  # Debug print for errors
 
