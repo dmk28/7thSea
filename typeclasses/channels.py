@@ -230,9 +230,18 @@ class Channel(DefaultChannel):
         return result
 
     def check_faction_access(self, accessing_obj):
-        if hasattr(accessing_obj, 'character_sheet'):
-            return accessing_obj.character_sheet.faction == self.db.faction_name
-        return False
+        if not self.db.faction_name:
+            return False
+        
+        # Try to find the guild with the name matching faction_name
+        guild = AdventuringGuild.objects.filter(db_name=self.db.faction_name).first()
+        
+        if not guild:
+            return False
+        
+        # Check if the accessing_obj is a member of the guild
+        return guild.is_member(accessing_obj)
+
 
     def check_nation_access(self, accessing_obj):
         if hasattr(accessing_obj, 'character_sheet'):
@@ -244,6 +253,7 @@ class Channel(DefaultChannel):
     def set_faction_lock(self, faction_name):
         self.db.channel_type = 'FACTION'
         self.db.faction_name = faction_name
+        self.save()
 
     def set_nation_lock(self, nation_name):
         self.db.channel_type = 'NATION'

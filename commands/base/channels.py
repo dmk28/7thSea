@@ -3,7 +3,7 @@ from evennia.utils.evtable import EvTable
 from evennia.utils.utils import make_iter
 from typeclasses.channels import Channel
 from evennia.utils.search import search_channel
-
+from world.adventuring_guilds.models import AdventuringGuild
 class CmdChannel(MuxCommand):
     """
     Channel commands
@@ -261,16 +261,23 @@ class CmdChannel(MuxCommand):
 
     def set_faction_lock(self):
         if not self.args:
-            self.caller.msg("Usage: channel/set_faction <channel> = <faction_name>")
+            self.caller.msg("Usage: channel/set_faction <channel> = <guild_name>")
             return
-        channel_name, faction_name = self.args.split('=')
+        channel_name, guild_name = self.args.split('=')
         channel = search_channel(channel_name.strip())
         if not channel.exists():
             self.caller.msg(f"No channel found with the name '{channel_name}'.")
             return
         channel = channel.first()
-        channel.set_faction_lock(faction_name.strip())
-        self.caller.msg(f"Channel '{channel.key}' is now locked to faction '{faction_name}'.")
+        
+        # Check if the guild exists
+        guild = AdventuringGuild.objects.filter(db_name=guild_name.strip()).first()
+        if not guild:
+            self.caller.msg(f"No guild found with the name '{guild_name}'.")
+            return
+        
+        channel.set_faction_lock(guild.db_name)
+        self.caller.msg(f"Channel '{channel.key}' is now locked to guild '{guild.db_name}'.")
 
     def set_nation_lock(self):
         if not self.args:
