@@ -222,6 +222,9 @@ class CmdChannel(MuxCommand):
       channel_name = channel_name.strip()
       message = message.strip()
 
+      if message.startswith("="): #temporary fix
+         message = message[1:].strip()
+
       # Debugging statement
       caller.msg(f"DEBUG: channel_name='{channel_name}', message='{message}', sep='{sep}'")
 
