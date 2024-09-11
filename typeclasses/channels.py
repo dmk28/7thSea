@@ -180,7 +180,7 @@ class Channel(DefaultChannel):
     Cribbed shamelessly from Arx-Game, altered for current-ver Evennia, so credit goes to Apostate and Tehom for this one.
     Thanks, guys.
     """
-    
+    log_file = "channel_{channelname}.log"
     mentions = ["Everyone", "All"]
 
 
