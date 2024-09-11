@@ -91,6 +91,3 @@ class CmdHeal(Command):
                 target.db.unconscious = False
                 target.msg("|gYou snap out of unconsciousness.|n")
                 caller.msg(f"{target.name} has regained consciousness.")
-
-        # Inform the room
-        target.location.msg_contents(f"{target.name} has been healed.", exclude=[caller, target])
