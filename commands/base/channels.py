@@ -40,9 +40,9 @@ class CmdChannel(MuxCommand):
 
         if self.switches:
             switch = self.switches[0].lower()
-            if switch == "create":
+            if switch == "create" and caller.check_permstring("Builders"):
                 self.create_channel()
-            elif switch == "delete":
+            elif switch == "delete"and caller.check_permstring("Builders"):
                 self.delete_channel()
             elif switch == "list":
                 self.list_channels()
@@ -58,11 +58,11 @@ class CmdChannel(MuxCommand):
                 self.unmute_channel()
             elif switch == "history":
                 self.show_history()
-            elif switch == "set_faction":
+            elif switch == "set_faction" and caller.check_permstring("Builders"):
                   self.set_faction_lock()
-            elif switch == "set_nation":
+            elif switch == "set_nation" and caller.check_permstring("Builders"):
                   self.set_nation_lock()
-            elif switch == "remove_lock":
+            elif switch == "remove_lock" and caller.check_permstring("Builders"):
                   self.remove_lock()
             else:
                 caller.msg(f"Unknown switch: {switch}")  
