@@ -46,7 +46,7 @@ class CombatCommand(MuxCommand):
             self.join_combat()
             return
         
-        if "force_end" in self.switches and caller.check_permstring("Builders"):
+        if "force_end" in self.switches and self.caller.check_permstring("Builders"):
             self.end_combat(combat)
             return
 
