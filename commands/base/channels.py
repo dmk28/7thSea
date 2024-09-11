@@ -224,7 +224,8 @@ class CmdChannel(MuxCommand):
         num_messages = num_messages.strip()
 
         channel = search_channel(channel_name).first()
-        if not channel:
+        if not channel.exists():
+            caller.msg("Invalid channel.")
             return
 
         try:
@@ -232,6 +233,8 @@ class CmdChannel(MuxCommand):
         except ValueError:
             caller.msg("Invalid number of messages. Using default of 20.")
             num_messages = 20
+        except TypeError:
+            caller.msg("Invalid command, please try again.")
 
         channel.get_history(caller, num_messages)
 
