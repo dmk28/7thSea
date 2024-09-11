@@ -3,7 +3,7 @@ from evennia.utils.utils import inherits_from
 from evennia import ScriptDB
 from random import randint
 from world.character_sheet.models import CharacterSheet
-
+from evennia.utils.evtable import EvTable
 
 class CombatScript(DefaultScript):
     """
@@ -25,6 +25,18 @@ class CombatScript(DefaultScript):
         self.db.soak_keep = 0
         self.db.firearm_cooldowns = {}
 
+    def display_combat_status(self):
+        table = EvTable("|cName|n", "|cFlesh Wounds|n", "|cDramatic Wounds|n", border="cells")
+        
+        for participant in self.db.participants:
+            name = participant.name
+            flesh_wounds = participant.db.flesh_wounds
+            dramatic_wounds = participant.db.dramatic_wounds
+            table.add_row(name, flesh_wounds, dramatic_wounds)
+
+        table_display = table.get()
+        self.msg_all("\nCurrent Combat Status:\n" + table_display)
+        
     def at_start(self):
         self.msg_all(f"|500Combat has begun|n.")
 
@@ -132,14 +144,8 @@ class CombatScript(DefaultScript):
         return True 
 
     def end_combat(self):
-        winner, message = self.determine_combat_winner()
-
-        self.msg_all("Combat has ended.")
-        if winner:
-            self.msg_all(message)
-        else:
-            self.msg_all("The combat ends without a clear victor.")
-
+        if not hasattr(self.db, 'end_votes'):
+            self.db.end_votes = set()
 
         for char in self.db.participants:
             if hasattr(char.db, 'combat_id'):
@@ -163,7 +169,23 @@ class CombatScript(DefaultScript):
             char.msg("Combat has ended. Your flesh wounds have healed, but any dramatic wounds remain.")
 
         self.msg_all("Combat has ended.")
+        if hasattr(self.db, 'end_votes'):
+            del self.db.end_votes
         self.stop()
+
+    def vote_end_combat(self, voter):
+        if not hasattr(self.db, 'end_votes'):
+            self.db.end_votes = set()
+
+        self.db.end_votes.add(voter)
+        self.msg_all(f"{voter.name} has voted to end the combat.")
+
+        if len(self.db.end_votes) == len(self.db.participants):
+            self.msg_all("All participants have agreed to end the combat.")
+            self.end_combat()
+        else:
+            remaining = len(self.db.participants) - len(self.db.end_votes)
+            self.msg_all(f"{remaining} more vote(s) needed to end the combat.")
     
     def offer_action(self, character):
         self.db.action_state = "choosing_action"
@@ -294,6 +316,7 @@ class CombatScript(DefaultScript):
 
         self.msg_all(f"Round {self.db.round} begins.")
         self.roll_initiative()
+        self.display_combat_status()
         self.process_next_character()
 
     def process_next_character(self):

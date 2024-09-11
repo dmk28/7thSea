@@ -1,4 +1,3 @@
-
 from evennia import Command
 from evennia.commands.default.muxcommand import MuxCommand
 from world.combat_script.combat_system import get_combat
@@ -21,10 +20,12 @@ class CombatCommand(MuxCommand):
       combat/tag <target>
       combat/doubleattack <target>
       combat/pommelstrike <target>
-      combat/start <target>
+      combat/start <target1> [<target2> ...]
+      combat/join <combat_id>
+      combat/force_end (admin only)
       combat/end
 
-    This command handles all combat actions, including starting and ending combat.
+    This command handles all combat actions, including starting, joining, and ending combat.
     """
     key = "combat"
     aliases = ["attack", "defend", "hold", "pass", "feint", "stopthrust", "riposte", 
@@ -32,7 +33,7 @@ class CombatCommand(MuxCommand):
     locks = "cmd:all()"
     help_category = "Combat Commands"
     switches = ["attack", "defend", "hold", "pass", "feint", "stopthrust", "riposte", 
-                      "doubleparry", "lunge", "tag", "doubleattack", "pommelstrike", "start", "end"]
+                "doubleparry", "lunge", "tag", "doubleattack", "pommelstrike", "start", "join", "force_end", "end"]
 
     def func(self):
         combat = get_combat(self.caller)
@@ -41,8 +42,16 @@ class CombatCommand(MuxCommand):
             self.start_combat()
             return
         
-        if "end" in self.switches:
+        if "join" in self.switches:
+            self.join_combat()
+            return
+        
+        if "force_end" in self.switches and caller.check_permstring("Builders"):
             self.end_combat(combat)
+            return
+
+        if "end" in self.switches:
+            self.vote_end_combat(combat)
             return
 
         if not combat:
@@ -71,15 +80,14 @@ class CombatCommand(MuxCommand):
 
     def start_combat(self):
         if not self.args:
-            self.caller.msg("You must specify a target to start combat with.")
+            self.caller.msg("You must specify at least one target to start combat with.")
             return
         
-        target = self.caller.search(self.args)
-        if not target:
-            return
+        targets = [self.caller.search(arg) for arg in self.args.split()]
+        targets = [t for t in targets if t]  # Remove any None values
         
-        if self.caller == target:
-            self.caller.msg("You cannot start combat with yourself.")
+        if len(targets) < 1:
+            self.caller.msg("You need to specify at least one valid target.")
             return
         
         existing_combat = get_combat(self.caller)
@@ -92,36 +100,51 @@ class CombatCommand(MuxCommand):
             self.caller.msg("Failed to create combat.")
             return
 
-        combat.db.participants = [self.caller, target]
+        combat.db.participants = [self.caller] + targets
         combat.start_combat()
         
-        self.caller.msg(f"You have initiated combat with {target.name}!")
-        target.msg(f"{self.caller.name} has initiated combat with you!")
+        self.caller.msg(f"You have initiated combat with {', '.join(t.name for t in targets)}!")
+        for target in targets:
+            target.msg(f"{self.caller.name} has initiated combat with you!")
+
+    def join_combat(self):
+        if not self.args:
+            self.caller.msg("You must specify a combat ID to join.")
+            return
+        
+        try:
+            combat_id = int(self.args)
+        except ValueError:
+            self.caller.msg("Invalid combat ID. Please provide a number.")
+            return
+
+        combat = get_combat(combat_id)
+        if not combat:
+            self.caller.msg(f"No combat found with ID {combat_id}")
+            return
+
+        if self.caller in combat.db.participants:
+            self.caller.msg("You are already in this combat.")
+            return
+
+        combat.db.participants.append(self.caller)
+        self.caller.db.combat_id = combat.id
+        self.caller.msg(f"You have joined the combat with ID {combat_id}")
+        combat.msg_all(f"{self.caller.name} has joined the combat!")
 
     def end_combat(self, combat):
         if combat:
-            combat.end_combat()
-            self.caller.msg("You have ended the combat.")
+            combat.force_end_combat()
+            self.caller.msg("You have forcefully ended the combat.")
         else:
             self.caller.msg("You are not in an active combat.")
-# Similar classes for Riposte, Lunge, etc.
 
-# class CmdSpecial(Command):
-#     """
-#     Use a special combat move.
-
-#     Usage:
-#       special
-#     """
-#     key = "special"
-#     locks = "cmd:all()"
-
-#     def func(self):
-#         combat = self.caller.ndb.combat
-#         if combat:
-#             combat.handle_action_input(self.caller, "special")
-#         else:
-#             self.caller.msg("You are not in combat.")
+    def vote_end_combat(self, combat):
+        if not combat:
+            self.caller.msg("You are not in an active combat.")
+            return
+        
+        combat.vote_end_combat(self.caller)
 
 class CmdViewCombatEffects(Command):
     """
