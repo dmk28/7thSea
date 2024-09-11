@@ -380,7 +380,7 @@ class Channel(OldChannel):
 
 
     def msg(self, msgobj, header=None, senders=None, sender_strings=None,
-        persistent=None, online=False, emit=False, external=False):
+        persistent=True, online=False, emit=False, external=False):
         """
         Modify the msg method to handle formatting and sending messages.
         """
@@ -408,6 +408,10 @@ class Channel(OldChannel):
         # Log the message if persistent
         if persistent:
                 self.log_message(message_content, senders[0] if senders else None)
+        super().msg(msgobj, header=header, senders=senders, sender_strings=sender_strings,
+                persistent=persistent, online=online, emit=emit, external=external)
+
+
     def get_log_filename(self):
         return os.path.join(settings.LOG_DIR, f"channel_{self.key.lower()}.log")
 
