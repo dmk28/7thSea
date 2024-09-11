@@ -156,7 +156,7 @@ class CmdChannel(MuxCommand):
             return
         
         channel = search_channel(self.args).first()
-        if not channel.exists():
+        if not channel:
             return
 
         if channel.connect(caller):
