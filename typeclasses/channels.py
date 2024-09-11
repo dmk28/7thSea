@@ -236,7 +236,13 @@ class Channel(DefaultChannel):
 
     @property
     def non_muted_subs(self):
-        return [ob for ob in self.subscriptions.all() if ob.is_connected and ob not in self.mutelist]
+        # Ensure subscriptions and mutelist are not None
+        subscriptions = self.subscriptions.all() if self.subscriptions else []
+        mutelist = self.mutelist if self.mutelist is not None else []
+
+        # Iterate through subscriptions and filter out muted users
+        return [ob for ob in subscriptions if ob.is_connected and ob not in mutelist]
+
 
     @staticmethod
     def format_wholist(listening):
