@@ -126,7 +126,7 @@ class CmdChannel(MuxCommand):
         if not channel:
             return
 
-        caller.msg(f"Subscribers of {channel}: {channel.wholist}")
+        caller.msg(f"Subscribers of {channel.key}: {channel.wholist}")
 
     def join_channel(self):
         """Join a channel"""
