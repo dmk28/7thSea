@@ -36,7 +36,8 @@ class CombatScript(DefaultScript):
             table.add_row(name, flesh_wounds, dramatic_wounds)
 
         table_display = table.get()
-        self.msg_all("\nCurrent Combat Status:\n" + table_display)
+        self.msg_all("\nCurrent Combat Status:\n")
+        self.msg_all(table_display)
         
     def at_start(self):
         self.msg_all(f"|500Combat has begun|n.")
