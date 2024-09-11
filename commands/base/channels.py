@@ -122,7 +122,7 @@ class CmdChannel(MuxCommand):
             caller.msg("Usage: channel/who <name>")
             return
         
-        channel = search_channel(self.args, global_search=True, typeclass=Channel)
+        channel = search_channel(self.args,  typeclass=Channel)
         if not channel:
             return
 
