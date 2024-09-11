@@ -34,10 +34,16 @@ class CombatScript(DefaultScript):
             flesh_wounds = participant.db.flesh_wounds
             dramatic_wounds = participant.db.dramatic_wounds
             table.add_row(name, flesh_wounds, dramatic_wounds)
-
-        table_display = table.get()
-        self.msg_all("\nCurrent Combat Status:\n")
-        self.msg_all(f"{table_display}")
+        
+        table_str = str(table)
+        
+        # Split the table string into lines
+        table_lines = table_str.split('\n')
+        
+        # Send each line separately
+        self.msg_all("\nCurrent Combat Status:")
+        for line in table_lines:
+            self.msg_all(line)
         
     def at_start(self):
         self.msg_all(f"|500Combat has begun|n.")
