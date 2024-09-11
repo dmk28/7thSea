@@ -24,6 +24,7 @@ class CombatScript(DefaultScript):
         self.db.round = 0  # Initialize the round counter
         self.db.soak_keep = 0
         self.db.firearm_cooldowns = {}
+        self.db.end_votes = set()
 
     def display_combat_status(self):
         table = EvTable("|cName|n", "|cFlesh Wounds|n", "|cDramatic Wounds|n", border="cells")
@@ -742,16 +743,7 @@ class CombatScript(DefaultScript):
             self.msg_all(f"{character.name} has regained consciousness!")
             self.add_participant(character)
     
-    
-    def display_combat_status(self):
-        """
-        Display the status of the combat.
-        """
-        status = f"Current Round: {self.db.round}\nParticipants:\n"
-        for char in self.db.participants:
-            status += f"- {char.name}: Flesh Wounds: {char.db.get('flesh_wounds', 0)}, Dramatic Wounds: {char.db.get('dramatic_wounds', 0)}\n"
-        self.msg_all(status)
-    
+  
     
     def remove_combat_cmdset(self, character):
         from commands.mycmdset import CombatCmdSet
