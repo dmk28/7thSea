@@ -226,10 +226,12 @@ class CmdChannel(MuxCommand):
             caller.msg("Usage: <channel> <message>")
             return
 
-        channel = caller.search(channel_name, global_search=True, typeclass=Channel)
-        if not channel:
+        channel = search_channel(channel_name)
+        if not channel.exists():
+            caller.msg(f"No channel found with the name '{self.args}'.")
             return
-
+        channel = channel.first()
+         
         if not channel.access(caller, "send"):
             caller.msg("You don't have permission to send messages to this channel.")
             return
