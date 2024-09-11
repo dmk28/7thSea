@@ -2,6 +2,7 @@ from evennia.commands.default.muxcommand import MuxCommand
 from evennia.utils.evtable import EvTable
 from evennia.utils.utils import make_iter
 from typeclasses.channels import Channel
+from evennia.utils.search import search_channel
 
 class CmdChannel(MuxCommand):
     """
@@ -225,7 +226,7 @@ class CmdChannel(MuxCommand):
             caller.msg("Usage: <channel> <message>")
             return
 
-        channel = caller.search(channel_name, global_search=True, typeclass=Channel)
+        channel = caller.search_channel(channel_name, global_search=True, typeclass=Channel)
         if not channel:
             return
 
