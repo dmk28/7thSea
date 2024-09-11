@@ -325,7 +325,7 @@ class Channel(DefaultChannel):
         if self.mutelist is None:
                 self.mutelist = []
         
-        if subscriber in utelist:
+        if subscriber in mutelist:
                 self.mutelist.remove(subscriber)
                 self.db.mute_list = self.mutelist
                 return True
