@@ -1,9 +1,9 @@
-from evennia import Command
+from evennia.commands.default.muxcommand import MuxCommand
 from evennia.utils.evtable import EvTable
 from evennia.utils.utils import make_iter
 from typeclasses.channels import Channel
 
-class CmdChannel(Command):
+class CmdChannel(MuxCommand):
     """
     Channel commands
 
