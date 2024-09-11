@@ -200,7 +200,7 @@ class Channel(OldChannel):
         self.db.channel_type = 'OOC'  # Default type
         self.db.faction_name = None
         self.db.nation_name = None
-        self.db.log_file = self.get_log_filename()
+        self.ensure_log_file_exists()  # Set up the log file    
 
     def set_org(self, guild):
         """Set this channel as an organization channel."""
@@ -414,26 +414,32 @@ class Channel(OldChannel):
 
     def log_message(self, message, sender):
         try:
-            self.ensure_log_file_exists()
             log_file = self.get_log_filename()
-            self.ensure_log_file_exists()
             sender_name = sender.key if sender else "Unknown"
             timestamp = logger.timeformat()
             log_entry = f"[{timestamp}] [{sender_name}] {message}"
             logger.log_file(log_entry, filename=log_file)
+            print(f"DEBUG: Logged message to {log_file}")
         except Exception as e:
             print(f"ERROR: Failed to log message. Error: {e}")
 
 
+
     def get_history(self, caller, num_messages=20):
         try:
-            self.ensure_log_file_exists()
             log_file = self.get_log_filename()
+            if not os.path.exists(log_file):
+                caller.msg(f"No history available for channel {self.key}.")
+                return
+
             def send_msg(lines):
-                messages = "".join(lines)
-                caller.msg(f"Last {len(lines)} messages in {self.key}:\n{messages}")
+                if not lines:
+                    caller.msg(f"No messages found in the history of channel {self.key}.")
+                else:
+                    messages = "".join(lines)
+                    caller.msg(f"Last {len(lines)} messages in {self.key}:\n{messages}")
+
             logger.tail_log_file(log_file, 0, num_messages, callback=send_msg)
         except Exception as e:
             caller.msg(f"Error retrieving channel history: {str(e)}")
-            print(f"ERROR: Failed to retrieve history. Error {e}")
-
+            print(f"ERROR: Failed to retrieve history. Error: {e}")
