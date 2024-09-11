@@ -182,6 +182,8 @@ class Channel(DefaultChannel):
     """
     
     mentions = ["Everyone", "All"]
+    log_file = set_log_filename("channel_{channelname}.log")
+
 
     @lazy_property
     def org_channel(self):
@@ -199,6 +201,7 @@ class Channel(DefaultChannel):
         self.db.channel_type = 'OOC'  # Default type
         self.db.faction_name = None
         self.db.nation_name = None
+        self.db.log_file = self.get_log_filename()
 
     def set_org(self, guild):
         """Set this channel as an organization channel."""
@@ -394,17 +397,19 @@ class Channel(DefaultChannel):
         # Log the message if persistent
         if persistent:
                 self.log_message(message_content, senders[0] if senders else None)
-
+    def get_log_filename(self):
+        """Returns the full path to the log file for this channel."""
+        return os.path.join(settings.LOG_DIR, f"channel_{self.key.lower()}.log")
 
     def log_message(self, message, sender):
         """Log the message to a file"""
-        log_file = f"channel_{self.key.lower()}.log"
+        log_file = self.db.log_file
         sender_name = sender.key if sender else "Unknown"
         logger.log_file(f"[{sender_name}] {message}", log_file)
 
     def get_history(self, caller, num_messages=20):
         """Retrieve channel history"""
-        log_file = f"channel_{self.key.lower()}.log"
+        log_file = self.db.log_file
 
         def send_msg(lines):                
             messages = "".join(lines)
