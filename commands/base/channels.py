@@ -87,7 +87,7 @@ class CmdChannel(MuxCommand):
             caller.msg("Usage: channel/delete <name>")
             return
         
-        channel = caller.search(self.args, global_search=True, typeclass=Channel)
+        channel = caller.search_channel(self.args, global_search=True, typeclass=Channel)
         if not channel:
             return
 
@@ -122,7 +122,7 @@ class CmdChannel(MuxCommand):
             caller.msg("Usage: channel/who <name>")
             return
         
-        channel = caller.search(self.args, global_search=True, typeclass=Channel)
+        channel = caller.search_channel(self.args, global_search=True, typeclass=Channel)
         if not channel:
             return
 
@@ -135,7 +135,7 @@ class CmdChannel(MuxCommand):
             caller.msg("Usage: channel/join <name>")
             return
         
-        channel = caller.search(self.args, global_search=True, typeclass=Channel)
+        channel = caller.search_channel(self.args, global_search=True, typeclass=Channel)
         if not channel:
             return
 
@@ -151,7 +151,7 @@ class CmdChannel(MuxCommand):
             caller.msg("Usage: channel/leave <name>")
             return
         
-        channel = caller.search(self.args, global_search=True, typeclass=Channel)
+        channel = caller.search_channel(self.args, global_search=True, typeclass=Channel)
         if not channel:
             return
 
@@ -183,7 +183,7 @@ class CmdChannel(MuxCommand):
             caller.msg("Usage: channel/unmute <name>")
             return
         
-        channel = caller.search(self.args, global_search=True, typeclass=Channel)
+        channel = caller.search_channel(self.args, global_search=True, typeclass=Channel)
         if not channel:
             return
 
@@ -203,7 +203,7 @@ class CmdChannel(MuxCommand):
         channel_name = channel_name.strip()
         num_messages = num_messages.strip()
 
-        channel = caller.search(channel_name, global_search=True, typeclass=Channel)
+        channel = caller.search_channel(channel_name, global_search=True, typeclass=Channel)
         if not channel:
             return
 
