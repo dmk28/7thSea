@@ -408,8 +408,7 @@ class Channel(OldChannel):
         # Log the message if persistent
         if persistent:
                 self.log_message(message_content, senders[0] if senders else None)
-        super().msg(msgobj, header=header, senders=senders, sender_strings=sender_strings,
-                persistent=persistent, online=online, emit=emit, external=external)
+   
 
 
     def get_log_filename(self):
