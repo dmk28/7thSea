@@ -106,8 +106,10 @@ class CmdChannel(MuxCommand):
             return
         
         channel = search_channel(self.args)
-        if not channel:
-            return
+        if not channel.exists():
+         caller.msg(f"No channel found with the name '{self.args}'.")
+         return
+        channel = channel.first()
 
         if not channel.access(caller, "control"):
             caller.msg("You don't have permission to delete this channel.")
@@ -221,7 +223,7 @@ class CmdChannel(MuxCommand):
         channel_name = channel_name.strip()
         num_messages = num_messages.strip()
 
-        channel = caller.search(channel_name, global_search=True, typeclass=Channel)
+        channel = search_channel(channel_name)
         if not channel:
             return
 
