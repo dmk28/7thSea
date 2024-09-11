@@ -122,10 +122,10 @@ class CmdChannel(MuxCommand):
             caller.msg("Usage: channel/who <name>")
             return
         
-        channel = search_channel(self.args)[0]
-        if not channel:
+        channel = search_channel(self.args)
+        if not channel.exists():
             return
-
+        channel = channel.first()
         caller.msg(f"Subscribers of {channel.key}: {channel.wholist}")
 
     def join_channel(self):
