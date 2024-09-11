@@ -155,8 +155,8 @@ class CmdChannel(MuxCommand):
             caller.msg("Usage: channel/join <name>")
             return
         
-        channel = caller.search(self.args, global_search=True, typeclass=Channel)
-        if not channel:
+        channel = search_channel(self.args).first()
+        if not channel.exists():
             return
 
         if channel.connect(caller):
@@ -171,7 +171,7 @@ class CmdChannel(MuxCommand):
             caller.msg("Usage: channel/leave <name>")
             return
         
-        channel = caller.search(self.args, global_search=True, typeclass=Channel)
+        channel = caller.search_channel(self.args).first()
         if not channel:
             return
 
@@ -187,7 +187,7 @@ class CmdChannel(MuxCommand):
             caller.msg("Usage: channel/mute <name>")
             return
         
-        channel = caller.search(self.args, global_search=True, typeclass=Channel)
+        channel = caller.search_channel(self.args).first()
         if not channel:
             return
 
