@@ -171,12 +171,16 @@ class CombatScript(DefaultScript):
 
         self.msg_all("Combat has ended.")
         if hasattr(self.db, 'end_votes'):
-            del self.db.end_votes
+            self.db.end_votes = set()
         self.stop()
 
     def vote_end_combat(self, voter):
-        if not hasattr(self.db, 'end_votes'):
+        if not self.db.end_votes:
             self.db.end_votes = set()
+        
+        if voter in self.db.end_votes:
+            self.msg_all(f"{voter.name} has already voted to end the combat.")
+            return
 
         self.db.end_votes.add(voter)
         self.msg_all(f"{voter.name} has voted to end the combat.")
