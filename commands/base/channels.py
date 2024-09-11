@@ -225,6 +225,7 @@ class CmdChannel(MuxCommand):
 
         channel = search_channel(channel_name).first()
         if not channel:
+            caller.msg("No channel with that name.")
             return
 
         try:

@@ -368,12 +368,17 @@ class Channel(DefaultChannel):
         return " ".join(words)
 
     def ensure_log_file_exists(self):
+        """Ensure that the log file exists and is writable."""
         log_file = self.get_log_filename()
         try:
             with open(log_file, 'a') as f:
                 pass  # Just to create the file if it doesn't exist
+            print(f"DEBUG: Log file verified/created at {log_file}")
         except IOError as e:
-            print(f"ERROR: Unable to access log file at {log_file}. Error: {e}")
+            print(f"ERROR: Unable to create/access log file at {log_file}. Error: {e}")
+
+
+
     def msg(self, msgobj, header=None, senders=None, sender_strings=None,
         persistent=None, online=False, emit=False, external=False):
         """
@@ -409,6 +414,7 @@ class Channel(DefaultChannel):
 
     def log_message(self, message, sender):
         try:
+            self.ensure_log_file_exists()
             log_file = self.get_log_filename()
             self.ensure_log_file_exists()
             sender_name = sender.key if sender else "Unknown"
@@ -421,12 +427,13 @@ class Channel(DefaultChannel):
 
     def get_history(self, caller, num_messages=20):
         try:
-            log_file = self.get_log_filename()
             self.ensure_log_file_exists()
+            log_file = self.get_log_filename()
             def send_msg(lines):
                 messages = "".join(lines)
                 caller.msg(f"Last {len(lines)} messages in {self.key}:\n{messages}")
             logger.tail_log_file(log_file, 0, num_messages, callback=send_msg)
         except Exception as e:
             caller.msg(f"Error retrieving channel history: {str(e)}")
+            print(f"ERROR: Failed to retrieve history. Error {e}")
 
