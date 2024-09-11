@@ -224,7 +224,7 @@ class CmdChannel(MuxCommand):
         num_messages = num_messages.strip()
 
         channel = search_channel(channel_name).first()
-        if not channel.exists():
+        if not channel:
             caller.msg("Invalid channel.")
             return
 
