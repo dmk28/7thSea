@@ -402,18 +402,36 @@ class Channel(DefaultChannel):
 
     def log_message(self, message, sender):
         """Log the message to a file"""
-        log_file = self.db.log_file
-        sender_name = sender.key if sender else "Unknown"
-        logger.log_file(f"[{sender_name}] {message}", log_file)
+        try:
+            log_file = self.db.log_file
+            if not log_file:
+                log_file = self.get_log_filename()
+                self.db.log_file = log_file
+            
+            sender_name = sender.key if sender else "Unknown"
+            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            log_entry = f"[{timestamp}] [{sender_name}] {message}\n"
+            
+            logger.log_file(log_entry, log_file)
+            print(f"DEBUG: Logged message to {log_file}: {log_entry}")  # Debug print
+        except Exception as e:
+            print(f"DEBUG: Error logging message: {str(e)}")  # Debug print for errors
 
     def get_history(self, caller, num_messages=20):
         """Retrieve channel history"""
-        log_file = self.db.log_file
+        try:
+            log_file = self.db.log_file
+            if not log_file:
+                log_file = self.get_log_filename()
+                self.db.log_file = log_file
 
-        def send_msg(lines):                
-            messages = "".join(lines)
-            caller.msg(f"Last {len(lines)} messages in {self.key}:\n{messages}")
+            def send_msg(lines):                
+                messages = "".join(lines)
+                caller.msg(f"Last {len(lines)} messages in {self.key}:\n{messages}")
 
-        from evennia.utils.logger import tail_log_file
-        tail_log_file(log_file, 0, num_messages, callback=send_msg)
+            from evennia.utils.logger import tail_log_file
+            tail_log_file(log_file, 0, num_messages, callback=send_msg)
+        except Exception as e:
+            caller.msg(f"Error retrieving channel history: {str(e)}")
+            print(f"DEBUG: Error in get_history: {str(e)}")  # Debug print for errors
 
