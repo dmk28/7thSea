@@ -235,7 +235,6 @@ class CmdChannel(MuxCommand):
             num_messages = 20
 
         # Check and reset log file if needed
-        log_file = channel.check_and_reset_logfile()
         caller.msg(f"DEBUG: Using log file: {log_file}")
 
         channel.get_history(caller, num_messages)
