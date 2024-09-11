@@ -234,8 +234,7 @@ class CmdChannel(MuxCommand):
             caller.msg("Invalid number of messages. Using default of 20.")
             num_messages = 20
 
-        # Check and reset log file if needed
-        caller.msg(f"DEBUG: Using log file: {log_file}")
+
 
         channel.get_history(caller, num_messages)
 
