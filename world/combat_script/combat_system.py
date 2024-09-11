@@ -774,8 +774,8 @@ class CombatScript(DefaultScript):
         room = self.db.participants[0].location
         
         # Prepare the messages
-        combat_msg = f"|r[Combat]|n {message}"
-        observer_msg = f"|r[Combat]|n {message}"
+        combat_msg = f"{message}"
+        observer_msg = f"{message}"
         
         # Ensure exclude is a list
         if exclude and not isinstance(exclude, list):
