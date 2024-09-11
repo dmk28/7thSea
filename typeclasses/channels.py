@@ -182,7 +182,6 @@ class Channel(DefaultChannel):
     """
     
     mentions = ["Everyone", "All"]
-    log_file = set_log_filename("channel_{channelname}.log")
 
 
     @lazy_property
