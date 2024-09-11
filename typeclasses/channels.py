@@ -253,7 +253,12 @@ class Channel(DefaultChannel):
         self.db.channel_type = 'OOC'
         self.db.faction_name = None
         self.db.nation_name = None
-        
+ 
+    @classmethod
+    def create(cls, key, description="", typeclass=None, **kwargs):
+        channel = super().create(key, description=description, typeclass=typeclass, **kwargs)
+        return channel  # Return just the channel object, not a tuple
+
 
     @property
     def mutelist(self):

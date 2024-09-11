@@ -71,23 +71,32 @@ class CmdChannel(MuxCommand):
             self.send_message()
 
     def create_channel(self):
-        """Create a new channel"""
-        caller = self.caller
-        if not self.args:
-            caller.msg("Usage: channel/create <name> [= description]")
-            return
-        
-        channel_name, sep, description = self.args.partition("=")
-        channel_name = channel_name.strip()
-        description = description.strip()
+      """Create a new channel"""
+      caller = self.caller
+      if not self.args:
+         caller.msg("Usage: channel/create <name> [= description]")
+         return
+      
+      channel_name, sep, description = self.args.partition("=")
+      channel_name = channel_name.strip()
+      description = description.strip()
 
-        if Channel.objects.filter(db_key__iexact=channel_name).exists():
-            caller.msg(f"A channel named '{channel_name}' already exists.")
-            return
+      if Channel.objects.filter(db_key__iexact=channel_name).exists():
+         caller.msg(f"A channel named '{channel_name}' already exists.")
+         return
 
-        new_channel = Channel.create(channel_name, description=description)
-        new_channel.connect(caller)
-        caller.msg(f"Channel '{channel_name}' created successfully.")
+      new_channel = Channel.create(channel_name, description=description)
+      
+      # Check if new_channel is a tuple
+      if isinstance(new_channel, tuple):
+         new_channel, errors = new_channel
+         if errors:
+               caller.msg(f"Errors occurred while creating the channel: {errors}")
+               return
+
+      # Now we can safely use connect
+      new_channel.connect(caller)
+      caller.msg(f"Channel '{channel_name}' created successfully.")
 
     def delete_channel(self):
         """Delete an existing channel"""
