@@ -325,7 +325,7 @@ class Channel(DefaultChannel):
         if self.mutelist is None:
                 self.mutelist = []
         
-        if subscriber in mutelist:
+        if subscriber in self.mutelist:
                 self.mutelist.remove(subscriber)
                 self.db.mute_list = self.mutelist
                 return True
@@ -406,7 +406,7 @@ class Channel(DefaultChannel):
         """Retrieve channel history"""
         log_file = f"channel_{self.key.lower()}.log"
 
-        def send_msg(lines):
+        def send_msg(lines):                
             messages = "".join(lines)
             caller.msg(f"Last {len(lines)} messages in {self.key}:\n{messages}")
 
