@@ -287,8 +287,8 @@ class Channel(DefaultChannel):
     def channel_prefix(self, msg=None, emit=False):
         """Define how the channel name appears in messages"""
         if self.db.colorstr:
-            return f"{self.db.colorstr}[{self.key}]{{n "
-        return f"{{w[{self.key}]{{n "
+            return f"{self.db.colorstr}[{self.key}]|n "
+        return f"|w[{self.key}]|n "
 
     def pose_transform(self, msg, sender_string):
         """Handle pose-style messages"""
@@ -326,7 +326,7 @@ class Channel(DefaultChannel):
         message = self.format_mentions(msgobj, [sender.key for sender in senders])
         
         # Add channel prefix
-        prefixed_message = self.channel_prefix() + message
+        prefixed_message = self.channel_prefix() + f"{sender}" + message
         
         # Send to subscribers
         for subscriber in self.non_muted_subs:
