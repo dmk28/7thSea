@@ -326,7 +326,7 @@ class Channel(DefaultChannel):
         message = self.format_mentions(msgobj, [sender.key for sender in senders])
         
         # Add channel prefix
-        prefixed_message = self.channel_prefix() + f"{sender}" + message
+        prefixed_message = self.channel_prefix() + f"{senders}" + message
         
         # Send to subscribers
         for subscriber in self.non_muted_subs:
