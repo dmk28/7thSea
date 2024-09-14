@@ -120,20 +120,25 @@ class CmdChannel(MuxCommand):
         caller.msg(f"Channel '{channel_name}' has been deleted.")
 
     def list_channels(self):
-        """List all available channels"""
+        """List all available channels that the character has access to"""
         caller = self.caller
-        channels = [chan for chan in Channel.objects.all() if chan.access(caller, "listen")]
+        accessible_channels = []
+
+        for chan in Channel.objects.all():
+            if chan.access(caller, "listen"):
+                accessible_channels.append(chan)
         
-        if not channels:
-            caller.msg("No channels available.")
+        if not accessible_channels:
+            caller.msg("No channels available to you.")
             return
 
         table = EvTable("Channel", "Description", "Subscribed", border="cells")
-        for chan in channels:
+        for chan in accessible_channels:
             subscribed = "Yes" if chan.has_connection(caller) else "No"
             table.add_row(chan.key, chan.db.desc or "", subscribed)
         
         caller.msg(str(table))
+
 
     def show_who(self):
         """Show who is subscribed to a channel"""
@@ -144,8 +149,14 @@ class CmdChannel(MuxCommand):
         
         channel = search_channel(self.args)
         if not channel.exists():
+            caller.msg(f"No channel found with the name '{self.args}'.")
             return
         channel = channel.first()
+
+        if not channel.access(caller, "listen"):
+            caller.msg(f"You don't have access to the channel {channel.key}.")
+            return
+
         caller.msg(f"Subscribers of {channel.key}: {channel.wholist}")
 
     def join_channel(self):
@@ -157,12 +168,32 @@ class CmdChannel(MuxCommand):
         
         channel = search_channel(self.args).first()
         if not channel:
+            caller.msg(f"No channel found with the name '{self.args}'.")
             return
 
+        # Check channel type and access restrictions
+        if channel.db.channel_type == 'NATION':
+            character_nationality = caller.db.nationality if hasattr(caller.db, 'nationality') else None
+            if character_nationality != channel.db.nation_name:
+                caller.msg(f"You cannot join the channel {channel.key}. It's restricted to citizens of {channel.db.nation_name}.")
+                return
+        elif channel.db.channel_type == 'FACTION':
+            if not AdventuringGuild.objects.filter(db_name=channel.db.faction_name, db_members=caller).exists():
+                caller.msg(f"You cannot join the channel {channel.key}. It's restricted to members of the {channel.db.faction_name} faction.")
+                return
+
+        # If the character passes the access checks, attempt to connect them to the channel
         if channel.connect(caller):
             caller.msg(f"You have joined the channel {channel.key}.")
         else:
             caller.msg(f"You are already subscribed to {channel.key}.")
+
+    
+
+
+
+
+
 
     def leave_channel(self):
         """Leave a channel"""
@@ -171,7 +202,7 @@ class CmdChannel(MuxCommand):
             caller.msg("Usage: channel/leave <name>")
             return
         
-        channel = caller.search_channel(self.args).first()
+        channel = search_channel(self.args).first()
         if not channel:
             return
 

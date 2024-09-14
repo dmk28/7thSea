@@ -388,6 +388,16 @@ class Channel(OldChannel):
             print(f"DEBUG: Log file verified/created at {log_file}")
         except IOError as e:
             print(f"ERROR: Unable to create/access log file at {log_file}. Error: {e}")
+    
+    
+    def access(self, accessing_obj, access_type='listen', default=False):
+        result = super().access(accessing_obj, access_type, default)
+        if result:
+            if self.db.channel_type == 'NATION':
+                return accessing_obj.db.nationality == self.db.nation_name
+            elif self.db.channel_type == 'FACTION':
+                return AdventuringGuild.objects.filter(db_name=self.db.faction_name, db_members=accessing_obj).exists()
+        return result
 
 
 
