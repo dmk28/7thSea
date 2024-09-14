@@ -1285,7 +1285,7 @@ class CombatScript(DefaultScript):
         
         attack_skill = attacker.character_sheet.get_knack_value(f"{offense_weapon_attack}")
         
-        defense_roll = self.roll_keep((defender.db.traits['finesse'] + riposte_skill), defender.db.traits['finesse'])
+        defense_roll = self.roll_keep((defender.db.traits['wits'] + riposte_skill), defender.db.traits['finesse'])
 
         if defense_roll > attacker_roll:
             damage = self.calculate_damage(defender, defense_weapon)
