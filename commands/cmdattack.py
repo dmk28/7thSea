@@ -27,9 +27,8 @@ class CombatCommand(MuxCommand):
 
     This command handles all combat actions, including starting, joining, and ending combat.
     """
-    key = "combat"
-    aliases = ["attack", "defend", "hold", "pass", "feint", "stopthrust", "riposte", 
-               "doubleparry", "lunge", "tag", "doubleattack", "pommelstrike"]
+    key = "+combat"
+    aliases = ["@combat"]
     locks = "cmd:all()"
     help_category = "Combat Commands"
     switches = ["attack", "defend", "hold", "pass", "feint", "stopthrust", "riposte", 
