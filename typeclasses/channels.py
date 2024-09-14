@@ -406,7 +406,6 @@ class Channel(OldChannel):
         """
         Modify the msg method to handle formatting and sending messages.
         """
-        
         senders = make_iter(senders) if senders else []
         
         # If sender_strings is not provided, fallback to sender's key.
@@ -414,24 +413,24 @@ class Channel(OldChannel):
 
         # Format the message with pose if emit, otherwise just the message
         if emit:
-                msgobj = self.pose_transform(msgobj, sender_string)
-                
-        
-        # Ensure the message is quoted and mentions are formatted
-        message_content = self.format_mentions(f'"{msgobj}"', [sender.key for sender in senders])
+            message_content = self.pose_transform(msgobj, sender_string)
+        else:
+            message_content = f"{sender_string}: {msgobj}"
 
-        # Add channel prefix and sender name
+        # Ensure the message is quoted and mentions are formatted
+        message_content = self.format_mentions(message_content, [sender.key for sender in senders])
+
+        # Add channel prefix
         channel_name = self.channel_prefix()
-        formatted_message = f"{channel_name} {sender_string}: {message_content}"
+        formatted_message = f"{channel_name} {message_content}"
 
         # Send to all non-muted subscribers
         for subscriber in self.non_muted_subs:
-                subscriber.msg(formatted_message, from_obj=senders, options={"from_channel": self.id})
+            subscriber.msg(formatted_message, from_obj=senders, options={"from_channel": self.id})
         
         # Log the message if persistent
         if persistent:
-                self.log_message(message_content, senders[0] if senders else None)
-   
+            self.log_message(message_content, senders[0] if senders else None)
 
 
     def get_log_filename(self):

@@ -270,30 +270,38 @@ class CmdChannel(MuxCommand):
         channel.get_history(caller, num_messages)
 
     def send_message(self):
-      """Send a message to a Channel"""
-      caller = self.caller
-      channel_name, sep, message = self.args.partition(" ")
-      channel_name = channel_name.strip()
-      message = message.strip()
+        """Send a message to a Channel"""
+        caller = self.caller
+        channel_name, sep, message = self.args.partition(" ")
+        channel_name = channel_name.strip()
+        message = message.strip()
 
-      if message.startswith("="): #temporary fix
-         message = message[1:].strip()
+        if not channel_name or not message:
+            caller.msg("Usage: <channel> <message>")
+            return
 
-      if not channel_name or not message:
-         caller.msg("Usage: <channel> <message>")
-         return
-      
-      channel = search_channel(channel_name)
-      if not channel.exists():
-         caller.msg(f"No channel found with the name '{self.args}'.")
-         return
-      channel = channel.first()
-      
-      if not channel.access(caller, "send"):
-         caller.msg("You don't have permission to send messages to this channel.")
-         return
+        channel = search_channel(channel_name)
+        if not channel.exists():
+            caller.msg(f"No channel found with the name '{channel_name}'.")
+            return
+        channel = channel.first()
 
-      channel.msg(message, senders=[caller])
+        if not channel.access(caller, "send"):
+            caller.msg("You don't have permission to send messages to this channel.")
+            return
+
+        # Handle emotes
+        if message.startswith(";"):
+            message = f"{caller.name} {message[1:].strip()}"
+            emit = True
+        elif message.startswith(":"):
+            message = f"{caller.name}{message[1:]}"
+            emit = True
+        else:
+            emit = False
+
+        # Send the message
+        channel.msg(message, senders=[caller], emit=emit)
 
     def set_faction_lock(self):
         if not self.args:
