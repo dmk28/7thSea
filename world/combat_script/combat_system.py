@@ -281,7 +281,7 @@ class CombatScript(DefaultScript):
         if action_type == "defense" and "prone" in character.ndb.special_effects:
             bonus -= 5
         if action_type == "attack" or action_type == "defense" or action_type == "damage" or action_type == "soak"  or action_type == "initiative" and "willful" in character.ndb.special_effects:
-            bonus += 5
+            bonus += 2
         if action_type == "defense" or action_type == "initiative" and "rose_cross" in character.ndb.special_effects:
             bonus += 5
 
