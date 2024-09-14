@@ -352,7 +352,7 @@ class Character(ObjectParent, DefaultCharacter):
         if not self.db.money:
             self.db.money = {}
         self.db.money[currency] = self.db.money.get(currency, 0) + amount
-        self.update_model(update_fields=['guilders', 'doubloons'])
+        self.character_sheet.save(update_fields=['money_guilders', 'money_doubloons'])
 
     def spend_money(self, currency, amount):
         if not self.db.money:
@@ -360,7 +360,7 @@ class Character(ObjectParent, DefaultCharacter):
         current = self.db.money.get(currency, 0)
         if current >= amount:
             self.db.money[currency] = current - amount
-            self.update_model(update_fields=['guilders', 'doubloons'])
+            self.character_sheet.save(update_fields=['money_guilders', 'money_doubloons'])
             return True
         return False
 
