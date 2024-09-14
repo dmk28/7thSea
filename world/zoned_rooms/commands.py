@@ -47,7 +47,7 @@ class CmdConvertToZonedRoom(MuxCommand):
             return
 
         if "area" in self.switches:
-            rooms = [o for o in self.caller.location.contents if inherits_from(o, DefaultRoom)]
+            rooms = [o for o in self.caller.location.contents if inherits_from(o, Room)]
             target, zone = self.caller.location, self.rhs.strip()
         else:
             target, zone = self.lhs.strip(), self.rhs.strip()
