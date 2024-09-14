@@ -14,10 +14,10 @@ from commands.crafting.crafting_cmdset import CraftingCmdSet, ShipBuildCmdset
 from world.banking.rooms import BankRoom
 from evennia.utils.utils import inherits_from
 from world.combat_script.repartee_cmdset import ReparteeCmdSet
-
 logger = logging.getLogger("evennia")
-
-
+from evennia.utils import list_to_string
+from world.zoned_rooms.models import ZonedRoomModel
+from typeclasses.exits import PlayerExit
 class Room(ObjectParent, DefaultRoom):
     """
     Rooms are like any Object, except their location is None
@@ -180,6 +180,64 @@ class ShipyardRoom(Room):
 #         self.db.desc = "A bustling market with vendors hawking their wares."
 #         self.db.room_cmdset = MarketCmdSet  # You'd need to create this cmdset
 
+class ZonedRoom(DefaultRoom):
+    ZONES = [
+        "Noble District",
+        "Merchant District",
+        "Residential District",
+        "Shipyards",
+        "Slums"
+    ]
+
+    def at_object_creation(self):
+        super().at_object_creation()
+        self.db.is_main_zone_room = False
+        if not ZonedRoomModel.objects.filter(room=self).exists():
+            ZonedRoomModel.objects.create(room=self, zone="")
+        self.db.zone = None
+        self.db.owner = None
+        self.db.keyholders = []
+
+    def set_zone(self, zone):
+        if zone in self.ZONES:
+            zoned_room, _ = ZonedRoomModel.objects.get_or_create(room=self)
+            zoned_room.zone = zone
+            zoned_room.save()
+            self.db.zone = zone
+        else:
+            raise ValueError(f"Invalid zone. Must be one of: {', '.join(self.ZONES)}")
+
+    def get_zone(self):
+        try:
+            return self.zoned_room.zone, self.db.zone
+
+        except ZonedRoomModel.DoesNotExist:
+            return ""
+    def at_init(self):
+        """
+        This is called when the object is re-cached from memory. We ensure
+        the ZonedRoomModel exists here.
+        """
+        super().at_init()
+        ZonedRoomModel.objects.get_or_create(room=self)
+
+    def return_appearance(self, looker):
+        """
+        This is called when someone looks at the room.
+        """
+        string = super().return_appearance(looker)
+        if self.db.zone:
+            string += f"\n|cZone:|n {self.db.zone}"
+        return string
+
+    def get_zone(self):
+        return self.db.zone
+
+    def set_owner(self, owner):
+        self.db.owner = owner
+
+    def get_owner(self):
+        return self.db.owner
 
 class SeaRoom(DefaultRoom):
     def at_object_creation(self):
@@ -205,3 +263,79 @@ class SeaRoom(DefaultRoom):
             desc += f"\nYou are at the port of {self.db.port_name}."
         desc += f"\nCoordinates: {self.db.coordinates}"
         return desc
+
+
+
+
+class NobleDistrictRoom(ZonedRoom):
+    def at_object_creation(self):
+        super().at_object_creation()
+        self.set_zone("Noble District")
+
+class MerchantDistrictRoom(ZonedRoom):
+    def at_object_creation(self):
+        super().at_object_creation()
+        self.set_zone("Merchant District")
+
+class ResidentialDistrictRoom(ZonedRoom):
+    def at_object_creation(self):
+        super().at_object_creation()
+        self.set_zone("Residential District")
+
+class ShipyardsRoom(ZonedRoom):
+    def at_object_creation(self):
+        super().at_object_creation()
+        self.set_zone("Shipyards")
+
+class SlumsRoom(ZonedRoom):
+    def at_object_creation(self):
+        super().at_object_creation()
+        self.set_zone("Slums")
+
+class InnRoom(ZonedRoom):
+    
+
+    """
+    This room represents the main area of the inn where players can rent rooms.
+    """
+    def at_object_creation(self):
+        from commands.property.cmdrent import InnCmdSet
+        """
+        Called when the room is first created.
+        """
+        super().at_object_creation()
+        self.cmdset.add(InnCmdSet, persistent=True)
+
+class BedRoom(ZonedRoom):
+    """
+    This room represents a rented bedroom that players can customize.
+    """
+    def at_object_creation(self):
+        """
+        Called when the room is first created.
+        """
+        super().at_object_creation()
+        self.locks.add("edit:id(%s) or perm(Admin);call:id(%s) or perm(Admin)" % (self.id, self.id))
+
+    def return_appearance(self, looker):
+        """
+        This is called when someone looks at the room.
+        """
+        string = super().return_appearance(looker)
+        if looker.attributes.has("owns_room") and looker.db.owns_room == self:
+            string += "\n\nThis is your rented room. You can use 'editdesc' to change its description."
+        return string
+
+class NobleBedRoom(BedRoom, NobleDistrictRoom):
+    pass
+
+class MerchantBedRoom(BedRoom, MerchantDistrictRoom):
+    pass
+
+class ResidentialBedRoom(BedRoom, ResidentialDistrictRoom):
+    pass
+
+class SlumsBedRoom(BedRoom, SlumsRoom):
+    pass
+
+

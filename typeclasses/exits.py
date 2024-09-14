@@ -24,3 +24,20 @@ class Exit(ObjectParent, DefaultExit):
     """
 
     pass
+class PlayerExit(Exit):
+    """
+    This exit can only be used by the room owner and those they've given permission to.
+    """
+    def at_object_creation(self):
+        """
+        Called when the exit is first created.
+        """
+        self.locks.add("traverse:roomowner() or keychain() or perm(Admin)")
+
+    def at_failed_traverse(self, traversing_object):
+        """
+        Called when an object fails to traverse this exit.
+        """
+        traversing_object.msg("You don't have permission to enter this room.")
+
+

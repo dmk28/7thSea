@@ -16,7 +16,7 @@ from evennia.comms.comms import DefaultChannel
 # from world.channelmeta.channels import ExtendedChannel as WorldExtendedChannel
 from evennia import settings
 from world.adventuring_guilds.models import AdventuringGuild
-
+from world.channelmeta.models import ChannelMetadata
 from evennia.utils.utils import make_iter, lazy_property
 from evennia.utils import logger
 from datetime import datetime
@@ -182,6 +182,9 @@ class Channel(OldChannel):
     """
     log_file = "channel_{channelname}.log"
     mentions = ["Everyone", "All"]
+    @lazy_property
+    def metadata(self):
+        return self.ensure_metadata()
 
 
     @lazy_property
@@ -200,7 +203,16 @@ class Channel(OldChannel):
         self.db.channel_type = 'OOC'  # Default type
         self.db.faction_name = None
         self.db.nation_name = None
+        self.ensure_metadata()
         self.ensure_log_file_exists()  # Set up the log file    
+
+    def ensure_metadata(self):
+        metadata, created = ChannelMetadata.objects.get_or_create(channel=self)
+        if created:
+            # Initialize default values if needed
+            metadata.custom_color = '|w'  # Default to white
+            metadata.save()
+        return metadata
 
     def set_org(self, guild):
         """Set this channel as an organization channel."""
@@ -384,6 +396,7 @@ class Channel(OldChannel):
         """
         Modify the msg method to handle formatting and sending messages.
         """
+        
         senders = make_iter(senders) if senders else []
         
         # If sender_strings is not provided, fallback to sender's key.
@@ -427,7 +440,15 @@ class Channel(OldChannel):
         except Exception as e:
             print(f"ERROR: Failed to log message. Error: {e}")
 
+    def set_color(self, color):
+        self.db.custom_color = color    
+    @staticmethod
+    def generate_random_color():
+        return f"|{random.randint(0, 5)}{random.randint(0, 5)}{random.randint(0, 5)}"
 
+    def channel_prefix(self, msg=None, emit=False):
+        color = self.get_color()
+        return f"{color}[{self.key}]|n "
 
     def get_history(self, caller, num_messages=20):
         try:
@@ -447,3 +468,11 @@ class Channel(OldChannel):
         except Exception as e:
             caller.msg(f"Error retrieving channel history: {str(e)}")
             print(f"ERROR: Failed to retrieve history. Error: {e}")
+    
+    def get_color(self):
+        metadata = self.ensure_metadata()
+        return metadata.get_channel_color()
+
+    def channel_prefix(self, msg=None, emit=False):
+        color = self.get_color()
+        return f"{color}[{self.key}]|n "

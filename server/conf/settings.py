@@ -43,13 +43,13 @@ COLOR_ANSI_XTERM256_BRIGHT_BG_EXTRA_MAP = color_markups.MUX_COLOR_ANSI_XTERM256_
 DJANGO_ADMIN_SITE_CLASS = "MyAdminSite"
 DEBUG = True    
 SITE_ID = 1
-CHANNEL_TYPECLASS = "typeclasses.channels.NewChannel"
+CHANNEL_TYPECLASS = "typeclasses.channels.Channel"
 DEFAULT_CMDSETS = [
     'commands.mycmdset.MyCmdset'
 
 ]
 INSTALLED_APPS += ['world.character_sheet', 'world.adventuring_guilds', 'world.ships', 'world.banking', 'world.crafts', 'world.nations',
-'world.econgame']
+'world.econgame', 'world.zoned_rooms', 'world.channelmeta']
 GAME_SLOGAN = "Adventures in the High Seas"
 
 ######################################################################

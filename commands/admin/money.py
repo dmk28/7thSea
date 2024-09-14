@@ -10,14 +10,14 @@ class CmdMoney(Command):
       money add <amount>
     """
     key = "money"
-    locks = "cmd:perm(Wizards)"
+    locks = "cmd:all()"
     help_category = "Admin"
 
     def func(self):
         if not self.args:
             money = self.caller.db.money.get("guilders", 0) if self.caller.db.money else 0
             self.caller.msg(f"You have {money} guilders.")
-        elif self.args.startswith("add "):
+        elif self.args.startswith("add ") and self.caller.check_permstring("Builders"):
             try:
                 if not caller.db.hasattr('Money', {}):
                     caller.db.money = {}

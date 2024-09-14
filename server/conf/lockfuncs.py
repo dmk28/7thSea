@@ -64,3 +64,25 @@ def is_approved(accessing_obj, accessed_obj, *args, **kwargs):
     Check if the accessing object is an approved character.
     """
     return bool(accessing_obj.db.approved and accessing_obj.character_sheet.approved)
+
+def roomowner(accessing_obj, accessed_obj, *args, **kwargs):
+    """
+    Check if the accessing object is the owner of the room.
+    """
+    if hasattr(accessed_obj, 'location') and accessed_obj.location:
+        return accessing_obj == accessed_obj.location.get_owner()
+    return False
+
+def keychain(accessing_obj, accessed_obj, *args, **kwargs):
+    """
+    Check if the accessing object has permission to use this exit.
+    This function is used in the exit's lock string.
+    """
+    if not accessed_obj.location:
+        return False
+    room = accessed_obj.location
+    if hasattr(room, 'db'):
+        owner = room.db.owner
+        keyholders = room.db.keyholders or []
+        return accessing_obj == owner or accessing_obj.name in keyholders
+    return False
