@@ -59,3 +59,8 @@ def is_eisen(accessing_obj, accessed_obj, *args, **kwargs):
     return (hasattr(accessing_obj, 'character') and 
             accessing_obj.character and
             accessing_obj.character.db.nationality == "Eisen")
+def is_approved(accessing_obj, accessed_obj, *args, **kwargs):
+    """
+    Check if the accessing object is an approved character.
+    """
+    return bool(accessing_obj.db.approved and accessing_obj.character_sheet.approved)
