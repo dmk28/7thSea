@@ -1,7 +1,7 @@
 from evennia import Command, DefaultRoom
 from evennia.utils.utils import inherits_from
 from evennia.utils.ansi import strip_ansi
-from typeclasses.rooms import ZonedRoom
+from typeclasses.rooms import ZonedRoom, Room
 from evennia.commands.default.muxcommand import MuxCommand
 from world.zoned_rooms.models import ZonedRoomModel
 import re
