@@ -935,25 +935,20 @@ Duelist Style: {sheet.duelist_style}
 
 def finish_chargen(caller):
     sheet = ensure_chargen_data(caller)
-
-    # Set final status
     sheet.complete_chargen = True
     sheet.approved = False
-
-    # Update full_name if it hasn't been set
     if not sheet.full_name:
         sheet.full_name = caller.key
-    if sheet.hero_points >= 0:
+    if sheet.hero_points > 0:
         sheet.hero_points = 0
     sheet.save()
 
-    # Create approval request
-    new_request = create.create_script("typeclasses.requests.Request")
+    new_request = create_script("typeclasses.requests.Request")
     new_request.db.requester = caller
     new_request.db.request_type = "Character Approval"
     new_request.db.description = f"New character {caller.name} requires approval."
+    new_request.db.date_created = new_request.db.date_created.strftime("%Y-%m-%d %H:%M:%S")
 
-    # Move the character to a waiting room
     waiting_room = caller.search("Main Room", global_search=True)
     if waiting_room:
         caller.move_to(waiting_room, quiet=True)
@@ -962,7 +957,6 @@ def finish_chargen(caller):
     text += "You've been moved to a waiting room. A staff member will review your character shortly."
     caller.msg(text)
 
-    # Clean up any remaining temporary data
     if hasattr(caller.ndb, 'chargen'):
         del caller.ndb.chargen
 

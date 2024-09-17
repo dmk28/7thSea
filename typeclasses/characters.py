@@ -58,6 +58,7 @@ class Character(ObjectParent, DefaultCharacter):
         self.db.total_xp_accrued = 0
         self.db.create_character_sheet = True
         self.db.update_model_task = None
+        self.db.mails = []
 
     def at_init(self):
         super().at_init()
@@ -65,6 +66,8 @@ class Character(ObjectParent, DefaultCharacter):
             # This will lazily create the character sheet if it doesn't exist
             _ = self.character_sheet
             self.db.create_character_sheet = False
+        if not self.db.db.mails:
+            self.db.mails = []
 
     def at_hurt(self, damtype, value):
         self.msg(f"Debug: Entering at_hurt method. damtype: {damtype}, value: {value}")

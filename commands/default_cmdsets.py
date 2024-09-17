@@ -18,6 +18,7 @@ from evennia import default_cmds
 from .mycmdset import MyCmdSet
 # from world.channelmeta.commands import CommsCmdSet
 from .base.channels import CmdChannel
+from world.mailsys.mail import CmdMail
 class CharacterCmdSet(default_cmds.CharacterCmdSet):
     """
     The `CharacterCmdSet` contains general in-game commands like `look`,
@@ -54,6 +55,7 @@ class AccountCmdSet(default_cmds.AccountCmdSet):
         """
         super().at_cmdset_creation()
         self.add(CmdChannel())
+        self.add(CmdMail())
         #
         # any commands you add below will overload the default ones.
         #

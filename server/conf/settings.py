@@ -49,7 +49,7 @@ DEFAULT_CMDSETS = [
 
 ]
 INSTALLED_APPS += ['world.character_sheet', 'world.adventuring_guilds', 'world.ships', 'world.banking', 'world.crafts', 'world.nations',
-'world.econgame', 'world.zoned_rooms', 'world.channelmeta']
+'world.econgame', 'world.zoned_rooms', 'world.channelmeta', 'world.mailsys']
 GAME_SLOGAN = "Adventures in the High Seas"
 
 ######################################################################

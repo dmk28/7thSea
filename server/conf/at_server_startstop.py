@@ -19,13 +19,16 @@ at_server_cold_stop()
 from evennia import create_script
 from world.bboards import BBOARD_HANDLER
 from world.dynmap.seamap import init_sea_map
+from world.mailsys.cleanup import delete_old_mail
+from evennia.utils import gametime
 def at_server_init():
     """
     This is called first as the server is starting up, regardless of how.
     """
     create_script("world.scripts.SheetUpdateScript")
     init_sea_map()
-
+    gametime.schedule(delete_old_mail, repeat=True, hour=0, min=0, sec=0, days=15)
+    
 
 
 def at_server_start():

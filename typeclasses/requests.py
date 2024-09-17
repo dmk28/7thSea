@@ -15,6 +15,7 @@ class Request(DefaultScript):
         self.db.requester = None
         self.db.request_type = ""
         self.db.description = ""
+        self.db.bucket = ""
         self.db.status = "Pending"
         self.db.gm_comments = ""
         # Initialize attributes

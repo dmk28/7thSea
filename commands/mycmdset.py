@@ -8,7 +8,7 @@ from commands.xpaward import CmdAwardXP
 from commands.buyattribute import CmdBuyAttribute
 from commands.cmdattack import CombatCommand
 # from commands.combatcmdset import MovesCmdSet
-from commands.request import CmdRequest, CmdReviewApprove, CmdReviewList, CmdReviewDeny, CmdReviewView
+from commands.request import CmdRequest
 from commands.approvechar import CmdApproveCharacter
 from commands.wield import WeaponCommand
 from commands.sorcery.sorcerycmdset import SorceryCmdSet
@@ -61,10 +61,7 @@ class RequestCmdSet(CmdSet):
     key = "RequestCmdSet"
     priority = 1
     def at_cmdset_creation(self):
-        self.add(CmdReviewApprove())
-        self.add(CmdReviewDeny())
-        self.add(CmdReviewList())
-        self.add(CmdReviewView())
+        self.add(CmdRequest())
 
 class MyCmdSet(CmdSet):
     """
