@@ -171,25 +171,21 @@ class CmdChannel(MuxCommand):
             caller.msg(f"No channel found with the name '{self.args}'.")
             return
 
-        # Check channel type and access restrictions
-        if channel.db.channel_type == 'NATION':
-            character_nationality = caller.db.nationality if hasattr(caller.db, 'nationality') else None
-            if character_nationality != channel.db.nation_name:
+        # Use the access method to check if the caller can join the channel
+        if not channel.access(caller, "listen"):
+            if channel.db.channel_type == 'NATION':
                 caller.msg(f"You cannot join the channel {channel.key}. It's restricted to citizens of {channel.db.nation_name}.")
-                return
-        elif channel.db.channel_type == 'FACTION':
-            if not AdventuringGuild.objects.filter(db_name=channel.db.faction_name, db_members=caller).exists():
+            elif channel.db.channel_type == 'FACTION':
                 caller.msg(f"You cannot join the channel {channel.key}. It's restricted to members of the {channel.db.faction_name} faction.")
-                return
+            else:
+                caller.msg(f"You don't have permission to join the channel {channel.key}.")
+            return
 
-        # If the character passes the access checks, attempt to connect them to the channel
+        # If the character passes the access check, attempt to connect them to the channel
         if channel.connect(caller):
             caller.msg(f"You have joined the channel {channel.key}.")
         else:
             caller.msg(f"You are already subscribed to {channel.key}.")
-
-    
-
 
 
 
