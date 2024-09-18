@@ -268,6 +268,7 @@ class CmdChannel(MuxCommand):
 
 
         channel.get_history(caller, num_messages)
+    
     def send_message(self):
         """Send a message to a Channel"""
         caller = self.caller
@@ -308,14 +309,9 @@ class CmdChannel(MuxCommand):
             message = message[1:].strip()
 
         # Handle emotes
-        if message.startswith(";"):
-            message = f"{caller.name} {message[1:].strip()}"
-            emit = True
-        elif message.startswith(":"):
-            message = f"{caller.name}{message[1:]}"
+        if message.startswith(";") or message.startswith(":"):
             emit = True
         else:
-            message = f"{caller.name}: {message}"
             emit = False
 
         # Send the message
