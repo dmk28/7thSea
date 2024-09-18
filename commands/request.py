@@ -71,7 +71,7 @@ class CmdRequest(MuxCommand):
         new_request.db.requester = self.caller
         new_request.db.request_type = request_type
         new_request.db.description = description
-        new_request.db.date_created = timezone.now().strftime("%Y-%m-%d %H:%M:%S")
+        new_request.db.date_created = timezone.now().strftime("%m-%d-%Y %H:%M:%S")
 
         self.caller.msg(f"Your request '{request_type}' has been submitted for GM approval.")
 
