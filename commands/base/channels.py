@@ -272,9 +272,24 @@ class CmdChannel(MuxCommand):
     def send_message(self):
         """Send a message to a Channel"""
         caller = self.caller
-        channel_name, sep, message = self.args.partition(" ")
-        channel_name = channel_name.strip()
-        message = message.strip()
+        args = self.args.strip()
+        
+        # Find the first space that's not inside quotes
+        space_index = -1
+        in_quotes = False
+        for i, char in enumerate(args):
+            if char == '"':
+                in_quotes = not in_quotes
+            elif char == ' ' and not in_quotes:
+                space_index = i
+                break
+        
+        if space_index == -1:
+            caller.msg("Usage: <channel> <message>")
+            return
+        
+        channel_name = args[:space_index].strip('"')
+        message = args[space_index+1:].strip()
 
         if not channel_name or not message:
             caller.msg("Usage: <channel> <message>")
