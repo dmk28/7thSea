@@ -410,20 +410,25 @@ class Channel(OldChannel):
         
         # If sender_strings is not provided, fallback to sender's key.
         sender_string = sender_strings[0] if sender_strings else (senders[0].key if senders else "Unknown")
-
+        
         # Format the message with pose if emit, otherwise just the message
         if emit:
-            message_content = self.pose_transform(msgobj, sender_string)
+            if msgobj.startswith(":"):
+                message_content = f"{sender_string} {msgobj[1:]}"
+            elif msgobj.startswith(";"):
+                message_content = f"{sender_string}{msgobj[1:].strip()}"
+            else:
+                message_content = f"{sender_string} {msgobj}"
         else:
             message_content = f"{sender_string}: {msgobj}"
-
+        
         # Ensure the message is quoted and mentions are formatted
         message_content = self.format_mentions(message_content, [sender.key for sender in senders])
-
+        
         # Add channel prefix
         channel_name = self.channel_prefix()
         formatted_message = f"{channel_name} {message_content}"
-
+        
         # Send to all non-muted subscribers
         for subscriber in self.non_muted_subs:
             subscriber.msg(formatted_message, from_obj=senders, options={"from_channel": self.id})
@@ -431,7 +436,6 @@ class Channel(OldChannel):
         # Log the message if persistent
         if persistent:
             self.log_message(message_content, senders[0] if senders else None)
-
 
     def get_log_filename(self):
         return os.path.join(settings.LOG_DIR, f"channel_{self.key.lower()}.log")
