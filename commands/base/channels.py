@@ -304,19 +304,20 @@ class CmdChannel(MuxCommand):
         if not channel.access(caller, "send"):
             caller.msg("You don't have permission to send messages to this channel.")
             return
-
+        if message.startswith("="):
+            new_message = message[1:].strip()
         # Handle emotes
-        if message.startswith(";"):
-            message = f"{caller.name} {message[1:].strip()}"
+        if new_message.startswith(";"):
+            new_message = f"{caller.name} {message[1:].strip()}"
             emit = True
-        elif message.startswith(":"):
-            message = f"{caller.name}{message[1:]}"
+        elif new_message.startswith(":"):
+            new_message = f"{caller.name}{message[1:]}"
             emit = True
         else:
             emit = False
 
         # Send the message
-        channel.msg(message, senders=[caller], emit=emit)
+        channel.msg(new_message, senders=[caller], emit=emit)
 
     def set_faction_lock(self):
         if not self.args:
